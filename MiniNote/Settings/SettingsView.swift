@@ -16,6 +16,7 @@ struct SettingsView: View {
 
     // Startup
     @AppStorage("startupBehavior") private var startupBehavior: String = "continue"
+    @AppStorage("appLanguage") private var appLanguage: String = Language.systemDefault.rawValue
 
     // Update check
     @State private var updateMessage: String = ""
@@ -37,42 +38,49 @@ struct SettingsView: View {
 
     private var generalTab: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Picker("启动行为", selection: $startupBehavior) {
-                Text("继续上一个会话").tag("continue")
-                Text("启动新会话").tag("new")
+            Picker(L("settings.language"), selection: $appLanguage) {
+                ForEach(Language.allCases) { language in
+                    Text(language.displayName).tag(language.rawValue)
+                }
+            }
+            .pickerStyle(.menu)
+
+            Picker(L("settings.startup"), selection: $startupBehavior) {
+                Text(L("settings.continueLast")).tag("continue")
+                Text(L("settings.newSession")).tag("new")
             }
             .pickerStyle(.radioGroup)
 
-            Toggle("自动换行", isOn: $wordWrap)
-            Toggle("行号显示", isOn: $showLineNumbers)
+            Toggle(L("settings.wordWrap"), isOn: $wordWrap)
+            Toggle(L("settings.lineNumbers"), isOn: $showLineNumbers)
 
             Spacer()
         }
         .padding()
-        .tabItem { Label("通用", systemImage: "gearshape") }
+        .tabItem { Label(L("settings.general"), systemImage: "gearshape") }
     }
 
     // MARK: - Appearance
 
     private var appearanceTab: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Picker("主题", selection: $theme) {
-                Text("浅色").tag("light")
-                Text("深色").tag("dark")
-                Text("跟随系统").tag("system")
+            Picker(L("settings.theme"), selection: $theme) {
+                Text(L("settings.light")).tag("light")
+                Text(L("settings.dark")).tag("dark")
+                Text(L("settings.system")).tag("system")
             }
             .pickerStyle(.radioGroup)
 
             HStack {
-                Text("字号")
+                Text(L("settings.fontSize"))
                 Slider(value: $fontSize, in: 10...30, step: 1)
                 Text("\(Int(fontSize)) pt")
                     .frame(width: 40, alignment: .trailing)
             }
 
             HStack {
-                Text("字体")
-                Button("选择字体...") {
+                Text(L("settings.font"))
+                Button(L("settings.chooseFont")) {
                     NSFontManager.shared.orderFrontFontPanel(nil)
                 }
             }
@@ -80,31 +88,31 @@ struct SettingsView: View {
             Spacer()
         }
         .padding()
-        .tabItem { Label("外观", systemImage: "paintpalette") }
+        .tabItem { Label(L("settings.appearance"), systemImage: "paintpalette") }
     }
 
     // MARK: - Behavior
 
     private var behaviorTab: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("默认渲染状态")
+            Text(L("settings.defaultRender"))
                 .font(.headline)
 
-            Toggle(".mint 默认渲染", isOn: $renderMint)
-            Toggle(".txt 默认渲染", isOn: $renderTxt)
-            Toggle(".md 默认渲染", isOn: $renderMd)
+            Toggle(L("settings.renderMint"), isOn: $renderMint)
+            Toggle(L("settings.renderTxt"), isOn: $renderTxt)
+            Toggle(L("settings.renderMd"), isOn: $renderMd)
 
             Spacer()
 
             HStack {
                 Spacer()
-                Button("恢复默认设置") {
+                Button(L("settings.resetDefaults")) {
                     resetDefaults()
                 }
             }
         }
         .padding()
-        .tabItem { Label("行为", systemImage: "text.word.spacing") }
+        .tabItem { Label(L("settings.behavior"), systemImage: "text.word.spacing") }
     }
 
     // MARK: - Update
@@ -117,7 +125,7 @@ struct SettingsView: View {
                         ProgressView()
                             .scaleEffect(0.8)
                     }
-                    Text("检查更新")
+                    Text(L("settings.checkUpdate"))
                 }
             }
             .disabled(isChecking)
@@ -131,7 +139,7 @@ struct SettingsView: View {
             Spacer()
         }
         .padding()
-        .tabItem { Label("更新", systemImage: "arrow.down.circle") }
+        .tabItem { Label(L("settings.update"), systemImage: "arrow.down.circle") }
     }
 
     // MARK: - Actions
@@ -143,13 +151,17 @@ struct SettingsView: View {
             defer { isChecking = false }
             if let result = try? await updateService.checkForUpdate() {
                 if result.hasUpdate, let release = result.release {
-                    updateMessage = "有新版本 \(release.tagName)"
+                    updateMessage = LocalizationService.formatted(
+                        "update.hasUpdate",
+                        release.tagName,
+                        language: appLanguage
+                    )
                     NSWorkspace.shared.open(release.htmlURL)
                 } else {
-                    updateMessage = "已是最新版本"
+                    updateMessage = L("update.latest")
                 }
             } else {
-                updateMessage = "检查失败，请稍后重试"
+                updateMessage = L("update.failed")
             }
         }
     }
@@ -163,6 +175,10 @@ struct SettingsView: View {
         renderTxt = false
         renderMd = false
         startupBehavior = "continue"
-        updateMessage = "已恢复默认设置"
+        updateMessage = L("settings.defaultsRestored")
+    }
+
+    private func L(_ key: String) -> String {
+        LocalizationService.text(key, language: appLanguage)
     }
 }

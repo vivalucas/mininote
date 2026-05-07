@@ -8,9 +8,9 @@ final class FileService {
 
         var errorDescription: String? {
             switch self {
-            case .cannotRead:  "无法读取文件"
-            case .cannotWrite: "无法写入文件"
-            case .unsupportedType: "不支持的文件格式"
+            case .cannotRead:  LocalizationService.text("file.error.cannotRead")
+            case .cannotWrite: LocalizationService.text("file.error.cannotWrite")
+            case .unsupportedType: LocalizationService.text("file.error.unsupportedType")
             }
         }
     }
@@ -20,7 +20,7 @@ final class FileService {
         let content = try String(contentsOf: url, encoding: .utf8)
         let lineEnding = detectLineEnding(in: content)
 
-        return Document(
+        let document = Document(
             content: content,
             type: type,
             fileURL: url,
@@ -28,6 +28,8 @@ final class FileService {
             isModified: false,
             isRendering: false
         )
+        document.lineEnding = lineEnding
+        return document
     }
 
     func save(document: Document) throws {
@@ -63,7 +65,7 @@ final class FileService {
     }
 
     func defaultFileName(type: DocumentType) -> String {
-        "未标题.\(type.fileExtension)"
+        "\(LocalizationService.text("common.untitled")).\(type.fileExtension)"
     }
 
     func isSupportedExtension(_ ext: String) -> Bool {

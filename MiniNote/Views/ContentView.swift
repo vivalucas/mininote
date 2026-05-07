@@ -8,6 +8,7 @@ struct ContentView: View {
     @AppStorage("wordWrap") private var wordWrap: Bool = true
     @AppStorage("showLineNumbers") private var showLineNumbers: Bool = false
     @AppStorage("theme") private var theme: String = "system"
+    @AppStorage("appLanguage") private var appLanguage: String = Language.systemDefault.rawValue
 
     // Close alert
     @State private var closeTarget: Document? = nil
@@ -27,6 +28,7 @@ struct ContentView: View {
                 onNewTab: { state.newTab() },
                 onCloseTab: { doc in requestClose(doc) },
                 onSelectTab: { id in state.switchToTab(id) },
+                appLanguage: appLanguage,
                 onReorder: { from, to in
                     state.documents.move(fromOffsets: from, toOffset: to)
                     state.saveSessionSnapshot()
@@ -98,24 +100,30 @@ struct ContentView: View {
                 hasLaunchedBefore = true
             }
         }
-        .alert("是否保存更改？", isPresented: $showCloseAlert) {
-            Button("保存") {
+        .alert(L("alert.saveChanges"), isPresented: $showCloseAlert) {
+            Button(L("alert.save")) {
                 guard let doc = closeTarget else { return }
                 state.saveDocument(doc)
                 state.closeTab(doc)
                 closeTarget = nil
             }
-            Button("不保存") {
+            Button(L("alert.dontSave")) {
                 guard let doc = closeTarget else { return }
                 state.closeTab(doc)
                 closeTarget = nil
             }
-            Button("取消", role: .cancel) {
+            Button(L("alert.cancel"), role: .cancel) {
                 closeTarget = nil
             }
         } message: {
             if let doc = closeTarget {
-                Text("「\(doc.fileName)」有未保存的更改。")
+                Text(
+                    LocalizationService.formatted(
+                        "alert.hasChanges",
+                        doc.displayName(language: appLanguage),
+                        language: appLanguage
+                    )
+                )
             }
         }
     }
@@ -156,5 +164,9 @@ struct ContentView: View {
             return text.distance(from: lastNewline, to: idx) + 1
         }
         return pos + 1
+    }
+
+    private func L(_ key: String) -> String {
+        LocalizationService.text(key, language: appLanguage)
     }
 }

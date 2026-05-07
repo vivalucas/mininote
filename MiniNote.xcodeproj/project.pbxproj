@@ -1,0 +1,690 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		100000000000000000000101 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000001 /* AppDelegate.swift */; };
+		100000000000000000000102 /* MiniNoteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000002 /* MiniNoteApp.swift */; };
+		100000000000000000000103 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000003 /* AppState.swift */; };
+		100000000000000000000104 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000004 /* Document.swift */; };
+		100000000000000000000105 /* DocumentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000005 /* DocumentType.swift */; };
+		100000000000000000000106 /* SessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000006 /* SessionStore.swift */; };
+		100000000000000000000107 /* FileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000007 /* FileService.swift */; };
+		100000000000000000000108 /* LocalizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000008 /* LocalizationService.swift */; };
+		100000000000000000000109 /* PasteboardService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000009 /* PasteboardService.swift */; };
+		10000000000000000000010A /* UpdateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000000A /* UpdateService.swift */; };
+		10000000000000000000010B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000000B /* SettingsView.swift */; };
+		10000000000000000000010C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000000C /* ContentView.swift */; };
+		10000000000000000000010D /* EditorTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000000D /* EditorTextView.swift */; };
+		10000000000000000000010E /* FirstLaunchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000000E /* FirstLaunchView.swift */; };
+		10000000000000000000010F /* MarkdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000000F /* MarkdownView.swift */; };
+		100000000000000000000110 /* StatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000010 /* StatusBar.swift */; };
+		100000000000000000000111 /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000011 /* TabBar.swift */; };
+		100000000000000000000112 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000012 /* Assets.xcassets */; };
+		100000000000000000000113 /* FinderSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000013 /* FinderSync.swift */; };
+		100000000000000000000114 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000014 /* PreviewViewController.swift */; };
+		100000000000000000000115 /* FinderExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 100000000000000000000021 /* FinderExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		100000000000000000000116 /* MiniNoteQuickLook.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 100000000000000000000022 /* MiniNoteQuickLook.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		100000000000000000000301 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 100000000000000000000201 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 100000000000000000000203;
+			remoteInfo = FinderExtension;
+		};
+		100000000000000000000302 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 100000000000000000000201 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 100000000000000000000204;
+			remoteInfo = MiniNoteQuickLook;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		100000000000000000000401 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				100000000000000000000115 /* FinderExtension.appex in Embed App Extensions */,
+				100000000000000000000116 /* MiniNoteQuickLook.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		100000000000000000000001 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		100000000000000000000002 /* MiniNoteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniNoteApp.swift; sourceTree = "<group>"; };
+		100000000000000000000003 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		100000000000000000000004 /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
+		100000000000000000000005 /* DocumentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentType.swift; sourceTree = "<group>"; };
+		100000000000000000000006 /* SessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStore.swift; sourceTree = "<group>"; };
+		100000000000000000000007 /* FileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileService.swift; sourceTree = "<group>"; };
+		100000000000000000000008 /* LocalizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationService.swift; sourceTree = "<group>"; };
+		100000000000000000000009 /* PasteboardService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasteboardService.swift; sourceTree = "<group>"; };
+		10000000000000000000000A /* UpdateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateService.swift; sourceTree = "<group>"; };
+		10000000000000000000000B /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		10000000000000000000000C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		10000000000000000000000D /* EditorTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorTextView.swift; sourceTree = "<group>"; };
+		10000000000000000000000E /* FirstLaunchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstLaunchView.swift; sourceTree = "<group>"; };
+		10000000000000000000000F /* MarkdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownView.swift; sourceTree = "<group>"; };
+		100000000000000000000010 /* StatusBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBar.swift; sourceTree = "<group>"; };
+		100000000000000000000011 /* TabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBar.swift; sourceTree = "<group>"; };
+		100000000000000000000012 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		100000000000000000000013 /* FinderSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinderSync.swift; sourceTree = "<group>"; };
+		100000000000000000000014 /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
+		100000000000000000000015 /* MiniNote-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MiniNote-Info.plist"; sourceTree = "<group>"; };
+		100000000000000000000016 /* MiniNote.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MiniNote.entitlements; sourceTree = "<group>"; };
+		100000000000000000000017 /* FinderExtension-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FinderExtension-Info.plist"; sourceTree = "<group>"; };
+		100000000000000000000018 /* FinderExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FinderExtension.entitlements; sourceTree = "<group>"; };
+		100000000000000000000019 /* QuickLook-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "QuickLook-Info.plist"; sourceTree = "<group>"; };
+		10000000000000000000001A /* QuickLook.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = QuickLook.entitlements; sourceTree = "<group>"; };
+		100000000000000000000020 /* MiniNote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiniNote.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		100000000000000000000021 /* FinderExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FinderExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		100000000000000000000022 /* MiniNoteQuickLook.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MiniNoteQuickLook.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		100000000000000000000501 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		100000000000000000000502 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		100000000000000000000503 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		100000000000000000000601 = {
+			isa = PBXGroup;
+			children = (
+				100000000000000000000602 /* MiniNote */,
+				100000000000000000000603 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		100000000000000000000602 /* MiniNote */ = {
+			isa = PBXGroup;
+			children = (
+				100000000000000000000604 /* App */,
+				100000000000000000000605 /* Config */,
+				100000000000000000000606 /* Models */,
+				100000000000000000000607 /* Resources */,
+				100000000000000000000608 /* Services */,
+				100000000000000000000609 /* Settings */,
+				10000000000000000000060A /* Views */,
+			);
+			path = MiniNote;
+			sourceTree = "<group>";
+		};
+		100000000000000000000603 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				100000000000000000000020 /* MiniNote.app */,
+				100000000000000000000021 /* FinderExtension.appex */,
+				100000000000000000000022 /* MiniNoteQuickLook.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		100000000000000000000604 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				100000000000000000000001 /* AppDelegate.swift */,
+				100000000000000000000002 /* MiniNoteApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		100000000000000000000605 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				100000000000000000000017 /* FinderExtension-Info.plist */,
+				100000000000000000000018 /* FinderExtension.entitlements */,
+				100000000000000000000015 /* MiniNote-Info.plist */,
+				100000000000000000000016 /* MiniNote.entitlements */,
+				100000000000000000000019 /* QuickLook-Info.plist */,
+				10000000000000000000001A /* QuickLook.entitlements */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		100000000000000000000606 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				100000000000000000000003 /* AppState.swift */,
+				100000000000000000000004 /* Document.swift */,
+				100000000000000000000005 /* DocumentType.swift */,
+				100000000000000000000006 /* SessionStore.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		100000000000000000000607 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				100000000000000000000012 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		100000000000000000000608 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				100000000000000000000007 /* FileService.swift */,
+				10000000000000000000060B /* FinderExtension */,
+				100000000000000000000008 /* LocalizationService.swift */,
+				100000000000000000000009 /* PasteboardService.swift */,
+				10000000000000000000060C /* QuickLook */,
+				10000000000000000000000A /* UpdateService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		100000000000000000000609 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				10000000000000000000000B /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		10000000000000000000060A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				10000000000000000000000C /* ContentView.swift */,
+				10000000000000000000000D /* EditorTextView.swift */,
+				10000000000000000000000E /* FirstLaunchView.swift */,
+				10000000000000000000000F /* MarkdownView.swift */,
+				100000000000000000000010 /* StatusBar.swift */,
+				100000000000000000000011 /* TabBar.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		10000000000000000000060B /* FinderExtension */ = {
+			isa = PBXGroup;
+			children = (
+				100000000000000000000013 /* FinderSync.swift */,
+			);
+			path = FinderExtension;
+			sourceTree = "<group>";
+		};
+		10000000000000000000060C /* QuickLook */ = {
+			isa = PBXGroup;
+			children = (
+				100000000000000000000014 /* PreviewViewController.swift */,
+			);
+			path = QuickLook;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		100000000000000000000202 /* MiniNote */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 100000000000000000000701 /* Build configuration list for PBXNativeTarget "MiniNote" */;
+			buildPhases = (
+				100000000000000000000801 /* Sources */,
+				100000000000000000000501 /* Frameworks */,
+				100000000000000000000901 /* Resources */,
+				100000000000000000000401 /* Embed App Extensions */,
+			);
+			buildRules = ();
+			dependencies = (
+				100000000000000000000303 /* PBXTargetDependency */,
+				100000000000000000000304 /* PBXTargetDependency */,
+			);
+			name = MiniNote;
+			productName = MiniNote;
+			productReference = 100000000000000000000020 /* MiniNote.app */;
+			productType = "com.apple.product-type.application";
+		};
+		100000000000000000000203 /* FinderExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 100000000000000000000702 /* Build configuration list for PBXNativeTarget "FinderExtension" */;
+			buildPhases = (
+				100000000000000000000802 /* Sources */,
+				100000000000000000000502 /* Frameworks */,
+				100000000000000000000902 /* Resources */,
+			);
+			buildRules = ();
+			dependencies = ();
+			name = FinderExtension;
+			productName = FinderExtension;
+			productReference = 100000000000000000000021 /* FinderExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		100000000000000000000204 /* MiniNoteQuickLook */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 100000000000000000000703 /* Build configuration list for PBXNativeTarget "MiniNoteQuickLook" */;
+			buildPhases = (
+				100000000000000000000803 /* Sources */,
+				100000000000000000000503 /* Frameworks */,
+				100000000000000000000903 /* Resources */,
+			);
+			buildRules = ();
+			dependencies = ();
+			name = MiniNoteQuickLook;
+			productName = MiniNoteQuickLook;
+			productReference = 100000000000000000000022 /* MiniNoteQuickLook.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		100000000000000000000201 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1640;
+				LastUpgradeCheck = 1640;
+				TargetAttributes = {
+					100000000000000000000202 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					100000000000000000000203 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					100000000000000000000204 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+				};
+			};
+			buildConfigurationList = 100000000000000000000704 /* Build configuration list for PBXProject "MiniNote" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 100000000000000000000601;
+			productRefGroup = 100000000000000000000603 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				100000000000000000000202 /* MiniNote */,
+				100000000000000000000203 /* FinderExtension */,
+				100000000000000000000204 /* MiniNoteQuickLook */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		100000000000000000000901 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				100000000000000000000112 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		100000000000000000000902 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = ();
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		100000000000000000000903 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = ();
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		100000000000000000000801 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				100000000000000000000101 /* AppDelegate.swift in Sources */,
+				100000000000000000000102 /* MiniNoteApp.swift in Sources */,
+				100000000000000000000103 /* AppState.swift in Sources */,
+				100000000000000000000104 /* Document.swift in Sources */,
+				100000000000000000000105 /* DocumentType.swift in Sources */,
+				100000000000000000000106 /* SessionStore.swift in Sources */,
+				100000000000000000000107 /* FileService.swift in Sources */,
+				100000000000000000000108 /* LocalizationService.swift in Sources */,
+				100000000000000000000109 /* PasteboardService.swift in Sources */,
+				10000000000000000000010A /* UpdateService.swift in Sources */,
+				10000000000000000000010B /* SettingsView.swift in Sources */,
+				10000000000000000000010C /* ContentView.swift in Sources */,
+				10000000000000000000010D /* EditorTextView.swift in Sources */,
+				10000000000000000000010E /* FirstLaunchView.swift in Sources */,
+				10000000000000000000010F /* MarkdownView.swift in Sources */,
+				100000000000000000000110 /* StatusBar.swift in Sources */,
+				100000000000000000000111 /* TabBar.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		100000000000000000000802 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				100000000000000000000113 /* FinderSync.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		100000000000000000000803 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				100000000000000000000114 /* PreviewViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		100000000000000000000303 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 100000000000000000000203 /* FinderExtension */;
+			targetProxy = 100000000000000000000301 /* PBXContainerItemProxy */;
+		};
+		100000000000000000000304 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 100000000000000000000204 /* MiniNoteQuickLook */;
+			targetProxy = 100000000000000000000302 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		100000000000000000000A01 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_LANGUAGE = en;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				CURRENT_PROJECT_VERSION = 1;
+			};
+			name = Debug;
+		};
+		100000000000000000000A02 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_LANGUAGE = en;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				CURRENT_PROJECT_VERSION = 1;
+			};
+			name = Release;
+		};
+		100000000000000000000A03 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MiniNote/Config/MiniNote.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "MiniNote/Config/MiniNote-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 0.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mininote.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		100000000000000000000A04 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MiniNote/Config/MiniNote.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "MiniNote/Config/MiniNote-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 0.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mininote.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		100000000000000000000A05 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = MiniNote/Config/FinderExtension.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "MiniNote/Config/FinderExtension-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 0.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mininote.app.FinderExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		100000000000000000000A06 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = MiniNote/Config/FinderExtension.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "MiniNote/Config/FinderExtension-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 0.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mininote.app.FinderExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		100000000000000000000A07 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = MiniNote/Config/QuickLook.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "MiniNote/Config/QuickLook-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 0.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mininote.app.MiniNoteQuickLook;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		100000000000000000000A08 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = MiniNote/Config/QuickLook.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "MiniNote/Config/QuickLook-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 0.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mininote.app.MiniNoteQuickLook;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		100000000000000000000701 /* Build configuration list for PBXNativeTarget "MiniNote" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				100000000000000000000A03 /* Debug */,
+				100000000000000000000A04 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		100000000000000000000702 /* Build configuration list for PBXNativeTarget "FinderExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				100000000000000000000A05 /* Debug */,
+				100000000000000000000A06 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		100000000000000000000703 /* Build configuration list for PBXNativeTarget "MiniNoteQuickLook" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				100000000000000000000A07 /* Debug */,
+				100000000000000000000A08 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		100000000000000000000704 /* Build configuration list for PBXProject "MiniNote" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				100000000000000000000A01 /* Debug */,
+				100000000000000000000A02 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 100000000000000000000201 /* Project object */;
+}

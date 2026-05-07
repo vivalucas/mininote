@@ -7,9 +7,9 @@ enum DocumentType: String, CaseIterable, Codable {
 
     var displayName: String {
         switch self {
-        case .mint: "MiniNote 文档"
-        case .txt:  "纯文本文档"
-        case .md:   "Markdown 文档"
+        case .mint: LocalizationService.text("document.mint")
+        case .txt:  LocalizationService.text("document.txt")
+        case .md:   LocalizationService.text("document.md")
         }
     }
 

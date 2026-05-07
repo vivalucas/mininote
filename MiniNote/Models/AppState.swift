@@ -167,11 +167,12 @@ final class AppState {
                     }
                     restored.append(doc)
                 }
+                let restoredTabs = restored
                 await MainActor.run {
-                    documents = restored
-                    let idx = min(activeIndex, restored.count - 1)
-                    activeTabId = restored[idx].id
-                    cursorPosition = restored[idx].cursorPosition
+                    documents = restoredTabs
+                    let idx = min(activeIndex, restoredTabs.count - 1)
+                    activeTabId = restoredTabs[idx].id
+                    cursorPosition = restoredTabs[idx].cursorPosition
                 }
             } else {
                 await MainActor.run { newTab() }

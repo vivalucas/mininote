@@ -264,7 +264,7 @@ final class LineNumberGutter: NSRulerView {
 
     init(font: NSFont) {
         self.font = font
-        super.init(frame: .zero)
+        super.init(scrollView: nil, orientation: .verticalRuler)
         ruleThickness = 40
     }
 

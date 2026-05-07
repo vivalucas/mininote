@@ -1,9 +1,12 @@
+import AppKit
 import SwiftUI
 
 @main
 struct MiniNoteApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @State private var appState = AppState()
+    @AppStorage("appLanguage") private var appLanguage: String = Language.systemDefault.rawValue
+    private let updateService = UpdateService()
 
     var body: some Scene {
         WindowGroup {
@@ -15,21 +18,25 @@ struct MiniNoteApp: App {
         .commands {
             // File menu
             CommandGroup(replacing: .newItem) {
-                Button("新建") { appState.newTab() }
+                Button(LocalizationService.text("menu.new", language: appLanguage)) {
+                    appState.newTab()
+                }
                     .keyboardShortcut("n")
-                Button("打开...") { appState.openFile() }
+                Button(LocalizationService.text("menu.open", language: appLanguage)) {
+                    appState.openFile()
+                }
                     .keyboardShortcut("o")
             }
 
             CommandGroup(replacing: .saveItem) {
-                Button("保存") {
+                Button(LocalizationService.text("menu.save", language: appLanguage)) {
                     if let doc = appState.activeDocument {
                         appState.saveDocument(doc)
                     }
                 }
                 .keyboardShortcut("s")
 
-                Button("另存为...") {
+                Button(LocalizationService.text("menu.saveAs", language: appLanguage)) {
                     if let doc = appState.activeDocument {
                         appState.saveAsDocument(doc)
                     }
@@ -38,7 +45,7 @@ struct MiniNoteApp: App {
             }
 
             CommandGroup(before: .toolbar) {
-                Button("Markdown 渲染切换") {
+                Button(LocalizationService.text("menu.toggleRender", language: appLanguage)) {
                     if let doc = appState.activeDocument {
                         appState.toggleRendering(for: doc)
                     }
@@ -49,12 +56,12 @@ struct MiniNoteApp: App {
             // Edit menu additions
             CommandGroup(after: .textEditing) {
                 Divider()
-                Button("查找...") {
+                Button(LocalizationService.text("menu.find", language: appLanguage)) {
                     NotificationCenter.default.post(name: .showFindPanel, object: nil)
                 }
                 .keyboardShortcut("f")
 
-                Button("查找替换...") {
+                Button(LocalizationService.text("menu.findReplace", language: appLanguage)) {
                     NotificationCenter.default.post(name: .showFindReplacePanel, object: nil)
                 }
                 .keyboardShortcut("f", modifiers: [.command, .option])
@@ -62,17 +69,23 @@ struct MiniNoteApp: App {
 
             // View menu — zoom
             CommandGroup(before: .textFormatting) {
-                Button("放大") { appState.zoomIn() }
+                Button(LocalizationService.text("menu.zoomIn", language: appLanguage)) {
+                    appState.zoomIn()
+                }
                     .keyboardShortcut("=", modifiers: [.command])
-                Button("缩小") { appState.zoomOut() }
+                Button(LocalizationService.text("menu.zoomOut", language: appLanguage)) {
+                    appState.zoomOut()
+                }
                     .keyboardShortcut("-", modifiers: [.command])
-                Button("实际大小") { appState.resetZoom() }
+                Button(LocalizationService.text("menu.zoomReset", language: appLanguage)) {
+                    appState.resetZoom()
+                }
                     .keyboardShortcut("0", modifiers: [.command])
             }
 
             // Window menu — close tab
             CommandGroup(after: .windowSize) {
-                Button("关闭标签页") {
+                Button(LocalizationService.text("menu.closeTab", language: appLanguage)) {
                     if let doc = appState.activeDocument {
                         // Post to ContentView via a notification or direct action
                         NotificationCenter.default.post(
@@ -83,10 +96,105 @@ struct MiniNoteApp: App {
                 }
                 .keyboardShortcut("w")
             }
+
+            CommandMenu(LocalizationService.text("menu.help", language: appLanguage)) {
+                Button(LocalizationService.text("menu.checkUpdates", language: appLanguage)) {
+                    checkForUpdates()
+                }
+                Button(LocalizationService.text("menu.viewOnGitHub", language: appLanguage)) {
+                    NSWorkspace.shared.open(updateService.repositoryURL)
+                }
+                Divider()
+                Button(LocalizationService.text("menu.contact", language: appLanguage)) {
+                    showContact()
+                }
+            }
         }
 
         Settings {
             SettingsView()
         }
+    }
+
+    private func checkForUpdates() {
+        Task {
+            do {
+                guard let result = try await updateService.checkForUpdate() else {
+                    await MainActor.run {
+                        showAlert(
+                            title: L("update.failed"),
+                            message: L("update.failedMessage")
+                        )
+                    }
+                    return
+                }
+
+                await MainActor.run {
+                    if result.hasUpdate, let release = result.release {
+                        let latestVersion = updateService.normalizedVersion(release.tagName)
+                        let currentVersion = updateService.currentAppVersion()
+                        showUpdateAvailableAlert(
+                            latestVersion: latestVersion,
+                            currentVersion: currentVersion,
+                            releaseURL: release.htmlURL
+                        )
+                    } else {
+                        showAlert(
+                            title: L("update.latest"),
+                            message: LocalizationService.formatted(
+                                "update.latestMessage",
+                                updateService.currentAppVersion(),
+                                language: appLanguage
+                            )
+                        )
+                    }
+                }
+            } catch {
+                await MainActor.run {
+                    showAlert(
+                        title: L("update.failed"),
+                        message: L("update.failedMessage")
+                    )
+                }
+            }
+        }
+    }
+
+    private func showUpdateAvailableAlert(
+        latestVersion: String,
+        currentVersion: String,
+        releaseURL: URL
+    ) {
+        let alert = NSAlert()
+        alert.messageText = L("update.availableTitle")
+        alert.informativeText = LocalizationService.formatted(
+            "update.availableMessage",
+            latestVersion,
+            currentVersion,
+            language: appLanguage
+        )
+        alert.addButton(withTitle: L("update.download"))
+        alert.addButton(withTitle: L("update.later"))
+        NSApp.activate(ignoringOtherApps: true)
+        if alert.runModal() == .alertFirstButtonReturn {
+            NSWorkspace.shared.open(releaseURL)
+        }
+    }
+
+    private func showContact() {
+        showAlert(title: L("contact.title"), message: L("contact.body"))
+    }
+
+    private func showAlert(title: String, message: String) {
+        let alert = NSAlert()
+        alert.messageText = title
+        alert.informativeText = message
+        alert.addButton(withTitle: "OK")
+        NSApp.activate(ignoringOtherApps: true)
+        _ = alert.runModal()
+    }
+
+    private func L(_ key: String) -> String {
+        LocalizationService.text(key, language: appLanguage)
     }
 }

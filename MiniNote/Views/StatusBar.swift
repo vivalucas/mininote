@@ -2,13 +2,23 @@ import SwiftUI
 
 struct StatusBar: View {
     let document: Document
+    @AppStorage("appLanguage") private var appLanguage: String = Language.systemDefault.rawValue
 
     private var lineInfo: String {
-        "行 \(currentLine), 列 \(currentColumn)"
+        LocalizationService.formatted(
+            "status.position",
+            currentLine,
+            currentColumn,
+            language: appLanguage
+        )
     }
 
     private var charCount: String {
-        "\(document.content.count) 字符"
+        LocalizationService.formatted(
+            "status.chars",
+            document.content.count,
+            language: appLanguage
+        )
     }
 
     private var encodingLabel: String {
@@ -23,7 +33,10 @@ struct StatusBar: View {
     }
 
     private var renderLabel: String {
-        document.isRendering ? "渲染" : "纯文本"
+        LocalizationService.text(
+            document.isRendering ? "status.rendered" : "status.plain",
+            language: appLanguage
+        )
     }
 
     // Approximation — NSTextView provides exact values via binding

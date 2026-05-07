@@ -4,33 +4,41 @@ struct FirstLaunchView: View {
     var onDismiss: () -> Void
 
     @AppStorage("renderMd") private var renderMd = false
+    @AppStorage("appLanguage") private var appLanguage: String = Language.systemDefault.rawValue
     @State private var setDefaultApp = false
 
     var body: some View {
         VStack(spacing: 24) {
-            Text("欢迎使用 MiniNote")
+            Text(L("welcome.title"))
                 .font(.title)
                 .bold()
 
-            Text("一个轻量级纯文本编辑器，对标 Windows 11 新版记事本。")
+            Text(L("welcome.subtitle"))
                 .foregroundColor(.secondary)
 
             Divider()
 
             VStack(alignment: .leading, spacing: 16) {
-                Text("快速设置")
+                Picker(L("settings.language"), selection: $appLanguage) {
+                    ForEach(Language.allCases) { language in
+                        Text(language.displayName).tag(language.rawValue)
+                    }
+                }
+                .pickerStyle(.menu)
+
+                Text(L("welcome.quickSetup"))
                     .font(.headline)
 
-                Toggle("将 .mint 文件默认用 MiniNote 打开", isOn: $setDefaultApp)
+                Toggle(L("welcome.setDefault"), isOn: $setDefaultApp)
 
-                Toggle("打开 .md 文件时默认渲染 Markdown", isOn: $renderMd)
+                Toggle(L("welcome.mdRender"), isOn: $renderMd)
             }
 
-            Text("随时可在偏好设置（Cmd+,）中修改这些选项。")
+            Text(L("welcome.settingsHint"))
                 .font(.caption)
                 .foregroundColor(.secondary)
 
-            Button("开始使用") {
+            Button(L("welcome.start")) {
                 if setDefaultApp {
                     setAsDefaultForMintFiles()
                 }
@@ -51,5 +59,10 @@ struct FirstLaunchView: View {
         // which sets the CFBundleDocumentTypes in Info.plist + LSSetDefaultRoleHandlerForContentType.
         // Simplified: the Info.plist declares .mint support and the system
         // prompts the user on first open of a .mint file.
+        _ = bundleID
+    }
+
+    private func L(_ key: String) -> String {
+        LocalizationService.text(key, language: appLanguage)
     }
 }

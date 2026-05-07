@@ -14,7 +14,14 @@ final class Document: Identifiable {
     var isScratch: Bool { fileURL == nil }
 
     var fileName: String {
-        fileURL?.lastPathComponent ?? "未标题"
+        displayName()
+    }
+
+    func displayName(language: String? = nil) -> String {
+        fileURL?.lastPathComponent ?? LocalizationService.text(
+            "common.untitled",
+            language: language
+        )
     }
 
     var encoding: String.Encoding = .utf8

@@ -1,0 +1,79 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to build, for example 0.0.1"
+        required: true
+        default: "0.0.1"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-26
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION="${GITHUB_REF_NAME#v}"
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Building MiniNote $VERSION"
+
+      - name: Build MiniNote
+        run: |
+          xcodebuild -project MiniNote.xcodeproj \
+            -scheme MiniNote \
+            -configuration Release \
+            -destination "generic/platform=macOS" \
+            -arch arm64 \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            MARKETING_VERSION="${{ steps.version.outputs.version }}" \
+            CURRENT_PROJECT_VERSION="${{ steps.version.outputs.version }}" \
+            clean build \
+            CONFIGURATION_BUILD_DIR="$PWD/build"
+
+      - name: Create ZIP
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          ditto -c -k --keepParent "build/MiniNote.app" "MiniNote-${VERSION}.zip"
+
+      - name: Create DMG
+        run: |
+          APP_PATH="build/MiniNote.app"
+          VERSION="${{ steps.version.outputs.version }}"
+          DMG_NAME="MiniNote-${VERSION}.dmg"
+          VOLUME_NAME="MiniNote"
+
+          STAGING="$(mktemp -d)"
+          cp -R "$APP_PATH" "$STAGING/"
+          ln -s /Applications "$STAGING/Applications"
+
+          hdiutil create -volname "$VOLUME_NAME" -srcfolder "$STAGING" \
+            -fs HFS+ -format UDZO -imagekey zlib-level=9 "$DMG_NAME"
+          rm -rf "$STAGING"
+
+      - name: Upload release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "MiniNote ${{ steps.version.outputs.version }}"
+          tag_name: "v${{ steps.version.outputs.version }}"
+          files: |
+            MiniNote-${{ steps.version.outputs.version }}.dmg
+            MiniNote-${{ steps.version.outputs.version }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
