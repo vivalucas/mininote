@@ -37,4 +37,6 @@ extension Notification.Name {
     static let editorZoomOut = Notification.Name("editorZoomOut")
     static let editorZoomReset = Notification.Name("editorZoomReset")
     static let closeCurrentTab = Notification.Name("closeCurrentTab")
+    static let showFindPanel = Notification.Name("showFindPanel")
+    static let showFindReplacePanel = Notification.Name("showFindReplacePanel")
 }

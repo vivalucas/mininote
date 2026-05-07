@@ -3,11 +3,11 @@ import SwiftUI
 struct ContentView: View {
     @Environment(AppState.self) private var state
 
-    // Settings
-    @State private var fontSize: Double = 14
-    @State private var wordWrap: Bool = true
-    @State private var showLineNumbers: Bool = false
-    @State private var showSettings = false
+    // Settings (persisted via @AppStorage, shared with SettingsView)
+    @AppStorage("fontSize") private var fontSize: Double = 14
+    @AppStorage("wordWrap") private var wordWrap: Bool = true
+    @AppStorage("showLineNumbers") private var showLineNumbers: Bool = false
+    @AppStorage("theme") private var theme: String = "system"
 
     // Close alert
     @State private var closeTarget: Document? = nil
@@ -49,10 +49,10 @@ struct ContentView: View {
                             }
                         ),
                         cursorPosition: Binding(
-                            get: { state.cursorPosition },
+                            get: { doc.cursorPosition },
                             set: { pos in
-                                state.cursorPosition = pos
                                 doc.cursorPosition = pos
+                                state.cursorPosition = pos
                             }
                         ),
                         fontSize: fontSize,
@@ -69,6 +69,7 @@ struct ContentView: View {
             }
         }
         .frame(minWidth: 600, minHeight: 400)
+        .preferredColorScheme(colorScheme)
         .onAppear {
             state.restoreSessionOrStartFresh()
             if !hasLaunchedBefore {
@@ -91,13 +92,6 @@ struct ContentView: View {
                 }
             }
         )
-        .sheet(isPresented: $showSettings) {
-            SettingsView(
-                fontSize: $fontSize,
-                wordWrap: $wordWrap,
-                showLineNumbers: $showLineNumbers
-            )
-        }
         .sheet(isPresented: $showFirstLaunch) {
             FirstLaunchView {
                 showFirstLaunch = false
@@ -123,6 +117,14 @@ struct ContentView: View {
             if let doc = closeTarget {
                 Text("「\(doc.fileName)」有未保存的更改。")
             }
+        }
+    }
+
+    private var colorScheme: ColorScheme? {
+        switch theme {
+        case "light": return .light
+        case "dark": return .dark
+        default: return nil
         }
     }
 

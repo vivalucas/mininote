@@ -49,11 +49,13 @@ struct MiniNoteApp: App {
             // Edit menu additions
             CommandGroup(after: .textEditing) {
                 Divider()
+                Button("查找...") {
+                    NotificationCenter.default.post(name: .showFindPanel, object: nil)
+                }
+                .keyboardShortcut("f")
+
                 Button("查找替换...") {
-                    NSApp.sendAction(
-                        #selector(NSTextView.performFindPanelAction(_:)),
-                        to: nil, from: nil
-                    )
+                    NotificationCenter.default.post(name: .showFindReplacePanel, object: nil)
                 }
                 .keyboardShortcut("f", modifiers: [.command, .option])
             }
@@ -84,8 +86,7 @@ struct MiniNoteApp: App {
         }
 
         Settings {
-            Text("偏好设置请在主窗口菜单栏 → 偏好设置中打开。")
-                .padding()
+            SettingsView()
         }
     }
 }

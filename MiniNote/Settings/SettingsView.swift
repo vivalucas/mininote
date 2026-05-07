@@ -1,12 +1,10 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @Environment(\.dismiss) private var dismiss
-
     // General
-    @Binding var fontSize: Double
-    @Binding var wordWrap: Bool
-    @Binding var showLineNumbers: Bool
+    @AppStorage("fontSize") private var fontSize: Double = 14
+    @AppStorage("wordWrap") private var wordWrap: Bool = true
+    @AppStorage("showLineNumbers") private var showLineNumbers: Bool = false
 
     // Appearance
     @AppStorage("theme") private var theme: String = "system"

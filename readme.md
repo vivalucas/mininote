@@ -2,6 +2,8 @@
 
 一个 macOS 上的轻量级纯文本编辑器，体验对标 Windows 11 新版记事本。
 
+[English](README.en.md) | [日本語](README.ja.md)
+
 ---
 
 ## 为什么做这个
