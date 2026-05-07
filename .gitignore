@@ -1,0 +1,20 @@
+# Xcode
+*.xcuserdata/
+xcuserdata/
+DerivedData/
+*.moved-aside
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# macOS
+.DS_Store
+*.swp
+*~
+
+# Project planning & logs (not source code)
+project-log/
+
+# Claude Code
+.claude/
+CLAUDE.md
