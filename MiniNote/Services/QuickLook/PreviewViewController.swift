@@ -1,7 +1,7 @@
 import Cocoa
 import Quartz
 
-final class PreviewViewController: NSViewController, QLPreviewingController {
+final class PreviewViewController: NSViewController, @MainActor QLPreviewingController {
     private let scrollView = NSScrollView()
     private let textView = NSTextView()
 
