@@ -12,7 +12,7 @@ struct GitHubRelease: Codable {
     }
 }
 
-final class UpdateService {
+final class UpdateService: Sendable {
     private let repoOwner = "vivalucas"
     private let repoName = "mininote"
 

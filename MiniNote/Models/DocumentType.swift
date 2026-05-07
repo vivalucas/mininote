@@ -1,6 +1,6 @@
 import Foundation
 
-enum DocumentType: String, CaseIterable, Codable {
+enum DocumentType: String, CaseIterable, Codable, Sendable {
     case mint
     case txt
     case md

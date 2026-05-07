@@ -1,6 +1,6 @@
 import Foundation
 
-struct SessionTabInfo: Codable {
+struct SessionTabInfo: Codable, Sendable {
     let id: UUID
     let type: DocumentType
     let fileURL: URL?
@@ -8,7 +8,7 @@ struct SessionTabInfo: Codable {
     let isRendering: Bool
 }
 
-struct SessionData: Codable {
+struct SessionData: Codable, Sendable {
     var tabs: [SessionTabInfo]
     var activeTabIndex: Int
 }
@@ -37,17 +37,8 @@ actor SessionStore {
 
     // MARK: - Session metadata
 
-    func saveSession(tabs: [Document], activeIndex: Int) {
-        let info: [SessionTabInfo] = tabs.map { doc in
-            SessionTabInfo(
-                id: doc.id,
-                type: doc.type,
-                fileURL: doc.fileURL,
-                cursorPosition: doc.cursorPosition,
-                isRendering: doc.isRendering
-            )
-        }
-        let data = SessionData(tabs: info, activeTabIndex: activeIndex)
+    func saveSession(tabInfos: [SessionTabInfo], activeIndex: Int) {
+        let data = SessionData(tabs: tabInfos, activeTabIndex: activeIndex)
         if let encoded = try? JSONEncoder().encode(data) {
             try? encoded.write(to: sessionFile, options: .atomic)
         }

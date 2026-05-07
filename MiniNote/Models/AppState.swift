@@ -1,6 +1,7 @@
 import SwiftUI
 import Observation
 
+@MainActor
 @Observable
 final class AppState {
     var documents: [Document] = []
@@ -25,7 +26,9 @@ final class AppState {
 
     func closeTab(_ doc: Document) {
         if doc.isScratch {
-            Task { await sessionStore.deleteScratchFile(id: doc.id) }
+            let store = sessionStore
+            let docId = doc.id
+            Task { await store.deleteScratchFile(id: docId) }
         }
         documents.removeAll { $0.id == doc.id }
         if activeTabId == doc.id {
@@ -40,8 +43,11 @@ final class AppState {
     func switchToTab(_ id: UUID) {
         guard id != activeTabId else { return }
         if let current = activeDocument, current.isScratch {
+            let store = sessionStore
+            let docId = current.id
+            let content = current.content
             Task {
-                await sessionStore.flushImmediately(id: current.id, content: current.content)
+                await store.flushImmediately(id: docId, content: content)
             }
         }
         activeTabId = id
@@ -63,18 +69,16 @@ final class AppState {
         let panel = NSOpenPanel()
         panel.allowedContentTypes = [.plainText, .init(filenameExtension: "mint")!]
         panel.allowsMultipleSelection = false
-        panel.begin { [weak self] response in
-            guard let self, response == .OK, let url = panel.url else { return }
-            if let existing = self.documents.first(where: { $0.fileURL == url }) {
-                self.activeTabId = existing.id
-                return
-            }
-            if let doc = try? self.fileService.open(url: url) {
-                doc.isRendering = self.defaultRender(for: doc.type)
-                self.documents.append(doc)
-                self.activeTabId = doc.id
-                self.saveSessionSnapshot()
-            }
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+        if let existing = documents.first(where: { $0.fileURL == url }) {
+            activeTabId = existing.id
+            return
+        }
+        if let doc = try? fileService.open(url: url) {
+            doc.isRendering = defaultRender(for: doc.type)
+            documents.append(doc)
+            activeTabId = doc.id
+            saveSessionSnapshot()
         }
     }
 
@@ -90,10 +94,8 @@ final class AppState {
         let panel = NSSavePanel()
         panel.allowedContentTypes = [.plainText, .init(filenameExtension: "mint")!]
         panel.nameFieldStringValue = doc.fileName
-        panel.begin { [weak self] response in
-            guard let self, response == .OK, let url = panel.url else { return }
-            try? self.fileService.saveAs(document: doc, to: url)
-        }
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+        try? fileService.saveAs(document: doc, to: url)
     }
 
     // MARK: - Zoom
@@ -116,15 +118,21 @@ final class AppState {
 
     func scheduleScratchSave(for doc: Document) {
         guard doc.isScratch else { return }
+        let store = sessionStore
+        let docId = doc.id
+        let content = doc.content
         Task {
-            await sessionStore.scheduleScratchWrite(id: doc.id, content: doc.content)
+            await store.scheduleScratchWrite(id: docId, content: content)
         }
     }
 
     func flushCurrentScratch() {
         guard let doc = activeDocument, doc.isScratch else { return }
+        let store = sessionStore
+        let docId = doc.id
+        let content = doc.content
         Task {
-            await sessionStore.flushImmediately(id: doc.id, content: doc.content)
+            await store.flushImmediately(id: docId, content: content)
         }
     }
 
@@ -132,24 +140,36 @@ final class AppState {
         let scratchDocs = documents.filter { $0.isScratch }.map {
             (id: $0.id, content: $0.content)
         }
+        let store = sessionStore
         Task {
-            await sessionStore.flushAll(scratchDocs: scratchDocs)
+            await store.flushAll(scratchDocs: scratchDocs)
         }
     }
 
     func saveSessionSnapshot() {
         let activeIndex = documents.firstIndex(where: { $0.id == activeTabId }) ?? 0
-        Task { await sessionStore.saveSession(tabs: documents, activeIndex: activeIndex) }
+        let tabInfos = documents.map { doc in
+            SessionTabInfo(
+                id: doc.id,
+                type: doc.type,
+                fileURL: doc.fileURL,
+                cursorPosition: doc.cursorPosition,
+                isRendering: doc.isRendering
+            )
+        }
+        let store = sessionStore
+        Task { await store.saveSession(tabInfos: tabInfos, activeIndex: activeIndex) }
     }
 
     func restoreSessionOrStartFresh() {
         let behavior = UserDefaults.standard.string(forKey: "startupBehavior") ?? "continue"
         guard behavior == "continue" else {
-            Task { @MainActor in newTab() }
+            newTab()
             return
         }
-        Task {
-            if let (tabInfos, activeIndex) = await sessionStore.loadSession(),
+        let store = sessionStore
+        Task { [weak self] in
+            if let (tabInfos, activeIndex) = await store.loadSession(),
                !tabInfos.isEmpty {
                 var restored: [Document] = []
                 for info in tabInfos {
@@ -161,7 +181,7 @@ final class AppState {
                         isRendering: info.isRendering
                     )
                     if doc.isScratch {
-                        doc.content = await sessionStore.readScratchContent(id: info.id) ?? ""
+                        doc.content = await store.readScratchContent(id: info.id) ?? ""
                     } else if let url = info.fileURL {
                         doc.content = (try? String(contentsOf: url, encoding: .utf8)) ?? ""
                     }
@@ -169,13 +189,14 @@ final class AppState {
                 }
                 let restoredTabs = restored
                 await MainActor.run {
-                    documents = restoredTabs
+                    guard let self else { return }
+                    self.documents = restoredTabs
                     let idx = min(activeIndex, restoredTabs.count - 1)
-                    activeTabId = restoredTabs[idx].id
-                    cursorPosition = restoredTabs[idx].cursorPosition
+                    self.activeTabId = restoredTabs[idx].id
+                    self.cursorPosition = restoredTabs[idx].cursorPosition
                 }
             } else {
-                await MainActor.run { newTab() }
+                await MainActor.run { self?.newTab() }
             }
         }
     }
