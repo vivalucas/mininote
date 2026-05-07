@@ -1,5 +1,4 @@
 import Foundation
-import Observation
 
 struct SessionTabInfo: Codable {
     let id: UUID
@@ -18,7 +17,8 @@ actor SessionStore {
     private let sessionsDir: URL
     private let sessionFile: URL
     private var writeTask: Task<Void, Never>?
-    private var pendingDocuments = Set<UUID>()
+    /// Scratch doc content waiting to be persisted after debounce.
+    private var pendingContent: [UUID: String] = [:]
 
     init() {
         let appSupport = FileManager.default.urls(
@@ -49,7 +49,7 @@ actor SessionStore {
         }
         let data = SessionData(tabs: info, activeTabIndex: activeIndex)
         if let encoded = try? JSONEncoder().encode(data) {
-            try? encoded.write(to: sessionFile)
+            try? encoded.write(to: sessionFile, options: .atomic)
         }
     }
 
@@ -62,27 +62,36 @@ actor SessionStore {
 
     // MARK: - Scratch document auto-save (debounced + lifecycle)
 
-    func scheduleScratchWrite(document: Document) {
-        pendingDocuments.insert(document.id)
+    /// Called on every content change for a scratch document.
+    /// Stores content in memory and (re)schedules a 3-second debounced write.
+    func scheduleScratchWrite(id: UUID, content: String) {
+        pendingContent[id] = content
         writeTask?.cancel()
-        writeTask = Task {
+        writeTask = Task { [pendingContent] in
             try? await Task.sleep(for: .seconds(3))
             guard !Task.isCancelled else { return }
-            await persistScratchDocuments()
+            for (docId, text) in pendingContent {
+                writeScratchContent(id: docId, content: text)
+            }
         }
     }
 
-    func flushImmediately(document: Document) {
+    /// Immediate write for a single scratch document (tab switch, app resign).
+    func flushImmediately(id: UUID, content: String) {
         writeTask?.cancel()
-        writeScratchContent(id: document.id, content: document.content)
+        writeTask = nil
+        writeScratchContent(id: id, content: content)
+        pendingContent.removeValue(forKey: id)
     }
 
-    func flushAll() {
+    /// Flush all pending scratch documents to disk (app terminate, background).
+    func flushAll(scratchDocs: [(id: UUID, content: String)]) {
         writeTask?.cancel()
-    }
-
-    private func persistScratchDocuments() async {
-        // pendingDocuments are written individually during the debounce cycle
+        writeTask = nil
+        for (id, content) in scratchDocs {
+            writeScratchContent(id: id, content: content)
+        }
+        pendingContent.removeAll()
     }
 
     // MARK: - Individual file I/O

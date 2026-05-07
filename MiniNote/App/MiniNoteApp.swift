@@ -13,11 +13,12 @@ struct MiniNoteApp: App {
         .windowResizability(.contentSize)
         .defaultSize(width: 800, height: 600)
         .commands {
+            // File menu
             CommandGroup(replacing: .newItem) {
-                Button("新建") {
-                    appState.newTab()
-                }
-                .keyboardShortcut("n")
+                Button("新建") { appState.newTab() }
+                    .keyboardShortcut("n")
+                Button("打开...") { appState.openFile() }
+                    .keyboardShortcut("o")
             }
 
             CommandGroup(replacing: .saveItem) {
@@ -36,20 +37,49 @@ struct MiniNoteApp: App {
                 .keyboardShortcut("s", modifiers: [.command, .shift])
             }
 
-            CommandGroup(replacing: .textFormatting) {
-                Button("查找") {
-                    // Handled by NSTextView natively via Cmd+F
+            CommandGroup(before: .toolbar) {
+                Button("Markdown 渲染切换") {
+                    if let doc = appState.activeDocument {
+                        appState.toggleRendering(for: doc)
+                    }
                 }
-                .keyboardShortcut("f")
+                .keyboardShortcut("r")
+            }
 
-                Button("查找替换") {
-                    // Trigger find-and-replace panel
+            // Edit menu additions
+            CommandGroup(after: .textEditing) {
+                Divider()
+                Button("查找替换...") {
                     NSApp.sendAction(
                         #selector(NSTextView.performFindPanelAction(_:)),
                         to: nil, from: nil
                     )
                 }
                 .keyboardShortcut("f", modifiers: [.command, .option])
+            }
+
+            // View menu — zoom
+            CommandGroup(before: .textFormatting) {
+                Button("放大") { appState.zoomIn() }
+                    .keyboardShortcut("=", modifiers: [.command])
+                Button("缩小") { appState.zoomOut() }
+                    .keyboardShortcut("-", modifiers: [.command])
+                Button("实际大小") { appState.resetZoom() }
+                    .keyboardShortcut("0", modifiers: [.command])
+            }
+
+            // Window menu — close tab
+            CommandGroup(after: .windowSize) {
+                Button("关闭标签页") {
+                    if let doc = appState.activeDocument {
+                        // Post to ContentView via a notification or direct action
+                        NotificationCenter.default.post(
+                            name: .closeCurrentTab,
+                            object: doc
+                        )
+                    }
+                }
+                .keyboardShortcut("w")
             }
         }
 

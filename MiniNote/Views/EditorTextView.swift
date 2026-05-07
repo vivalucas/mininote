@@ -29,7 +29,9 @@ struct EditorTextView: NSViewRepresentable {
         textView.isVerticallyResizable = true
         textView.isHorizontallyResizable = !wordWrap
         textView.textContainer?.widthTracksTextView = wordWrap
-        textView.textContainer?.containerWidth = wordWrap ? scrollView.contentSize.width : CGFloat.greatestFiniteMagnitude
+        textView.textContainer?.containerWidth = wordWrap
+            ? scrollView.contentSize.width
+            : CGFloat.greatestFiniteMagnitude
         textView.string = text
         textView.isAutomaticSpellingCorrectionEnabled = false
         textView.isAutomaticGrammarCheckingEnabled = false
@@ -41,6 +43,26 @@ struct EditorTextView: NSViewRepresentable {
 
         context.coordinator.textView = textView
         context.coordinator.parent = self
+        context.coordinator.currentFontSize = fontSize
+
+        // Observe zoom notifications
+        context.coordinator.zoomObserver = NotificationCenter.default.addObserver(
+            forName: .editorZoomIn,
+            object: nil,
+            queue: .main
+        ) { _ in context.coordinator.zoomIn() }
+
+        context.coordinator.zoomOutObserver = NotificationCenter.default.addObserver(
+            forName: .editorZoomOut,
+            object: nil,
+            queue: .main
+        ) { _ in context.coordinator.zoomOut() }
+
+        context.coordinator.zoomResetObserver = NotificationCenter.default.addObserver(
+            forName: .editorZoomReset,
+            object: nil,
+            queue: .main
+        ) { _ in context.coordinator.zoomReset() }
 
         return scrollView
     }
@@ -51,7 +73,12 @@ struct EditorTextView: NSViewRepresentable {
         if textView.string != text {
             textView.string = text
         }
-        textView.font = NSFont.monospacedSystemFont(ofSize: fontSize, weight: .regular)
+
+        let newFont = NSFont.monospacedSystemFont(ofSize: fontSize, weight: .regular)
+        if textView.font != newFont {
+            textView.font = newFont
+        }
+
         textView.isHorizontallyResizable = !wordWrap
         textView.textContainer?.widthTracksTextView = wordWrap
         textView.textContainer?.containerWidth = wordWrap
@@ -59,11 +86,24 @@ struct EditorTextView: NSViewRepresentable {
             : CGFloat.greatestFiniteMagnitude
 
         context.coordinator.parent = self
+        context.coordinator.currentFontSize = fontSize
 
-        // Restore cursor position if needed
+        // Restore cursor position
         if textView.selectedRange().location != cursorPosition,
            cursorPosition <= textView.string.utf16.count {
             textView.setSelectedRange(NSRange(location: cursorPosition, length: 0))
+        }
+    }
+
+    func dismantleNSView(_ nsView: NSScrollView, coordinator: Coordinator) {
+        if let obs = coordinator.zoomObserver {
+            NotificationCenter.default.removeObserver(obs)
+        }
+        if let obs = coordinator.zoomOutObserver {
+            NotificationCenter.default.removeObserver(obs)
+        }
+        if let obs = coordinator.zoomResetObserver {
+            NotificationCenter.default.removeObserver(obs)
         }
     }
 
@@ -74,6 +114,11 @@ struct EditorTextView: NSViewRepresentable {
         @Binding var cursorPosition: Int
         weak var textView: NSTextView?
         var parent: EditorTextView?
+        var currentFontSize: Double = 14
+
+        var zoomObserver: Any?
+        var zoomOutObserver: Any?
+        var zoomResetObserver: Any?
 
         init(text: Binding<String>, cursorPosition: Binding<Int>) {
             _text = text
@@ -95,12 +140,28 @@ struct EditorTextView: NSViewRepresentable {
             }
         }
 
-        // Override paste to force plain text only
-        func textView(_ textView: NSTextView, shouldChangeTextIn affectedCharRange: NSRange, replacementString: String?) -> String? {
-            // NSTextView paste goes through here — the replacementString
-            // from paste is already plain text because isRichText = false.
-            // We also handle programmatic insertions here.
-            return replacementString
+        // MARK: - Zoom
+
+        func zoomIn() {
+            currentFontSize = min(currentFontSize + 2, 72)
+            applyFontSize()
+        }
+
+        func zoomOut() {
+            currentFontSize = max(currentFontSize - 2, 8)
+            applyFontSize()
+        }
+
+        func zoomReset() {
+            currentFontSize = parent?.fontSize ?? 14
+            applyFontSize()
+        }
+
+        private func applyFontSize() {
+            textView?.font = NSFont.monospacedSystemFont(
+                ofSize: currentFontSize,
+                weight: .regular
+            )
         }
     }
 }

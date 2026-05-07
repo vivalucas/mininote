@@ -10,8 +10,12 @@ struct ContentView: View {
     @State private var showSettings = false
 
     // Close alert
-    @State private var pendingCloseDoc: Document? = nil
+    @State private var closeTarget: Document? = nil
     @State private var showCloseAlert = false
+
+    // First launch
+    @AppStorage("hasLaunchedBefore") private var hasLaunchedBefore = false
+    @State private var showFirstLaunch = false
 
     var body: some View {
         @Bindable var state = state
@@ -25,13 +29,12 @@ struct ContentView: View {
                 onSelectTab: { id in state.switchToTab(id) },
                 onReorder: { from, to in
                     state.documents.move(fromOffsets: from, toOffset: to)
-                    state.saveSession()
+                    state.saveSessionSnapshot()
                 }
             )
 
             Divider()
 
-            // Editor area
             if let doc = state.activeDocument {
                 if doc.isRendering {
                     MarkdownView(content: doc.content, fontSize: fontSize)
@@ -60,13 +63,18 @@ struct ContentView: View {
                 Divider()
                 StatusBar(
                     document: doc,
-                    currentLine: lineNumber(at: state.cursorPosition, in: doc.content),
-                    currentColumn: columnNumber(at: state.cursorPosition, in: doc.content)
+                    currentLine: line(at: state.cursorPosition, in: doc.content),
+                    currentColumn: column(at: state.cursorPosition, in: doc.content)
                 )
             }
         }
         .frame(minWidth: 600, minHeight: 400)
-        .onAppear { state.restoreSessionOrStartFresh() }
+        .onAppear {
+            state.restoreSessionOrStartFresh()
+            if !hasLaunchedBefore {
+                showFirstLaunch = true
+            }
+        }
         .onReceive(
             NotificationCenter.default.publisher(for: .appDidResignActive),
             perform: state.onLifecycleEvent
@@ -75,56 +83,75 @@ struct ContentView: View {
             NotificationCenter.default.publisher(for: .appWillTerminate),
             perform: state.onLifecycleEvent
         )
+        .onReceive(
+            NotificationCenter.default.publisher(for: .closeCurrentTab),
+            perform: { notification in
+                if let doc = notification.object as? Document {
+                    requestClose(doc)
+                }
+            }
+        )
         .sheet(isPresented: $showSettings) {
             SettingsView(
                 fontSize: $fontSize,
                 wordWrap: $wordWrap,
-                showLineNumbers: $showLineNumbers,
-                documents: $state.documents
+                showLineNumbers: $showLineNumbers
             )
         }
-        .alert("是否保存更改？", isPresented: $showCloseAlert, presenting: pendingCloseDoc) { doc in
+        .sheet(isPresented: $showFirstLaunch) {
+            FirstLaunchView {
+                showFirstLaunch = false
+                hasLaunchedBefore = true
+            }
+        }
+        .alert("是否保存更改？", isPresented: $showCloseAlert) {
             Button("保存") {
+                guard let doc = closeTarget else { return }
                 state.saveDocument(doc)
                 state.closeTab(doc)
+                closeTarget = nil
             }
-            Button("不保存") { state.closeTab(doc) }
-            Button("取消", role: .cancel) { pendingCloseDoc = nil }
-        } message: { doc in
-            Text("「\(doc.fileName)」有未保存的更改。")
+            Button("不保存") {
+                guard let doc = closeTarget else { return }
+                state.closeTab(doc)
+                closeTarget = nil
+            }
+            Button("取消", role: .cancel) {
+                closeTarget = nil
+            }
+        } message: {
+            if let doc = closeTarget {
+                Text("「\(doc.fileName)」有未保存的更改。")
+            }
         }
     }
 
-    // MARK: - Close flow
-
     private func requestClose(_ doc: Document) {
         if doc.isModified {
-            pendingCloseDoc = doc
+            closeTarget = doc
             showCloseAlert = true
         } else {
             state.closeTab(doc)
         }
     }
 
-    // MARK: - Helpers
-
-    private func lineNumber(at pos: Int, in text: String) -> Int {
-        let end = text.utf16.index(
+    private func line(at pos: Int, in text: String) -> Int {
+        let idx = text.utf16.index(
             text.utf16.startIndex,
             offsetBy: min(pos, text.utf16.count),
             limitedBy: text.utf16.endIndex
         ) ?? text.utf16.startIndex
-        return text[..<end].components(separatedBy: .newlines).count
+        return text[..<idx].components(separatedBy: .newlines).count
     }
 
-    private func columnNumber(at pos: Int, in text: String) -> Int {
-        let end = text.utf16.index(
+    private func column(at pos: Int, in text: String) -> Int {
+        let idx = text.utf16.index(
             text.utf16.startIndex,
             offsetBy: min(pos, text.utf16.count),
             limitedBy: text.utf16.endIndex
         ) ?? text.utf16.startIndex
-        if let lastNewline = text[..<end].lastIndex(of: "\n") {
-            return text.distance(from: lastNewline, to: end) + 1
+        if let lastNewline = text[..<idx].lastIndex(of: "\n") {
+            return text.distance(from: lastNewline, to: idx) + 1
         }
         return pos + 1
     }

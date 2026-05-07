@@ -8,6 +8,8 @@ struct TabBar: View {
     var onSelectTab: (UUID) -> Void
     var onReorder: (IndexSet, Int) -> Void
 
+    @State private var draggedTab: Document? = nil
+
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 0) {
@@ -18,8 +20,21 @@ struct TabBar: View {
                         onSelect: { onSelectTab(doc.id) },
                         onClose: { onCloseTab(doc) }
                     )
+                    .onDrag {
+                        draggedTab = doc
+                        return NSItemProvider(object: doc.id.uuidString as NSString)
+                    }
+                    .onDrop(
+                        of: [.text],
+                        delegate: TabDropDelegate(
+                            item: doc,
+                            documents: documents,
+                            draggedTab: $draggedTab,
+                            onReorder: onReorder
+                        )
+                    )
                 }
-                // "+" button
+
                 Button(action: onNewTab) {
                     Image(systemName: "plus")
                         .font(.system(size: 12, weight: .medium))
@@ -36,6 +51,36 @@ struct TabBar: View {
     }
 }
 
+// MARK: - Drop Delegate
+
+private struct TabDropDelegate: DropDelegate {
+    let item: Document
+    let documents: [Document]
+    @Binding var draggedTab: Document?
+    let onReorder: (IndexSet, Int) -> Void
+
+    func performDrop(info: DropInfo) -> Bool {
+        draggedTab = nil
+        return true
+    }
+
+    func dropEntered(info: DropInfo) {
+        guard let dragged = draggedTab,
+              dragged.id != item.id,
+              let fromIndex = documents.firstIndex(where: { $0.id == dragged.id }),
+              let toIndex = documents.firstIndex(where: { $0.id == item.id })
+        else { return }
+
+        if fromIndex != toIndex {
+            onReorder(IndexSet(integer: fromIndex), toIndex > fromIndex ? toIndex + 1 : toIndex)
+        }
+    }
+
+    func dropUpdated(info: DropInfo) -> DropProposal? {
+        DropProposal(operation: .move)
+    }
+}
+
 // MARK: - Tab Button
 
 private struct TabButton: View {
@@ -49,23 +94,19 @@ private struct TabButton: View {
     var body: some View {
         Button(action: onSelect) {
             HStack(spacing: 6) {
-                // File icon
                 Image(systemName: document.isScratch ? "doc" : "doc.fill")
                     .font(.system(size: 11))
 
-                // File name
                 Text(document.fileName)
                     .font(.system(size: 12))
                     .lineLimit(1)
 
-                // Unsaved indicator
                 if document.isModified {
                     Circle()
                         .fill(Color.gray)
                         .frame(width: 6, height: 6)
                 }
 
-                // Close button
                 Button(action: onClose) {
                     Image(systemName: "xmark")
                         .font(.system(size: 9, weight: .bold))
@@ -73,7 +114,7 @@ private struct TabButton: View {
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .opacity(isHovering ? 1 : 0)
+                .opacity(isHovering || isActive ? 1 : 0)
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 6)
