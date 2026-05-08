@@ -1,19 +1,24 @@
 import AppKit
 
+@MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
+    var appState: AppState?
+    private var isTerminating = false
+
     func applicationDidResignActive(_ notification: Notification) {
         NotificationCenter.default.post(name: .appDidResignActive, object: nil)
     }
 
-    func applicationWillTerminate(_ notification: Notification) {
-        NotificationCenter.default.post(name: .appWillTerminate, object: nil)
-    }
-
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
-        NotificationCenter.default.post(name: .appWillTerminate, object: nil)
-        // Brief delay to allow session flush to complete
-        Thread.sleep(forTimeInterval: 0.1)
-        return .terminateNow
+        guard !isTerminating else { return .terminateNow }
+        isTerminating = true
+        Task {
+            if let appState {
+                await appState.flushAndSaveBeforeTerminate()
+            }
+            sender.reply(toApplicationShouldTerminate: true)
+        }
+        return .terminateLater
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {

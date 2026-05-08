@@ -39,9 +39,8 @@ struct StatusBar: View {
         )
     }
 
-    // Approximation — NSTextView provides exact values via binding
-    var currentLine: Int = 1
-    var currentColumn: Int = 1
+    let currentLine: Int
+    let currentColumn: Int
 
     var body: some View {
         HStack(spacing: 16) {

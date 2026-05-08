@@ -15,7 +15,6 @@
 		100000000000000000000106 /* SessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000006 /* SessionStore.swift */; };
 		100000000000000000000107 /* FileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000007 /* FileService.swift */; };
 		100000000000000000000108 /* LocalizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000008 /* LocalizationService.swift */; };
-		100000000000000000000109 /* PasteboardService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000009 /* PasteboardService.swift */; };
 		10000000000000000000010A /* UpdateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000000A /* UpdateService.swift */; };
 		10000000000000000000010B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000000B /* SettingsView.swift */; };
 		10000000000000000000010C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000000C /* ContentView.swift */; };
@@ -72,7 +71,6 @@
 		100000000000000000000006 /* SessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStore.swift; sourceTree = "<group>"; };
 		100000000000000000000007 /* FileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileService.swift; sourceTree = "<group>"; };
 		100000000000000000000008 /* LocalizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationService.swift; sourceTree = "<group>"; };
-		100000000000000000000009 /* PasteboardService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasteboardService.swift; sourceTree = "<group>"; };
 		10000000000000000000000A /* UpdateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateService.swift; sourceTree = "<group>"; };
 		10000000000000000000000B /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		10000000000000000000000C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -181,7 +179,6 @@
 				100000000000000000000007 /* FileService.swift */,
 				10000000000000000000060B /* FinderExtension */,
 				100000000000000000000008 /* LocalizationService.swift */,
-				100000000000000000000009 /* PasteboardService.swift */,
 				10000000000000000000060C /* QuickLook */,
 				10000000000000000000000A /* UpdateService.swift */,
 			);
@@ -354,7 +351,6 @@
 				100000000000000000000106 /* SessionStore.swift in Sources */,
 				100000000000000000000107 /* FileService.swift in Sources */,
 				100000000000000000000108 /* LocalizationService.swift in Sources */,
-				100000000000000000000109 /* PasteboardService.swift in Sources */,
 				10000000000000000000010A /* UpdateService.swift in Sources */,
 				10000000000000000000010B /* SettingsView.swift in Sources */,
 				10000000000000000000010C /* ContentView.swift in Sources */,
@@ -533,7 +529,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.0.2;
+				MARKETING_VERSION = 0.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mininote.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -553,7 +549,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.0.2;
+				MARKETING_VERSION = 0.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mininote.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -573,7 +569,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 0.0.2;
+				MARKETING_VERSION = 0.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mininote.app.FinderExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -594,7 +590,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 0.0.2;
+				MARKETING_VERSION = 0.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mininote.app.FinderExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -615,7 +611,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 0.0.2;
+				MARKETING_VERSION = 0.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mininote.app.MiniNoteQuickLook;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -636,7 +632,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 0.0.2;
+				MARKETING_VERSION = 0.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mininote.app.MiniNoteQuickLook;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

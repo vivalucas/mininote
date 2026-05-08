@@ -164,9 +164,25 @@ final class AppState {
         }
     }
 
+    func flushAndSaveBeforeTerminate() async {
+        let sessionDocuments = documents.map {
+            (id: $0.id, content: $0.content, isScratch: $0.isScratch)
+        }
+        let activeIndex = documents.firstIndex(where: { $0.id == activeTabId }) ?? 0
+        let tabInfos = makeSessionTabInfos()
+        await sessionStore.flushAll(documents: sessionDocuments)
+        await sessionStore.saveSession(tabInfos: tabInfos, activeIndex: activeIndex)
+    }
+
     func saveSessionSnapshot() {
         let activeIndex = documents.firstIndex(where: { $0.id == activeTabId }) ?? 0
-        let tabInfos = documents.map { doc in
+        let tabInfos = makeSessionTabInfos()
+        let store = sessionStore
+        Task { await store.saveSession(tabInfos: tabInfos, activeIndex: activeIndex) }
+    }
+
+    private func makeSessionTabInfos() -> [SessionTabInfo] {
+        documents.map { doc in
             SessionTabInfo(
                 id: doc.id,
                 type: doc.type,
@@ -176,8 +192,6 @@ final class AppState {
                 isRendering: doc.isRendering
             )
         }
-        let store = sessionStore
-        Task { await store.saveSession(tabInfos: tabInfos, activeIndex: activeIndex) }
     }
 
     func restoreSessionOrStartFresh() {

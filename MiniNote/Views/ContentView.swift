@@ -155,15 +155,16 @@ struct ContentView: View {
     }
 
     private func column(at pos: Int, in text: String) -> Int {
+        let clampedPos = min(pos, text.utf16.count)
         let idx = text.utf16.index(
             text.utf16.startIndex,
-            offsetBy: min(pos, text.utf16.count),
+            offsetBy: clampedPos,
             limitedBy: text.utf16.endIndex
         ) ?? text.utf16.startIndex
         if let lastNewline = text[..<idx].lastIndex(of: "\n") {
             return text.distance(from: lastNewline, to: idx) + 1
         }
-        return pos + 1
+        return clampedPos + 1
     }
 
     private func L(_ key: String) -> String {

@@ -12,6 +12,9 @@ struct MiniNoteApp: App {
         WindowGroup {
             ContentView()
                 .environment(appState)
+                .onAppear {
+                    appDelegate.appState = appState
+                }
         }
         .windowResizability(.contentSize)
         .defaultSize(width: 800, height: 600)

@@ -109,19 +109,19 @@ struct EditorTextView: NSViewRepresentable {
             forName: .editorZoomIn,
             object: nil,
             queue: .main
-        ) { _ in context.coordinator.zoomIn() }
+        ) { [weak coordinator = context.coordinator] _ in coordinator?.zoomIn() }
 
         context.coordinator.zoomOutObserver = NotificationCenter.default.addObserver(
             forName: .editorZoomOut,
             object: nil,
             queue: .main
-        ) { _ in context.coordinator.zoomOut() }
+        ) { [weak coordinator = context.coordinator] _ in coordinator?.zoomOut() }
 
         context.coordinator.zoomResetObserver = NotificationCenter.default.addObserver(
             forName: .editorZoomReset,
             object: nil,
             queue: .main
-        ) { _ in context.coordinator.zoomReset() }
+        ) { [weak coordinator = context.coordinator] _ in coordinator?.zoomReset() }
 
         return scrollView
     }
