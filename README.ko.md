@@ -2,7 +2,7 @@
 
 macOS용 경량 텍스트 편집기. Windows 11 메모장 경험을 목표로 합니다.
 
-[中文](README.md) | [English](README.en.md) | [日本語](README.ja.md) | [Deutsch](README.de.md) | [Français](README.fr.md) | [Русский](README.ru.md)
+[中文](README.md) | [English](README.en.md) | [日本語](README.ja.md) | [Deutsch](README.de.md) | [Français](README.fr.md) | [Español](README.es.md) | [繁體中文](README.zh-TW.md) | [Português](README.pt-BR.md) | [Italiano](README.it.md) | [Русский](README.ru.md)
 
 ---
 

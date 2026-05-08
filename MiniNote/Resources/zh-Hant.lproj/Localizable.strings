@@ -1,0 +1,83 @@
+/* Menu */
+"menu.new" = "新增";
+"menu.open" = "開啟...";
+"menu.save" = "儲存";
+"menu.saveAs" = "另存為...";
+"menu.closeTab" = "關閉分頁";
+"menu.find" = "尋找...";
+"menu.findReplace" = "尋找與取代...";
+"menu.toggleRender" = "切換 Markdown 渲染";
+"menu.zoomIn" = "放大";
+"menu.zoomOut" = "縮小";
+"menu.zoomReset" = "實際大小";
+"menu.viewOnGitHub" = "在 GitHub 上查看";
+"menu.contact" = "聯絡方式";
+
+/* Settings */
+"settings.general" = "一般";
+"settings.appearance" = "外觀";
+"settings.behavior" = "行為";
+"settings.about" = "關於";
+"settings.language" = "語言";
+"settings.languageHint" = "MiniNote 依循 macOS 系統語言。更改系統語言後請重新啟動應用程式。";
+"settings.version" = "版本 %@";
+"settings.startup" = "啟動行為";
+"settings.continueLast" = "繼續上一個工作階段";
+"settings.newSession" = "啟動新工作階段";
+"settings.wordWrap" = "自動換行";
+"settings.lineNumbers" = "行號顯示";
+"settings.theme" = "主題";
+"settings.light" = "淺色";
+"settings.dark" = "深色";
+"settings.system" = "依循系統";
+"settings.fontSize" = "字型大小";
+"settings.font" = "字型";
+"settings.defaultRender" = "預設渲染狀態";
+"settings.renderMint" = ".mint 預設渲染";
+"settings.renderTxt" = ".txt 預設渲染";
+"settings.renderMd" = ".md 預設渲染";
+"settings.resetDefaults" = "恢復預設設定";
+"settings.checkUpdate" = "檢查更新";
+"settings.defaultsRestored" = "已恢復預設設定";
+
+/* Update */
+"update.hasUpdate" = "有新版本 %@";
+"update.latest" = "已是最新版本";
+"update.failed" = "無法檢查更新";
+
+/* Alert */
+"alert.saveChanges" = "是否儲存變更？";
+"alert.save" = "儲存";
+"alert.dontSave" = "不儲存";
+"alert.cancel" = "取消";
+"alert.hasChanges" = "「%@」有未儲存的變更。";
+
+/* Welcome */
+"welcome.title" = "歡迎使用 MiniNote";
+"welcome.subtitle" = "輕量級純文字編輯器，參考 Windows 11 記事本設計。";
+"welcome.quickSetup" = "快速設定";
+"welcome.setDefault" = "將 .mint 檔案預設用 MiniNote 開啟";
+"welcome.mdRender" = "開啟 .md 檔案時預設渲染 Markdown";
+"welcome.settingsHint" = "隨時可在偏好設定（Cmd+,）中修改這些選項。";
+"welcome.start" = "開始使用";
+
+/* Status */
+"status.position" = "行 %d, 列 %d";
+"status.chars" = "%d 字元";
+"status.plain" = "純文字";
+"status.rendered" = "渲染";
+
+/* Common */
+"common.untitled" = "未命名";
+"document.mint" = "MiniNote 文件";
+"document.txt" = "純文字文件";
+"document.md" = "Markdown 文件";
+
+/* File errors */
+"file.error.cannotRead" = "無法讀取檔案";
+"file.error.cannotWrite" = "無法寫入檔案";
+"file.error.unsupportedType" = "不支援的檔案格式";
+
+/* Contact */
+"contact.title" = "MiniNote 聯絡資訊";
+"contact.body" = "作者：Lucas\n\n功能建議與問題回報：\nhttps://github.com/vivalucas/mininote/issues\n\n電子郵件：lucas6.zju@vip.163.com";

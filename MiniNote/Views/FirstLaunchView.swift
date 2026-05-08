@@ -4,41 +4,33 @@ struct FirstLaunchView: View {
     var onDismiss: () -> Void
 
     @AppStorage("renderMd") private var renderMd = false
-    @AppStorage("appLanguage") private var appLanguage: String = Language.systemDefault.rawValue
     @State private var setDefaultApp = false
 
     var body: some View {
         VStack(spacing: 24) {
-            Text(L("welcome.title"))
+            Text(String(localized: "welcome.title"))
                 .font(.title)
                 .bold()
 
-            Text(L("welcome.subtitle"))
+            Text(String(localized: "welcome.subtitle"))
                 .foregroundColor(.secondary)
 
             Divider()
 
             VStack(alignment: .leading, spacing: 16) {
-                Picker(L("settings.language"), selection: $appLanguage) {
-                    ForEach(Language.allCases) { language in
-                        Text(language.displayName).tag(language.rawValue)
-                    }
-                }
-                .pickerStyle(.menu)
-
-                Text(L("welcome.quickSetup"))
+                Text(String(localized: "welcome.quickSetup"))
                     .font(.headline)
 
-                Toggle(L("welcome.setDefault"), isOn: $setDefaultApp)
+                Toggle(String(localized: "welcome.setDefault"), isOn: $setDefaultApp)
 
-                Toggle(L("welcome.mdRender"), isOn: $renderMd)
+                Toggle(String(localized: "welcome.mdRender"), isOn: $renderMd)
             }
 
-            Text(L("welcome.settingsHint"))
+            Text(String(localized: "welcome.settingsHint"))
                 .font(.caption)
                 .foregroundColor(.secondary)
 
-            Button(L("welcome.start")) {
+            Button(String(localized: "welcome.start")) {
                 if setDefaultApp {
                     setAsDefaultForMintFiles()
                 }
@@ -60,9 +52,5 @@ struct FirstLaunchView: View {
         // Simplified: the Info.plist declares .mint support and the system
         // prompts the user on first open of a .mint file.
         _ = bundleID
-    }
-
-    private func L(_ key: String) -> String {
-        LocalizationService.text(key, language: appLanguage)
     }
 }

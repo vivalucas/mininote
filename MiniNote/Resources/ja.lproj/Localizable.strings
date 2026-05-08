@@ -1,0 +1,78 @@
+/* Menu */
+"menu.new" = "新規";
+"menu.open" = "開く...";
+"menu.save" = "保存";
+"menu.saveAs" = "名前を付けて保存...";
+"menu.closeTab" = "タブを閉じる";
+"menu.find" = "検索...";
+"menu.findReplace" = "検索と置換...";
+"menu.toggleRender" = "Markdown レンダリング切替";
+"menu.zoomIn" = "拡大";
+"menu.zoomOut" = "縮小";
+"menu.zoomReset" = "実際のサイズ";
+"menu.viewOnGitHub" = "GitHub で開く";
+"menu.contact" = "お問い合わせ";
+
+/* Settings */
+"settings.general" = "一般";
+"settings.appearance" = "外観";
+"settings.behavior" = "動作";
+"settings.about" = "情報";
+"settings.language" = "言語";
+"settings.languageHint" = "MiniNote は macOS のシステム言語に従います。システム言語を変更後、アプリを再起動してください。";
+"settings.version" = "バージョン %@";
+"settings.startup" = "起動動作";
+"settings.continueLast" = "前回のセッションを続ける";
+"settings.newSession" = "新しいセッションを開始";
+"settings.wordWrap" = "自動折り返し";
+"settings.lineNumbers" = "行番号表示";
+"settings.theme" = "テーマ";
+"settings.light" = "ライト";
+"settings.dark" = "ダーク";
+"settings.system" = "システムに従う";
+"settings.fontSize" = "フォントサイズ";
+"settings.font" = "フォント";
+"settings.defaultRender" = "デフォルトレンダリング";
+"settings.renderMint" = ".mint をデフォルトでレンダリング";
+"settings.renderTxt" = ".txt をデフォルトでレンダリング";
+"settings.renderMd" = ".md をデフォルトでレンダリング";
+"settings.resetDefaults" = "デフォルトに戻す";
+"settings.checkUpdate" = "アップデートを確認";
+"settings.defaultsRestored" = "デフォルトに戻しました";
+
+/* Update */
+"update.hasUpdate" = "新しいバージョンがあります: %@";
+"update.latest" = "最新バージョンです";
+"update.failed" = "アップデートを確認できませんでした";
+
+/* Alert */
+"alert.saveChanges" = "変更を保存しますか？";
+"alert.save" = "保存";
+"alert.dontSave" = "保存しない";
+"alert.cancel" = "キャンセル";
+"alert.hasChanges" = "「%@」に未保存の変更があります。";
+
+/* Welcome */
+"welcome.title" = "MiniNote へようこそ";
+"welcome.subtitle" = "Windows 11 のメモ帳にインスパイアされた軽量テキストエディタ。";
+"welcome.quickSetup" = "クイック設定";
+"welcome.setDefault" = ".mint ファイルのデフォルトを MiniNote に設定";
+"welcome.mdRender" = ".md ファイルをデフォルトで Markdown レンダリング";
+"welcome.settingsHint" = "これらの設定は環境設定（Cmd+,）でいつでも変更できます。";
+"welcome.start" = "はじめる";
+
+/* Status */
+"status.position" = "%d 行, %d 列";
+"status.chars" = "%d 文字";
+"status.plain" = "テキスト";
+"status.rendered" = "レンダリング";
+
+/* Common */
+"common.untitled" = "無題";
+"document.mint" = "MiniNote 文書";
+"document.txt" = "プレーンテキスト文書";
+"document.md" = "Markdown 文書";
+
+/* Contact */
+"contact.title" = "MiniNote 連絡先";
+"contact.body" = "作者：Lucas\n\nバグ報告・機能リクエスト：\nhttps://github.com/vivalucas/mininote/issues\n\nメール：lucas6.zju@vip.163.com";

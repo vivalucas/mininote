@@ -38,7 +38,7 @@ struct EditorTextView: NSViewRepresentable {
         textView.delegate = context.coordinator
         textView.allowsUndo = true
         textView.isRichText = false
-        textView.font = NSFont.monospacedSystemFont(ofSize: fontSize, weight: .regular)
+        textView.font = editorFont(size: fontSize)
         textView.textColor = .textColor
         textView.backgroundColor = .textBackgroundColor
         textView.isVerticallyResizable = true
@@ -64,7 +64,7 @@ struct EditorTextView: NSViewRepresentable {
         scrollView.documentView = textView
 
         // Line number gutter
-        let gutter = LineNumberGutter(font: NSFont.monospacedSystemFont(ofSize: fontSize, weight: .regular))
+        let gutter = LineNumberGutter(font: lineNumberFont(size: fontSize))
         gutter.clientView = textView
         scrollView.verticalRulerView = gutter
         scrollView.hasVerticalRuler = showLineNumbers
@@ -81,7 +81,7 @@ struct EditorTextView: NSViewRepresentable {
             object: scrollView.contentView,
             queue: .main
         ) { [weak gutter] _ in
-            gutter?.needsDisplay = true
+            Task { @MainActor in gutter?.needsDisplay = true }
         }
 
         // Observe find/replace notifications
@@ -90,7 +90,7 @@ struct EditorTextView: NSViewRepresentable {
             object: nil,
             queue: .main
         ) { [weak textView] _ in
-            textView?.performFindPanelAction(nil)
+            Task { @MainActor in textView?.performFindPanelAction(nil) }
         }
 
         context.coordinator.findReplacePanelObserver = NotificationCenter.default.addObserver(
@@ -101,7 +101,7 @@ struct EditorTextView: NSViewRepresentable {
             // Open find panel with "replace" mode
             // NSTextView's performFindPanelAction(nil) shows the panel;
             // calling it twice or via showFindPanel opens with replace if available.
-            textView?.performFindPanelAction(nil)
+            Task { @MainActor in textView?.performFindPanelAction(nil) }
         }
 
         // Observe zoom notifications
@@ -109,19 +109,25 @@ struct EditorTextView: NSViewRepresentable {
             forName: .editorZoomIn,
             object: nil,
             queue: .main
-        ) { [weak coordinator = context.coordinator] _ in coordinator?.zoomIn() }
+        ) { [weak coordinator = context.coordinator] _ in
+            Task { @MainActor in coordinator?.zoomIn() }
+        }
 
         context.coordinator.zoomOutObserver = NotificationCenter.default.addObserver(
             forName: .editorZoomOut,
             object: nil,
             queue: .main
-        ) { [weak coordinator = context.coordinator] _ in coordinator?.zoomOut() }
+        ) { [weak coordinator = context.coordinator] _ in
+            Task { @MainActor in coordinator?.zoomOut() }
+        }
 
         context.coordinator.zoomResetObserver = NotificationCenter.default.addObserver(
             forName: .editorZoomReset,
             object: nil,
             queue: .main
-        ) { [weak coordinator = context.coordinator] _ in coordinator?.zoomReset() }
+        ) { [weak coordinator = context.coordinator] _ in
+            Task { @MainActor in coordinator?.zoomReset() }
+        }
 
         return scrollView
     }
@@ -134,10 +140,10 @@ struct EditorTextView: NSViewRepresentable {
             context.coordinator.gutter?.invalidateLineCache()
         }
 
-        let newFont = NSFont.monospacedSystemFont(ofSize: fontSize, weight: .regular)
+        let newFont = editorFont(size: fontSize)
         if textView.font != newFont {
             textView.font = newFont
-            context.coordinator.gutter?.font = newFont
+            context.coordinator.gutter?.font = lineNumberFont(size: fontSize)
         }
 
         textView.isHorizontallyResizable = !wordWrap
@@ -192,8 +198,17 @@ struct EditorTextView: NSViewRepresentable {
         }
     }
 
+    private func editorFont(size: Double) -> NSFont {
+        NSFont.systemFont(ofSize: size, weight: .regular)
+    }
+
+    private func lineNumberFont(size: Double) -> NSFont {
+        NSFont.monospacedDigitSystemFont(ofSize: max(size - 1, 11), weight: .regular)
+    }
+
     // MARK: - Coordinator
 
+    @MainActor
     final class Coordinator: NSObject, NSTextViewDelegate {
         @Binding var text: String
         @Binding var cursorPosition: Int
@@ -216,19 +231,15 @@ struct EditorTextView: NSViewRepresentable {
 
         func textDidChange(_ notification: Notification) {
             guard let textView else { return }
-            DispatchQueue.main.async {
-                self.text = textView.string
-                self.cursorPosition = textView.selectedRange().location
-                self.gutter?.invalidateLineCache()
-                self.gutter?.needsDisplay = true
-            }
+            text = textView.string
+            cursorPosition = textView.selectedRange().location
+            gutter?.invalidateLineCache()
+            gutter?.needsDisplay = true
         }
 
         func textViewDidChangeSelection(_ notification: Notification) {
             guard let textView else { return }
-            DispatchQueue.main.async {
-                self.cursorPosition = textView.selectedRange().location
-            }
+            cursorPosition = textView.selectedRange().location
         }
 
         // MARK: - Zoom
@@ -244,14 +255,17 @@ struct EditorTextView: NSViewRepresentable {
         }
 
         func zoomReset() {
-            currentFontSize = parent?.fontSize ?? 14
+            currentFontSize = parent?.fontSize ?? 16
             applyFontSize()
         }
 
         private func applyFontSize() {
-            let font = NSFont.monospacedSystemFont(ofSize: currentFontSize, weight: .regular)
+            let font = NSFont.systemFont(ofSize: currentFontSize, weight: .regular)
             textView?.font = font
-            gutter?.font = font
+            gutter?.font = NSFont.monospacedDigitSystemFont(
+                ofSize: max(currentFontSize - 1, 11),
+                weight: .regular
+            )
             gutter?.needsDisplay = true
         }
     }

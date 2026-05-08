@@ -7,9 +7,9 @@ enum DocumentType: String, CaseIterable, Codable, Sendable {
 
     var displayName: String {
         switch self {
-        case .mint: LocalizationService.text("document.mint")
-        case .txt:  LocalizationService.text("document.txt")
-        case .md:   LocalizationService.text("document.md")
+        case .mint: String(localized: "document.mint")
+        case .txt:  String(localized: "document.txt")
+        case .md:   String(localized: "document.md")
         }
     }
 

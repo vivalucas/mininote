@@ -2,7 +2,7 @@ import SwiftUI
 
 struct SettingsView: View {
     // General
-    @AppStorage("fontSize") private var fontSize: Double = 14
+    @AppStorage("fontSize") private var fontSize: Double = 16
     @AppStorage("wordWrap") private var wordWrap: Bool = true
     @AppStorage("showLineNumbers") private var showLineNumbers: Bool = false
 
@@ -16,9 +16,7 @@ struct SettingsView: View {
 
     // Startup
     @AppStorage("startupBehavior") private var startupBehavior: String = "continue"
-    @AppStorage("appLanguage") private var appLanguage: String = Language.systemDefault.rawValue
 
-    // Update check
     @State private var updateMessage: String = ""
     @State private var isChecking = false
 
@@ -29,106 +27,129 @@ struct SettingsView: View {
             generalTab
             appearanceTab
             behaviorTab
-            updateTab
+            aboutTab
         }
-        .frame(width: 420, height: 300)
+        .frame(width: 480, height: 320)
     }
 
     // MARK: - General
 
     private var generalTab: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Picker(L("settings.language"), selection: $appLanguage) {
-                ForEach(Language.allCases) { language in
-                    Text(language.displayName).tag(language.rawValue)
-                }
-            }
-            .pickerStyle(.menu)
+            Text(String(localized: "settings.languageHint"))
+                .font(.caption)
+                .foregroundColor(.secondary)
 
-            Picker(L("settings.startup"), selection: $startupBehavior) {
-                Text(L("settings.continueLast")).tag("continue")
-                Text(L("settings.newSession")).tag("new")
+            Picker(String(localized: "settings.startup"), selection: $startupBehavior) {
+                Text(String(localized: "settings.continueLast")).tag("continue")
+                Text(String(localized: "settings.newSession")).tag("new")
             }
             .pickerStyle(.radioGroup)
 
-            Toggle(L("settings.wordWrap"), isOn: $wordWrap)
-            Toggle(L("settings.lineNumbers"), isOn: $showLineNumbers)
+            Toggle(String(localized: "settings.wordWrap"), isOn: $wordWrap)
+            Toggle(String(localized: "settings.lineNumbers"), isOn: $showLineNumbers)
 
             Spacer()
         }
         .padding()
-        .tabItem { Label(L("settings.general"), systemImage: "gearshape") }
+        .tabItem { Label(String(localized: "settings.general"), systemImage: "gearshape") }
     }
 
     // MARK: - Appearance
 
     private var appearanceTab: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Picker(L("settings.theme"), selection: $theme) {
-                Text(L("settings.light")).tag("light")
-                Text(L("settings.dark")).tag("dark")
-                Text(L("settings.system")).tag("system")
+            Picker(String(localized: "settings.theme"), selection: $theme) {
+                Text(String(localized: "settings.light")).tag("light")
+                Text(String(localized: "settings.dark")).tag("dark")
+                Text(String(localized: "settings.system")).tag("system")
             }
             .pickerStyle(.radioGroup)
 
-            HStack {
-                Text(L("settings.fontSize"))
+            HStack(alignment: .firstTextBaseline) {
+                Text(String(localized: "settings.fontSize"))
                 Slider(value: $fontSize, in: 10...30, step: 1)
                 Text("\(Int(fontSize)) pt")
                     .frame(width: 40, alignment: .trailing)
             }
 
-            HStack {
-                Text(L("settings.font"))
-                Button(L("settings.chooseFont")) {
-                    NSFontManager.shared.orderFrontFontPanel(nil)
-                }
+            HStack(alignment: .firstTextBaseline) {
+                Text(String(localized: "settings.font"))
+                Text("System")
+                    .foregroundColor(.secondary)
+                Text("SF Pro / PingFang / Hiragino")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
             }
 
             Spacer()
         }
         .padding()
-        .tabItem { Label(L("settings.appearance"), systemImage: "paintpalette") }
+        .tabItem { Label(String(localized: "settings.appearance"), systemImage: "paintpalette") }
     }
 
     // MARK: - Behavior
 
     private var behaviorTab: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text(L("settings.defaultRender"))
+            Text(String(localized: "settings.defaultRender"))
                 .font(.headline)
 
-            Toggle(L("settings.renderMint"), isOn: $renderMint)
-            Toggle(L("settings.renderTxt"), isOn: $renderTxt)
-            Toggle(L("settings.renderMd"), isOn: $renderMd)
+            Toggle(String(localized: "settings.renderMint"), isOn: $renderMint)
+            Toggle(String(localized: "settings.renderTxt"), isOn: $renderTxt)
+            Toggle(String(localized: "settings.renderMd"), isOn: $renderMd)
 
             Spacer()
 
             HStack {
                 Spacer()
-                Button(L("settings.resetDefaults")) {
+                Button(String(localized: "settings.resetDefaults")) {
                     resetDefaults()
                 }
             }
         }
         .padding()
-        .tabItem { Label(L("settings.behavior"), systemImage: "text.word.spacing") }
+        .tabItem { Label(String(localized: "settings.behavior"), systemImage: "text.word.spacing") }
     }
 
-    // MARK: - Update
+    // MARK: - About
 
-    private var updateTab: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Button(action: checkForUpdate) {
-                HStack {
-                    if isChecking {
-                        ProgressView()
-                            .scaleEffect(0.8)
-                    }
-                    Text(L("settings.checkUpdate"))
+    private var aboutTab: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(spacing: 12) {
+                Image(nsImage: NSApp.applicationIconImage)
+                    .resizable()
+                    .frame(width: 48, height: 48)
+                    .cornerRadius(10)
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("MiniNote")
+                        .font(.headline)
+                    Text(String(format: NSLocalizedString("settings.version", comment: ""), updateService.currentAppVersion()))
+                        .foregroundColor(.secondary)
                 }
             }
-            .disabled(isChecking)
+
+            Divider()
+
+            HStack(spacing: 8) {
+                Button(action: checkForUpdate) {
+                    if isChecking {
+                        ProgressView()
+                            .scaleEffect(0.75)
+                    } else {
+                        Text(String(localized: "settings.checkUpdate"))
+                    }
+                }
+                .disabled(isChecking)
+
+                Button(String(localized: "menu.viewOnGitHub")) {
+                    NSWorkspace.shared.open(updateService.repositoryURL)
+                }
+
+                Button(String(localized: "menu.contact")) {
+                    NSWorkspace.shared.open(updateService.issuesURL)
+                }
+            }
 
             if !updateMessage.isEmpty {
                 Text(updateMessage)
@@ -139,10 +160,21 @@ struct SettingsView: View {
             Spacer()
         }
         .padding()
-        .tabItem { Label(L("settings.update"), systemImage: "arrow.down.circle") }
+        .tabItem { Label(String(localized: "settings.about"), systemImage: "info.circle") }
     }
 
     // MARK: - Actions
+
+    private func resetDefaults() {
+        fontSize = 16
+        wordWrap = true
+        showLineNumbers = false
+        theme = "system"
+        renderMint = false
+        renderTxt = false
+        renderMd = false
+        startupBehavior = "continue"
+    }
 
     private func checkForUpdate() {
         isChecking = true
@@ -151,34 +183,14 @@ struct SettingsView: View {
             defer { isChecking = false }
             if let result = try? await updateService.checkForUpdate() {
                 if result.hasUpdate, let release = result.release {
-                    updateMessage = LocalizationService.formatted(
-                        "update.hasUpdate",
-                        release.tagName,
-                        language: appLanguage
-                    )
+                    updateMessage = String(format: NSLocalizedString("update.hasUpdate", comment: ""), release.tagName)
                     NSWorkspace.shared.open(release.htmlURL)
                 } else {
-                    updateMessage = L("update.latest")
+                    updateMessage = String(localized: "update.latest")
                 }
             } else {
-                updateMessage = L("update.failed")
+                updateMessage = String(localized: "update.failed")
             }
         }
-    }
-
-    private func resetDefaults() {
-        fontSize = 14
-        wordWrap = true
-        showLineNumbers = false
-        theme = "system"
-        renderMint = false
-        renderTxt = false
-        renderMd = false
-        startupBehavior = "continue"
-        updateMessage = L("settings.defaultsRestored")
-    }
-
-    private func L(_ key: String) -> String {
-        LocalizationService.text(key, language: appLanguage)
     }
 }

@@ -4,11 +4,10 @@ struct ContentView: View {
     @Environment(AppState.self) private var state
 
     // Settings (persisted via @AppStorage, shared with SettingsView)
-    @AppStorage("fontSize") private var fontSize: Double = 14
+    @AppStorage("fontSize") private var fontSize: Double = 16
     @AppStorage("wordWrap") private var wordWrap: Bool = true
     @AppStorage("showLineNumbers") private var showLineNumbers: Bool = false
     @AppStorage("theme") private var theme: String = "system"
-    @AppStorage("appLanguage") private var appLanguage: String = Language.systemDefault.rawValue
 
     // Close alert
     @State private var closeTarget: Document? = nil
@@ -28,7 +27,6 @@ struct ContentView: View {
                 onNewTab: { state.newTab() },
                 onCloseTab: { doc in requestClose(doc) },
                 onSelectTab: { id in state.switchToTab(id) },
-                appLanguage: appLanguage,
                 onReorder: { from, to in
                     state.documents.move(fromOffsets: from, toOffset: to)
                     state.saveSessionSnapshot()
@@ -100,30 +98,24 @@ struct ContentView: View {
                 hasLaunchedBefore = true
             }
         }
-        .alert(L("alert.saveChanges"), isPresented: $showCloseAlert) {
-            Button(L("alert.save")) {
+        .alert(String(localized: "alert.saveChanges"), isPresented: $showCloseAlert) {
+            Button(String(localized: "alert.save")) {
                 guard let doc = closeTarget else { return }
                 state.saveDocument(doc)
                 state.closeTab(doc)
                 closeTarget = nil
             }
-            Button(L("alert.dontSave")) {
+            Button(String(localized: "alert.dontSave")) {
                 guard let doc = closeTarget else { return }
                 state.closeTab(doc)
                 closeTarget = nil
             }
-            Button(L("alert.cancel"), role: .cancel) {
+            Button(String(localized: "alert.cancel"), role: .cancel) {
                 closeTarget = nil
             }
         } message: {
             if let doc = closeTarget {
-                Text(
-                    LocalizationService.formatted(
-                        "alert.hasChanges",
-                        doc.displayName(language: appLanguage),
-                        language: appLanguage
-                    )
-                )
+                Text(String(format: NSLocalizedString("alert.hasChanges", comment: ""), doc.displayName))
             }
         }
     }
@@ -165,9 +157,5 @@ struct ContentView: View {
             return text.distance(from: lastNewline, to: idx) + 1
         }
         return clampedPos + 1
-    }
-
-    private func L(_ key: String) -> String {
-        LocalizationService.text(key, language: appLanguage)
     }
 }

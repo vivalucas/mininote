@@ -2,7 +2,7 @@
 
 A lightweight plain text editor for macOS, inspired by the Windows 11 Notepad experience.
 
-[中文](README.md) | [日本語](README.ja.md) | [한국어](README.ko.md) | [Deutsch](README.de.md) | [Français](README.fr.md) | [Русский](README.ru.md)
+[中文](README.md) | [日本語](README.ja.md) | [한국어](README.ko.md) | [Deutsch](README.de.md) | [Français](README.fr.md) | [Español](README.es.md) | [繁體中文](README.zh-TW.md) | [Português](README.pt-BR.md) | [Italiano](README.it.md) | [Русский](README.ru.md)
 
 ---
 

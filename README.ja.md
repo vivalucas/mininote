@@ -2,7 +2,7 @@
 
 macOS 用の軽量テキストエディタ。Windows 11 のメモ帳の体験を目標にしています。
 
-[中文](README.md) | [English](README.en.md) | [한국어](README.ko.md) | [Deutsch](README.de.md) | [Français](README.fr.md) | [Русский](README.ru.md)
+[中文](README.md) | [English](README.en.md) | [한국어](README.ko.md) | [Deutsch](README.de.md) | [Français](README.fr.md) | [Español](README.es.md) | [繁體中文](README.zh-TW.md) | [Português](README.pt-BR.md) | [Italiano](README.it.md) | [Русский](README.ru.md)
 
 ---
 

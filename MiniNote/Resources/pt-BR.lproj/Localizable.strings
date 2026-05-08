@@ -1,0 +1,83 @@
+/* Menu */
+"menu.new" = "Novo";
+"menu.open" = "Abrir...";
+"menu.save" = "Salvar";
+"menu.saveAs" = "Salvar como...";
+"menu.closeTab" = "Fechar aba";
+"menu.find" = "Buscar...";
+"menu.findReplace" = "Buscar e substituir...";
+"menu.toggleRender" = "Alternar renderização Markdown";
+"menu.zoomIn" = "Ampliar";
+"menu.zoomOut" = "Reduzir";
+"menu.zoomReset" = "Tamanho real";
+"menu.viewOnGitHub" = "Ver no GitHub";
+"menu.contact" = "Contato";
+
+/* Settings */
+"settings.general" = "Geral";
+"settings.appearance" = "Aparência";
+"settings.behavior" = "Comportamento";
+"settings.about" = "Sobre";
+"settings.language" = "Idioma";
+"settings.languageHint" = "MiniNote segue o idioma do sistema macOS. Altere o idioma do sistema e reinicie o aplicativo.";
+"settings.version" = "Versão %@";
+"settings.startup" = "Comportamento de inicialização";
+"settings.continueLast" = "Continuar última sessão";
+"settings.newSession" = "Iniciar nova sessão";
+"settings.wordWrap" = "Quebra de linha";
+"settings.lineNumbers" = "Números de linha";
+"settings.theme" = "Tema";
+"settings.light" = "Claro";
+"settings.dark" = "Escuro";
+"settings.system" = "Sistema";
+"settings.fontSize" = "Tamanho da fonte";
+"settings.font" = "Fonte";
+"settings.defaultRender" = "Estado de renderização padrão";
+"settings.renderMint" = "Renderizar .mint por padrão";
+"settings.renderTxt" = "Renderizar .txt por padrão";
+"settings.renderMd" = "Renderizar .md por padrão";
+"settings.resetDefaults" = "Restaurar padrões";
+"settings.checkUpdate" = "Verificar atualizações";
+"settings.defaultsRestored" = "Padrões restaurados";
+
+/* Update */
+"update.hasUpdate" = "Nova versão disponível: %@";
+"update.latest" = "Você está atualizado";
+"update.failed" = "Não foi possível verificar atualizações";
+
+/* Alert */
+"alert.saveChanges" = "Salvar alterações?";
+"alert.save" = "Salvar";
+"alert.dontSave" = "Não salvar";
+"alert.cancel" = "Cancelar";
+"alert.hasChanges" = "\"%@\" tem alterações não salvas.";
+
+/* Welcome */
+"welcome.title" = "Bem-vindo ao MiniNote";
+"welcome.subtitle" = "Um editor de texto leve, inspirado no Bloco de Notas do Windows 11.";
+"welcome.quickSetup" = "Configuração rápida";
+"welcome.setDefault" = "Definir MiniNote como padrão para arquivos .mint";
+"welcome.mdRender" = "Renderizar Markdown por padrão para arquivos .md";
+"welcome.settingsHint" = "Você pode alterar essas configurações a qualquer momento em Preferências (Cmd+,).";
+"welcome.start" = "Começar";
+
+/* Status */
+"status.position" = "Lin %d, Col %d";
+"status.chars" = "%d carac.";
+"status.plain" = "Texto";
+"status.rendered" = "Renderizado";
+
+/* Common */
+"common.untitled" = "Sem título";
+"document.mint" = "Documento MiniNote";
+"document.txt" = "Documento de texto";
+"document.md" = "Documento Markdown";
+
+/* File errors */
+"file.error.cannotRead" = "Não é possível ler o arquivo";
+"file.error.cannotWrite" = "Não é possível escrever o arquivo";
+"file.error.unsupportedType" = "Formato de arquivo não suportado";
+
+/* Contact */
+"contact.title" = "Informações de contato MiniNote";
+"contact.body" = "Autor: Lucas\n\nRelatórios de bugs e solicitações de recursos:\nhttps://github.com/vivalucas/mininote/issues\n\nE-mail: lucas6.zju@vip.163.com";

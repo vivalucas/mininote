@@ -1,0 +1,83 @@
+/* Menu */
+"menu.new" = "Новый";
+"menu.open" = "Открыть...";
+"menu.save" = "Сохранить";
+"menu.saveAs" = "Сохранить как...";
+"menu.closeTab" = "Закрыть вкладку";
+"menu.find" = "Найти...";
+"menu.findReplace" = "Найти и заменить...";
+"menu.toggleRender" = "Переключить Markdown";
+"menu.zoomIn" = "Увеличить";
+"menu.zoomOut" = "Уменьшить";
+"menu.zoomReset" = "Реальный размер";
+"menu.viewOnGitHub" = "Открыть на GitHub";
+"menu.contact" = "Контакты";
+
+/* Settings */
+"settings.general" = "Общие";
+"settings.appearance" = "Внешний вид";
+"settings.behavior" = "Поведение";
+"settings.about" = "О программе";
+"settings.language" = "Язык";
+"settings.languageHint" = "MiniNote использует язык системы macOS. Измените язык системы и перезапустите приложение.";
+"settings.version" = "Версия %@";
+"settings.startup" = "Поведение при запуске";
+"settings.continueLast" = "Продолжить последний сеанс";
+"settings.newSession" = "Начать новый сеанс";
+"settings.wordWrap" = "Перенос строк";
+"settings.lineNumbers" = "Номера строк";
+"settings.theme" = "Тема";
+"settings.light" = "Светлая";
+"settings.dark" = "Тёмная";
+"settings.system" = "Системная";
+"settings.fontSize" = "Размер шрифта";
+"settings.font" = "Шрифт";
+"settings.defaultRender" = "Рендеринг по умолчанию";
+"settings.renderMint" = "Рендеринг .mint по умолчанию";
+"settings.renderTxt" = "Рендеринг .txt по умолчанию";
+"settings.renderMd" = "Рендеринг .md по умолчанию";
+"settings.resetDefaults" = "Сбросить настройки";
+"settings.checkUpdate" = "Проверить обновления";
+"settings.defaultsRestored" = "Настройки сброшены";
+
+/* Update */
+"update.hasUpdate" = "Доступна новая версия: %@";
+"update.latest" = "Установлена последняя версия";
+"update.failed" = "Не удалось проверить обновления";
+
+/* Alert */
+"alert.saveChanges" = "Сохранить изменения?";
+"alert.save" = "Сохранить";
+"alert.dontSave" = "Не сохранять";
+"alert.cancel" = "Отмена";
+"alert.hasChanges" = "\"%@\" содержит несохранённые изменения.";
+
+/* Welcome */
+"welcome.title" = "Добро пожаловать в MiniNote";
+"welcome.subtitle" = "Легкий текстовый редактор в стиле Блокнота Windows 11.";
+"welcome.quickSetup" = "Быстрая настройка";
+"welcome.setDefault" = "Установить MiniNote для файлов .mint";
+"welcome.mdRender" = "Рендеринг Markdown для .md по умолчанию";
+"welcome.settingsHint" = "Вы можете изменить эти настройки в любое время (Cmd+,).";
+"welcome.start" = "Начать";
+
+/* Status */
+"status.position" = "Стр %d, Кол %d";
+"status.chars" = "%d симв.";
+"status.plain" = "Текст";
+"status.rendered" = "Рендер";
+
+/* Common */
+"common.untitled" = "Без названия";
+"document.mint" = "Документ MiniNote";
+"document.txt" = "Текстовый документ";
+"document.md" = "Документ Markdown";
+
+/* File errors */
+"file.error.cannotRead" = "Не удалось прочитать файл";
+"file.error.cannotWrite" = "Не удалось записать файл";
+"file.error.unsupportedType" = "Неподдерживаемый формат";
+
+/* Contact */
+"contact.title" = "Контакты MiniNote";
+"contact.body" = "Автор: Lucas\n\nОтчёты об ошибках и предложения:\nhttps://github.com/vivalucas/mininote/issues\n\nEmail: lucas6.zju@vip.163.com";

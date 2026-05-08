@@ -1,0 +1,78 @@
+/* Menu */
+"menu.new" = "New";
+"menu.open" = "Open...";
+"menu.save" = "Save";
+"menu.saveAs" = "Save As...";
+"menu.closeTab" = "Close Tab";
+"menu.find" = "Find...";
+"menu.findReplace" = "Find & Replace...";
+"menu.toggleRender" = "Toggle Markdown Rendering";
+"menu.zoomIn" = "Zoom In";
+"menu.zoomOut" = "Zoom Out";
+"menu.zoomReset" = "Actual Size";
+"menu.viewOnGitHub" = "View on GitHub";
+"menu.contact" = "Contact";
+
+/* Settings */
+"settings.general" = "General";
+"settings.appearance" = "Appearance";
+"settings.behavior" = "Behavior";
+"settings.about" = "About";
+"settings.language" = "Language";
+"settings.languageHint" = "MiniNote follows macOS system language. Change system language and restart the app.";
+"settings.version" = "Version %@";
+"settings.startup" = "Startup Behavior";
+"settings.continueLast" = "Continue Last Session";
+"settings.newSession" = "Start New Session";
+"settings.wordWrap" = "Word Wrap";
+"settings.lineNumbers" = "Line Numbers";
+"settings.theme" = "Theme";
+"settings.light" = "Light";
+"settings.dark" = "Dark";
+"settings.system" = "Follow System";
+"settings.fontSize" = "Font Size";
+"settings.font" = "Font";
+"settings.defaultRender" = "Default Render State";
+"settings.renderMint" = "Render .mint by default";
+"settings.renderTxt" = "Render .txt by default";
+"settings.renderMd" = "Render .md by default";
+"settings.resetDefaults" = "Reset to Defaults";
+"settings.checkUpdate" = "Check for Updates";
+"settings.defaultsRestored" = "Defaults restored";
+
+/* Update */
+"update.hasUpdate" = "New version available: %@";
+"update.latest" = "You are up to date";
+"update.failed" = "Could not check for updates";
+
+/* Alert */
+"alert.saveChanges" = "Save changes?";
+"alert.save" = "Save";
+"alert.dontSave" = "Don't Save";
+"alert.cancel" = "Cancel";
+"alert.hasChanges" = "\"%@\" has unsaved changes.";
+
+/* Welcome */
+"welcome.title" = "Welcome to MiniNote";
+"welcome.subtitle" = "A lightweight plain text editor, inspired by Windows 11 Notepad.";
+"welcome.quickSetup" = "Quick Setup";
+"welcome.setDefault" = "Set MiniNote as default for .mint files";
+"welcome.mdRender" = "Render Markdown by default for .md files";
+"welcome.settingsHint" = "You can change these anytime in Settings (Cmd+,).";
+"welcome.start" = "Get Started";
+
+/* Status */
+"status.position" = "Ln %d, Col %d";
+"status.chars" = "%d chars";
+"status.plain" = "Text";
+"status.rendered" = "Rendered";
+
+/* Common */
+"common.untitled" = "Untitled";
+"document.mint" = "MiniNote Document";
+"document.txt" = "Plain Text Document";
+"document.md" = "Markdown Document";
+
+/* Contact */
+"contact.title" = "MiniNote Contact Info";
+"contact.body" = "Author: Lucas\n\nBug reports & feature requests:\nhttps://github.com/vivalucas/mininote/issues\n\nEmail: lucas6.zju@vip.163.com";

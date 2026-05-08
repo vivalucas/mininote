@@ -28,6 +28,27 @@
 		100000000000000000000114 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000014 /* PreviewViewController.swift */; };
 		100000000000000000000115 /* FinderExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 100000000000000000000021 /* FinderExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		100000000000000000000116 /* MiniNoteQuickLook.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 100000000000000000000022 /* MiniNoteQuickLook.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+
+		10000000000000000000011F /* de-Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000038 /* de-Localizable.strings */; };
+		100000000000000000000120 /* de-InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000039 /* de-InfoPlist.strings */; };
+		100000000000000000000121 /* en-Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000003A /* en-Localizable.strings */; };
+		100000000000000000000122 /* en-InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000003B /* en-InfoPlist.strings */; };
+		100000000000000000000123 /* es-Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000003C /* es-Localizable.strings */; };
+		100000000000000000000124 /* es-InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000003D /* es-InfoPlist.strings */; };
+		100000000000000000000125 /* fr-Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000003E /* fr-Localizable.strings */; };
+		100000000000000000000126 /* fr-InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000003F /* fr-InfoPlist.strings */; };
+		100000000000000000000127 /* it-Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000040 /* it-Localizable.strings */; };
+		100000000000000000000128 /* it-InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000041 /* it-InfoPlist.strings */; };
+		100000000000000000000129 /* ja-Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000042 /* ja-Localizable.strings */; };
+		10000000000000000000012A /* ja-InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000043 /* ja-InfoPlist.strings */; };
+		10000000000000000000012B /* pt-BR-Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000044 /* pt-BR-Localizable.strings */; };
+		10000000000000000000012C /* pt-BR-InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000045 /* pt-BR-InfoPlist.strings */; };
+		10000000000000000000012D /* ru-Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000046 /* ru-Localizable.strings */; };
+		10000000000000000000012E /* ru-InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000047 /* ru-InfoPlist.strings */; };
+		10000000000000000000012F /* zh-Hans-Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000048 /* zh-Hans-Localizable.strings */; };
+		100000000000000000000130 /* zh-Hans-InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 100000000000000000000049 /* zh-Hans-InfoPlist.strings */; };
+		100000000000000000000131 /* zh-Hant-Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000004A /* zh-Hant-Localizable.strings */; };
+		100000000000000000000132 /* zh-Hant-InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 10000000000000000000004B /* zh-Hant-InfoPlist.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +112,27 @@
 		100000000000000000000020 /* MiniNote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiniNote.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		100000000000000000000021 /* FinderExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FinderExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		100000000000000000000022 /* MiniNoteQuickLook.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MiniNoteQuickLook.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+
+		100000000000000000000038 /* de-Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		100000000000000000000039 /* de-InfoPlist.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
+		10000000000000000000003A /* en-Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		10000000000000000000003B /* en-InfoPlist.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
+		10000000000000000000003C /* es-Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		10000000000000000000003D /* es-InfoPlist.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
+		10000000000000000000003E /* fr-Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		10000000000000000000003F /* fr-InfoPlist.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
+		100000000000000000000040 /* it-Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		100000000000000000000041 /* it-InfoPlist.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
+		100000000000000000000042 /* ja-Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		100000000000000000000043 /* ja-InfoPlist.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
+		100000000000000000000044 /* pt-BR-Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		100000000000000000000045 /* pt-BR-InfoPlist.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
+		100000000000000000000046 /* ru-Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		100000000000000000000047 /* ru-InfoPlist.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
+		100000000000000000000048 /* zh-Hans-Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		100000000000000000000049 /* zh-Hans-InfoPlist.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
+		10000000000000000000004A /* zh-Hant-Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		10000000000000000000004B /* zh-Hant-InfoPlist.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -169,6 +211,16 @@
 			isa = PBXGroup;
 			children = (
 				100000000000000000000012 /* Assets.xcassets */,
+					100000000000000000000610 /* de.lproj */,
+					100000000000000000000611 /* en.lproj */,
+					100000000000000000000612 /* es.lproj */,
+					100000000000000000000613 /* fr.lproj */,
+					100000000000000000000614 /* it.lproj */,
+					100000000000000000000615 /* ja.lproj */,
+					100000000000000000000616 /* pt-BR.lproj */,
+					100000000000000000000617 /* ru.lproj */,
+					100000000000000000000618 /* zh-Hans.lproj */,
+					100000000000000000000619 /* zh-Hant.lproj */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -220,6 +272,107 @@
 				100000000000000000000014 /* PreviewViewController.swift */,
 			);
 			path = QuickLook;
+			sourceTree = "<group>";
+		};
+
+		100000000000000000000610 /* de.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				100000000000000000000038 /* de-Localizable.strings */,
+				100000000000000000000039 /* de-InfoPlist.strings */,
+			);
+			name = de.lproj;
+			path = de.lproj;
+			sourceTree = "<group>";
+		};
+		100000000000000000000611 /* en.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				10000000000000000000003A /* en-Localizable.strings */,
+				10000000000000000000003B /* en-InfoPlist.strings */,
+			);
+			name = en.lproj;
+			path = en.lproj;
+			sourceTree = "<group>";
+		};
+		100000000000000000000612 /* es.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				10000000000000000000003C /* es-Localizable.strings */,
+				10000000000000000000003D /* es-InfoPlist.strings */,
+			);
+			name = es.lproj;
+			path = es.lproj;
+			sourceTree = "<group>";
+		};
+		100000000000000000000613 /* fr.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				10000000000000000000003E /* fr-Localizable.strings */,
+				10000000000000000000003F /* fr-InfoPlist.strings */,
+			);
+			name = fr.lproj;
+			path = fr.lproj;
+			sourceTree = "<group>";
+		};
+		100000000000000000000614 /* it.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				100000000000000000000040 /* it-Localizable.strings */,
+				100000000000000000000041 /* it-InfoPlist.strings */,
+			);
+			name = it.lproj;
+			path = it.lproj;
+			sourceTree = "<group>";
+		};
+		100000000000000000000615 /* ja.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				100000000000000000000042 /* ja-Localizable.strings */,
+				100000000000000000000043 /* ja-InfoPlist.strings */,
+			);
+			name = ja.lproj;
+			path = ja.lproj;
+			sourceTree = "<group>";
+		};
+		100000000000000000000616 /* pt-BR.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				100000000000000000000044 /* pt-BR-Localizable.strings */,
+				100000000000000000000045 /* pt-BR-InfoPlist.strings */,
+			);
+			name = pt-BR.lproj;
+			path = pt-BR.lproj;
+			sourceTree = "<group>";
+		};
+		100000000000000000000617 /* ru.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				100000000000000000000046 /* ru-Localizable.strings */,
+				100000000000000000000047 /* ru-InfoPlist.strings */,
+			);
+			name = ru.lproj;
+			path = ru.lproj;
+			sourceTree = "<group>";
+		};
+		100000000000000000000618 /* zh-Hans.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				100000000000000000000048 /* zh-Hans-Localizable.strings */,
+				100000000000000000000049 /* zh-Hans-InfoPlist.strings */,
+			);
+			name = zh-Hans.lproj;
+			path = zh-Hans.lproj;
+			sourceTree = "<group>";
+		};
+		100000000000000000000619 /* zh-Hant.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				10000000000000000000004A /* zh-Hant-Localizable.strings */,
+				10000000000000000000004B /* zh-Hant-InfoPlist.strings */,
+			);
+			name = zh-Hant.lproj;
+			path = zh-Hant.lproj;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -301,6 +454,15 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				"zh-Hans",
+				"zh-Hant",
+				ja,
+				de,
+				fr,
+				es,
+				"pt-BR",
+				it,
+				ru,
 				Base,
 			);
 			mainGroup = 100000000000000000000601;
@@ -529,7 +691,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.0.3;
+				MARKETING_VERSION = 0.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mininote.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -549,7 +711,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.0.3;
+				MARKETING_VERSION = 0.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mininote.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -569,7 +731,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 0.0.3;
+				MARKETING_VERSION = 0.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mininote.app.FinderExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -590,7 +752,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 0.0.3;
+				MARKETING_VERSION = 0.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mininote.app.FinderExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -611,7 +773,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 0.0.3;
+				MARKETING_VERSION = 0.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mininote.app.MiniNoteQuickLook;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -632,7 +794,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MARKETING_VERSION = 0.0.3;
+				MARKETING_VERSION = 0.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mininote.app.MiniNoteQuickLook;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

@@ -1,0 +1,78 @@
+/* Menu */
+"menu.new" = "新建";
+"menu.open" = "打开...";
+"menu.save" = "保存";
+"menu.saveAs" = "另存为...";
+"menu.closeTab" = "关闭标签页";
+"menu.find" = "查找...";
+"menu.findReplace" = "查找替换...";
+"menu.toggleRender" = "Markdown 渲染切换";
+"menu.zoomIn" = "放大";
+"menu.zoomOut" = "缩小";
+"menu.zoomReset" = "实际大小";
+"menu.viewOnGitHub" = "在 GitHub 上查看";
+"menu.contact" = "联系方式";
+
+/* Settings */
+"settings.general" = "通用";
+"settings.appearance" = "外观";
+"settings.behavior" = "行为";
+"settings.about" = "关于";
+"settings.language" = "语言";
+"settings.languageHint" = "MiniNote 跟随 macOS 系统语言。更改系统语言后请重启应用。";
+"settings.version" = "版本 %@";
+"settings.startup" = "启动行为";
+"settings.continueLast" = "继续上一个会话";
+"settings.newSession" = "启动新会话";
+"settings.wordWrap" = "自动换行";
+"settings.lineNumbers" = "行号显示";
+"settings.theme" = "主题";
+"settings.light" = "浅色";
+"settings.dark" = "深色";
+"settings.system" = "跟随系统";
+"settings.fontSize" = "字号";
+"settings.font" = "字体";
+"settings.defaultRender" = "默认渲染状态";
+"settings.renderMint" = ".mint 默认渲染";
+"settings.renderTxt" = ".txt 默认渲染";
+"settings.renderMd" = ".md 默认渲染";
+"settings.resetDefaults" = "恢复默认设置";
+"settings.checkUpdate" = "检查更新";
+"settings.defaultsRestored" = "已恢复默认设置";
+
+/* Update */
+"update.hasUpdate" = "有新版本 %@";
+"update.latest" = "已是最新版本";
+"update.failed" = "无法检查更新";
+
+/* Alert */
+"alert.saveChanges" = "是否保存更改？";
+"alert.save" = "保存";
+"alert.dontSave" = "不保存";
+"alert.cancel" = "取消";
+"alert.hasChanges" = "「%@」有未保存的更改。";
+
+/* Welcome */
+"welcome.title" = "欢迎使用 MiniNote";
+"welcome.subtitle" = "一个轻量级纯文本编辑器，对标 Windows 11 新版��事本。";
+"welcome.quickSetup" = "快速设置";
+"welcome.setDefault" = "将 .mint 文件默认用 MiniNote 打开";
+"welcome.mdRender" = "打开 .md 文件时默认渲染 Markdown";
+"welcome.settingsHint" = "随时可在偏好设置（Cmd+,）中修改这些选项。";
+"welcome.start" = "开始使用";
+
+/* Status */
+"status.position" = "行 %d, 列 %d";
+"status.chars" = "%d 字符";
+"status.plain" = "纯文本";
+"status.rendered" = "渲染";
+
+/* Common */
+"common.untitled" = "未标题";
+"document.mint" = "MiniNote 文档";
+"document.txt" = "纯文本文档";
+"document.md" = "Markdown 文档";
+
+/* Contact */
+"contact.title" = "MiniNote 联系信息";
+"contact.body" = "作者：Lucas\n\n功能建议与问题反馈：\nhttps://github.com/vivalucas/mininote/issues\n\n邮箱：lucas6.zju@vip.163.com";

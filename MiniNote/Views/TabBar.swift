@@ -6,7 +6,6 @@ struct TabBar: View {
     var onNewTab: () -> Void
     var onCloseTab: (Document) -> Void
     var onSelectTab: (UUID) -> Void
-    var appLanguage: String
     var onReorder: (IndexSet, Int) -> Void
 
     @State private var draggedTab: Document? = nil
@@ -19,8 +18,7 @@ struct TabBar: View {
                         document: doc,
                         isActive: doc.id == activeTabId,
                         onSelect: { onSelectTab(doc.id) },
-                        onClose: { onCloseTab(doc) },
-                        appLanguage: appLanguage
+                        onClose: { onCloseTab(doc) }
                     )
                     .onDrag {
                         draggedTab = doc
@@ -90,7 +88,6 @@ private struct TabButton: View {
     let isActive: Bool
     let onSelect: () -> Void
     let onClose: () -> Void
-    let appLanguage: String
 
     @State private var isHovering = false
 
@@ -100,7 +97,7 @@ private struct TabButton: View {
                 Image(systemName: document.isScratch ? "doc" : "doc.fill")
                     .font(.system(size: 11))
 
-                Text(document.displayName(language: appLanguage))
+                Text(document.displayName)
                     .font(.system(size: 12))
                     .lineLimit(1)
 
