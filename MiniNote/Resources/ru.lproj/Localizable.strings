@@ -32,6 +32,7 @@
 "settings.system" = "Системная";
 "settings.fontSize" = "Размер шрифта";
 "settings.font" = "Шрифт";
+"settings.systemFont" = "Системный";
 "settings.defaultRender" = "Рендеринг по умолчанию";
 "settings.renderMint" = "Рендеринг .mint по умолчанию";
 "settings.renderTxt" = "Рендеринг .txt по умолчанию";
@@ -69,6 +70,7 @@
 
 /* Common */
 "common.untitled" = "Без названия";
+"common.ok" = "OK";
 "document.mint" = "Документ MiniNote";
 "document.txt" = "Текстовый документ";
 "document.md" = "Документ Markdown";

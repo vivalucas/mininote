@@ -32,6 +32,7 @@
 "settings.system" = "システムに従う";
 "settings.fontSize" = "フォントサイズ";
 "settings.font" = "フォント";
+"settings.systemFont" = "システム";
 "settings.defaultRender" = "デフォルトレンダリング";
 "settings.renderMint" = ".mint をデフォルトでレンダリング";
 "settings.renderTxt" = ".txt をデフォルトでレンダリング";
@@ -69,9 +70,15 @@
 
 /* Common */
 "common.untitled" = "無題";
+"common.ok" = "OK";
 "document.mint" = "MiniNote 文書";
 "document.txt" = "プレーンテキスト文書";
 "document.md" = "Markdown 文書";
+
+/* File errors */
+"file.error.cannotRead" = "ファイルを読み込めませんでした";
+"file.error.cannotWrite" = "ファイルを書き込めませんでした";
+"file.error.unsupportedType" = "対応していないファイル形式です";
 
 /* Contact */
 "contact.title" = "MiniNote 連絡先";

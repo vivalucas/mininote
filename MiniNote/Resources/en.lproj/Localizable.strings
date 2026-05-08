@@ -32,6 +32,7 @@
 "settings.system" = "Follow System";
 "settings.fontSize" = "Font Size";
 "settings.font" = "Font";
+"settings.systemFont" = "System";
 "settings.defaultRender" = "Default Render State";
 "settings.renderMint" = "Render .mint by default";
 "settings.renderTxt" = "Render .txt by default";
@@ -69,9 +70,15 @@
 
 /* Common */
 "common.untitled" = "Untitled";
+"common.ok" = "OK";
 "document.mint" = "MiniNote Document";
 "document.txt" = "Plain Text Document";
 "document.md" = "Markdown Document";
+
+/* File errors */
+"file.error.cannotRead" = "Could not read the file";
+"file.error.cannotWrite" = "Could not write the file";
+"file.error.unsupportedType" = "Unsupported file format";
 
 /* Contact */
 "contact.title" = "MiniNote Contact Info";

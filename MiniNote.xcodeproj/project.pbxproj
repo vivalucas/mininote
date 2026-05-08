@@ -483,6 +483,26 @@
 			buildActionMask = 2147483647;
 			files = (
 				100000000000000000000112 /* Assets.xcassets in Resources */,
+				10000000000000000000011F /* de-Localizable.strings in Resources */,
+				100000000000000000000120 /* de-InfoPlist.strings in Resources */,
+				100000000000000000000121 /* en-Localizable.strings in Resources */,
+				100000000000000000000122 /* en-InfoPlist.strings in Resources */,
+				100000000000000000000123 /* es-Localizable.strings in Resources */,
+				100000000000000000000124 /* es-InfoPlist.strings in Resources */,
+				100000000000000000000125 /* fr-Localizable.strings in Resources */,
+				100000000000000000000126 /* fr-InfoPlist.strings in Resources */,
+				100000000000000000000127 /* it-Localizable.strings in Resources */,
+				100000000000000000000128 /* it-InfoPlist.strings in Resources */,
+				100000000000000000000129 /* ja-Localizable.strings in Resources */,
+				10000000000000000000012A /* ja-InfoPlist.strings in Resources */,
+				10000000000000000000012B /* pt-BR-Localizable.strings in Resources */,
+				10000000000000000000012C /* pt-BR-InfoPlist.strings in Resources */,
+				10000000000000000000012D /* ru-Localizable.strings in Resources */,
+				10000000000000000000012E /* ru-InfoPlist.strings in Resources */,
+				10000000000000000000012F /* zh-Hans-Localizable.strings in Resources */,
+				100000000000000000000130 /* zh-Hans-InfoPlist.strings in Resources */,
+				100000000000000000000131 /* zh-Hant-Localizable.strings in Resources */,
+				100000000000000000000132 /* zh-Hant-InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

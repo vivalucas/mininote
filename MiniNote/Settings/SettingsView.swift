@@ -19,6 +19,7 @@ struct SettingsView: View {
 
     @State private var updateMessage: String = ""
     @State private var isChecking = false
+    @State private var showContactInfo = false
 
     private let updateService = UpdateService()
 
@@ -75,7 +76,7 @@ struct SettingsView: View {
 
             HStack(alignment: .firstTextBaseline) {
                 Text(String(localized: "settings.font"))
-                Text("System")
+                Text(String(localized: "settings.systemFont"))
                     .foregroundColor(.secondary)
                 Text("SF Pro / PingFang / Hiragino")
                     .font(.caption)
@@ -147,7 +148,7 @@ struct SettingsView: View {
                 }
 
                 Button(String(localized: "menu.contact")) {
-                    NSWorkspace.shared.open(updateService.issuesURL)
+                    showContactInfo = true
                 }
             }
 
@@ -161,6 +162,11 @@ struct SettingsView: View {
         }
         .padding()
         .tabItem { Label(String(localized: "settings.about"), systemImage: "info.circle") }
+        .alert(String(localized: "contact.title"), isPresented: $showContactInfo) {
+            Button(String(localized: "common.ok"), role: .cancel) { }
+        } message: {
+            Text(String(localized: "contact.body"))
+        }
     }
 
     // MARK: - Actions

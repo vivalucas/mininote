@@ -32,6 +32,7 @@
 "settings.system" = "依循系統";
 "settings.fontSize" = "字型大小";
 "settings.font" = "字型";
+"settings.systemFont" = "系統";
 "settings.defaultRender" = "預設渲染狀態";
 "settings.renderMint" = ".mint 預設渲染";
 "settings.renderTxt" = ".txt 預設渲染";
@@ -69,6 +70,7 @@
 
 /* Common */
 "common.untitled" = "未命名";
+"common.ok" = "確定";
 "document.mint" = "MiniNote 文件";
 "document.txt" = "純文字文件";
 "document.md" = "Markdown 文件";

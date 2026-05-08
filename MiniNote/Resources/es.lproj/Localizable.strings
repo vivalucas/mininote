@@ -32,6 +32,7 @@
 "settings.system" = "Sistema";
 "settings.fontSize" = "Tamaño de fuente";
 "settings.font" = "Fuente";
+"settings.systemFont" = "Sistema";
 "settings.defaultRender" = "Estado de renderizado predeterminado";
 "settings.renderMint" = "Renderizar .mint por defecto";
 "settings.renderTxt" = "Renderizar .txt por defecto";
@@ -69,6 +70,7 @@
 
 /* Common */
 "common.untitled" = "Sin título";
+"common.ok" = "Aceptar";
 "document.mint" = "Documento MiniNote";
 "document.txt" = "Documento de texto";
 "document.md" = "Documento Markdown";

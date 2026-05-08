@@ -6,12 +6,12 @@
 "menu.closeTab" = "关闭标签页";
 "menu.find" = "查找...";
 "menu.findReplace" = "查找替换...";
-"menu.toggleRender" = "Markdown 渲染切换";
+"menu.toggleRender" = "切换 Markdown 渲染";
 "menu.zoomIn" = "放大";
 "menu.zoomOut" = "缩小";
 "menu.zoomReset" = "实际大小";
 "menu.viewOnGitHub" = "在 GitHub 上查看";
-"menu.contact" = "联系方式";
+"menu.contact" = "联系作者";
 
 /* Settings */
 "settings.general" = "通用";
@@ -32,16 +32,17 @@
 "settings.system" = "跟随系统";
 "settings.fontSize" = "字号";
 "settings.font" = "字体";
+"settings.systemFont" = "系统";
 "settings.defaultRender" = "默认渲染状态";
-"settings.renderMint" = ".mint 默认渲染";
-"settings.renderTxt" = ".txt 默认渲染";
-"settings.renderMd" = ".md 默认渲染";
+"settings.renderMint" = "默认渲染 .mint";
+"settings.renderTxt" = "默认渲染 .txt";
+"settings.renderMd" = "默认渲染 .md";
 "settings.resetDefaults" = "恢复默认设置";
 "settings.checkUpdate" = "检查更新";
 "settings.defaultsRestored" = "已恢复默认设置";
 
 /* Update */
-"update.hasUpdate" = "有新版本 %@";
+"update.hasUpdate" = "发现新版本：%@";
 "update.latest" = "已是最新版本";
 "update.failed" = "无法检查更新";
 
@@ -54,7 +55,7 @@
 
 /* Welcome */
 "welcome.title" = "欢迎使用 MiniNote";
-"welcome.subtitle" = "一个轻量级纯文本编辑器，对标 Windows 11 新版��事本。";
+"welcome.subtitle" = "一个轻量级纯文本编辑器，对标 Windows 11 新版记事本。";
 "welcome.quickSetup" = "快速设置";
 "welcome.setDefault" = "将 .mint 文件默认用 MiniNote 打开";
 "welcome.mdRender" = "打开 .md 文件时默认渲染 Markdown";
@@ -68,11 +69,17 @@
 "status.rendered" = "渲染";
 
 /* Common */
-"common.untitled" = "未标题";
+"common.untitled" = "未命名";
+"common.ok" = "确定";
 "document.mint" = "MiniNote 文档";
 "document.txt" = "纯文本文档";
 "document.md" = "Markdown 文档";
 
+/* File errors */
+"file.error.cannotRead" = "无法读取文件";
+"file.error.cannotWrite" = "无法写入文件";
+"file.error.unsupportedType" = "不支持的文件格式";
+
 /* Contact */
-"contact.title" = "MiniNote 联系信息";
+"contact.title" = "联系 MiniNote";
 "contact.body" = "作者：Lucas\n\n功能建议与问题反馈：\nhttps://github.com/vivalucas/mininote/issues\n\n邮箱：lucas6.zju@vip.163.com";
