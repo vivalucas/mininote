@@ -47,7 +47,7 @@ struct ContentView: View {
                             set: { newValue in
                                 doc.content = newValue
                                 doc.isModified = true
-                                state.scheduleScratchSave(for: doc)
+                                state.scheduleContentSave(for: doc)
                             }
                         ),
                         cursorPosition: Binding(

@@ -25,11 +25,9 @@ final class AppState {
     }
 
     func closeTab(_ doc: Document) {
-        if doc.isScratch {
-            let store = sessionStore
-            let docId = doc.id
-            Task { await store.deleteScratchFile(id: docId) }
-        }
+        let store = sessionStore
+        let docId = doc.id
+        Task { await store.deleteContentFiles(id: docId) }
         documents.removeAll { $0.id == doc.id }
         if activeTabId == doc.id {
             activeTabId = documents.first?.id ?? UUID()
@@ -42,12 +40,13 @@ final class AppState {
 
     func switchToTab(_ id: UUID) {
         guard id != activeTabId else { return }
-        if let current = activeDocument, current.isScratch {
+        if let current = activeDocument {
             let store = sessionStore
             let docId = current.id
             let content = current.content
+            let isScratch = current.isScratch
             Task {
-                await store.flushImmediately(id: docId, content: content)
+                await store.flushImmediately(id: docId, content: content, isScratch: isScratch)
             }
         }
         activeTabId = id
@@ -61,6 +60,7 @@ final class AppState {
 
     func toggleRendering(for doc: Document) {
         doc.isRendering.toggle()
+        saveSessionSnapshot()
     }
 
     // MARK: - File Operations
@@ -84,7 +84,12 @@ final class AppState {
 
     func saveDocument(_ doc: Document) {
         if doc.fileURL != nil {
-            try? fileService.save(document: doc)
+            if (try? fileService.save(document: doc)) != nil {
+                let store = sessionStore
+                let docId = doc.id
+                Task { await store.deleteDraftFile(id: docId) }
+                saveSessionSnapshot()
+            }
         } else {
             saveAsDocument(doc)
         }
@@ -95,7 +100,19 @@ final class AppState {
         panel.allowedContentTypes = [.plainText, .init(filenameExtension: "mint")!]
         panel.nameFieldStringValue = doc.fileName
         guard panel.runModal() == .OK, let url = panel.url else { return }
-        try? fileService.saveAs(document: doc, to: url)
+        let docId = doc.id
+        let wasScratch = doc.isScratch
+        if (try? fileService.saveAs(document: doc, to: url)) != nil {
+            let store = sessionStore
+            Task {
+                if wasScratch {
+                    await store.deleteContentFiles(id: docId)
+                } else {
+                    await store.deleteDraftFile(id: docId)
+                }
+            }
+            saveSessionSnapshot()
+        }
     }
 
     // MARK: - Zoom
@@ -116,33 +133,34 @@ final class AppState {
 
     // MARK: - Session Persistence
 
-    func scheduleScratchSave(for doc: Document) {
-        guard doc.isScratch else { return }
+    func scheduleContentSave(for doc: Document) {
         let store = sessionStore
         let docId = doc.id
         let content = doc.content
+        let isScratch = doc.isScratch
         Task {
-            await store.scheduleScratchWrite(id: docId, content: content)
+            await store.scheduleContentWrite(id: docId, content: content, isScratch: isScratch)
         }
     }
 
-    func flushCurrentScratch() {
-        guard let doc = activeDocument, doc.isScratch else { return }
+    func flushCurrentDocument() {
+        guard let doc = activeDocument else { return }
         let store = sessionStore
         let docId = doc.id
         let content = doc.content
+        let isScratch = doc.isScratch
         Task {
-            await store.flushImmediately(id: docId, content: content)
+            await store.flushImmediately(id: docId, content: content, isScratch: isScratch)
         }
     }
 
-    func flushAllScratch() {
-        let scratchDocs = documents.filter { $0.isScratch }.map {
-            (id: $0.id, content: $0.content)
+    func flushAllDocuments() {
+        let sessionDocuments = documents.map {
+            (id: $0.id, content: $0.content, isScratch: $0.isScratch)
         }
         let store = sessionStore
         Task {
-            await store.flushAll(scratchDocs: scratchDocs)
+            await store.flushAll(documents: sessionDocuments)
         }
     }
 
@@ -154,6 +172,7 @@ final class AppState {
                 type: doc.type,
                 fileURL: doc.fileURL,
                 cursorPosition: doc.cursorPosition,
+                isModified: doc.isModified,
                 isRendering: doc.isRendering
             )
         }
@@ -178,12 +197,14 @@ final class AppState {
                         type: info.type,
                         fileURL: info.fileURL,
                         cursorPosition: info.cursorPosition,
+                        isModified: info.isModified,
                         isRendering: info.isRendering
                     )
                     if doc.isScratch {
-                        doc.content = await store.readScratchContent(id: info.id) ?? ""
+                        doc.content = await store.readContent(id: info.id, isScratch: true) ?? ""
                     } else if let url = info.fileURL {
-                        doc.content = (try? String(contentsOf: url, encoding: .utf8)) ?? ""
+                        doc.content = await store.readContent(id: info.id, isScratch: false)
+                            ?? ((try? String(contentsOf: url, encoding: .utf8)) ?? "")
                     }
                     restored.append(doc)
                 }
@@ -206,10 +227,10 @@ final class AppState {
     func onLifecycleEvent(_ notification: Notification) {
         switch notification.name {
         case .appDidResignActive:
-            flushCurrentScratch()
+            flushCurrentDocument()
             saveSessionSnapshot()
         case .appWillTerminate:
-            flushAllScratch()
+            flushAllDocuments()
             saveSessionSnapshot()
         default:
             break

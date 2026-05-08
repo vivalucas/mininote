@@ -131,6 +131,7 @@ struct EditorTextView: NSViewRepresentable {
 
         if textView.string != text {
             textView.string = text
+            context.coordinator.gutter?.invalidateLineCache()
         }
 
         let newFont = NSFont.monospacedSystemFont(ofSize: fontSize, weight: .regular)
@@ -218,6 +219,7 @@ struct EditorTextView: NSViewRepresentable {
             DispatchQueue.main.async {
                 self.text = textView.string
                 self.cursorPosition = textView.selectedRange().location
+                self.gutter?.invalidateLineCache()
                 self.gutter?.needsDisplay = true
             }
         }
@@ -262,6 +264,9 @@ final class LineNumberGutter: NSRulerView {
         didSet { needsDisplay = true }
     }
 
+    private var cachedText: String = ""
+    private var newlineLocations: [Int] = []
+
     init(font: NSFont) {
         self.font = font
         super.init(scrollView: nil, orientation: .verticalRuler)
@@ -270,6 +275,12 @@ final class LineNumberGutter: NSRulerView {
 
     required init(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    func invalidateLineCache() {
+        cachedText = ""
+        newlineLocations = []
+        needsDisplay = true
     }
 
     override func draw(_ dirtyRect: NSRect) {
@@ -282,11 +293,12 @@ final class LineNumberGutter: NSRulerView {
         dirtyRect.fill()
 
         let visibleRect = textView.visibleRect
-        let nsString = textView.string as NSString
+        let text = textView.string
         let attrs: [NSAttributedString.Key: Any] = [
             .font: font,
             .foregroundColor: NSColor.secondaryLabelColor
         ]
+        updateLineCacheIfNeeded(for: text)
 
         // Find the glyph range for the visible area
         let glyphRange = layoutManager.glyphRange(
@@ -307,9 +319,7 @@ final class LineNumberGutter: NSRulerView {
             let charIndex = layoutManager.characterIndexForGlyph(at: glyphIndex)
             let y = NSMinY(lineRect) - NSMinY(visibleRect)
 
-            // Count line number (1-based)
-            let beforeText = nsString.substring(to: charIndex)
-            let lineNum = beforeText.components(separatedBy: "\n").count
+            let lineNum = lineNumber(at: charIndex)
             let str = "\(lineNum)"
             let size = str.size(withAttributes: attrs)
             let x = ruleThickness - size.width - 6
@@ -318,5 +328,33 @@ final class LineNumberGutter: NSRulerView {
             // Advance to next line fragment
             glyphIndex = NSMaxRange(effectiveRange)
         }
+    }
+
+    private func updateLineCacheIfNeeded(for text: String) {
+        guard text != cachedText else { return }
+        cachedText = text
+        newlineLocations = []
+
+        var offset = 0
+        for scalar in text.unicodeScalars {
+            if scalar == "\n" {
+                newlineLocations.append(offset)
+            }
+            offset += scalar.utf16.count
+        }
+    }
+
+    private func lineNumber(at charIndex: Int) -> Int {
+        var lowerBound = 0
+        var upperBound = newlineLocations.count
+        while lowerBound < upperBound {
+            let midpoint = (lowerBound + upperBound) / 2
+            if newlineLocations[midpoint] < charIndex {
+                lowerBound = midpoint + 1
+            } else {
+                upperBound = midpoint
+            }
+        }
+        return lowerBound + 1
     }
 }
