@@ -1,0 +1,440 @@
+{
+  "about": {
+    "closeTitle": "Über schließen",
+    "feedback": "Feedback",
+    "github": "GitHub",
+    "license": "Lizenz",
+    "productName": "MiniNote",
+    "summary": "Ein leichtes, elegantes, modernes lokales Notizwerkzeug",
+    "tipPrefix": "Tipp:",
+    "title": "Über",
+    "version": "Version: v{{version}}"
+  },
+  "common": {
+    "back": "Zurück",
+    "blankNote": "Leere Notiz",
+    "cancel": "Abbrechen",
+    "default": "Standard",
+    "delete": "Löschen",
+    "noteCount": "{{count}} Notiz(en)",
+    "operationFailed": "Vorgang fehlgeschlagen",
+    "save": "Speichern",
+    "untitledNote": "Unbenannte Notiz",
+    "untitledFile": "Unbenannte Datei",
+    "wordCount": "{{count}} Zeichen",
+    "wordCountUnit": "Zeichen"
+  },
+  "contextMenu": {
+    "edit": {
+      "copy": "Kopieren",
+      "cut": "Ausschneiden",
+      "paste": "Einfügen",
+      "selectAll": "Alles auswählen"
+    },
+    "tile": {
+      "close": "Lösen",
+      "copy": "Kopieren",
+      "save": "Speichern",
+      "switchToPad": "Zu Fenster wechseln"
+    }
+  },
+  "errors": {
+    "categoryAlreadyExists": "Kategorie \"{{category}}\" existiert bereits",
+    "categoryNameEmpty": "Kategoriename darf nicht leer sein",
+    "categoryNameInvalidChars": "Kategoriename darf keine Sonderzeichen enthalten",
+    "categoryNotFound": "Kategorie \"{{category}}\" nicht gefunden",
+    "desktopConfig": "Desktop-Konfiguration konnte nicht aktualisiert werden",
+    "duplicateShortcut": "Ein-/Ausblenden-Tastenkürzel darf nicht mit dem Quick-Notiz-Tastenkürzel identisch sein",
+    "imagePasteFailed": "Bild konnte nicht eingefügt werden",
+    "imageTooLarge": "Bilddatei zu groß (max. {{maxMb}} MB)",
+    "noPool": "Notizfenster-Pool wurde noch nicht initialisiert",
+    "noteNotFound": "Notiz nicht gefunden",
+    "unsupportedFile": "Es werden nur .mint-, .md- und .txt-Dateien unterstützt",
+    "unsupportedImageFormat": "Nicht unterstütztes Bildformat",
+    "unsupportedShortcut": "{{field}}-Konfiguration ist ungültig",
+    "unsupportedShortcutGeneric": "Tastenkürzel-Konfiguration ist ungültig",
+    "fileTooLarge": "Datei zu groß (max. {{maxMb}} MB)"
+  },
+  "markdown": {
+    "copied": "Kopiert",
+    "copy": "Kopieren",
+    "emptyHint": "Vorschau der aktuellen Notiz",
+    "alert": {
+      "note": "Hinweis",
+      "tip": "Tipp",
+      "important": "Wichtig",
+      "warning": "Warnung",
+      "caution": "Vorsicht"
+    }
+  },
+  "main": {
+    "category": {
+      "confirmDelete": "\"{{category}}\" löschen?",
+      "confirmDeleteAction": "Löschen bestätigen",
+      "delete": "Kategorie löschen",
+      "emptyFolder": "Leerer Ordner",
+      "new": "Neue Kategorie",
+      "placeholder": "Kategorienamen eingeben…",
+      "rename": "Umbenennen",
+      "uncategorized": "Unkategorisiert"
+    },
+    "editor": {
+      "confirmDelete": "Löschen bestätigen?",
+      "contentPlaceholder": "Schreiben beginnen…",
+      "emptyHint": "Notiz auswählen oder erstellen",
+      "pinToTile": "An Bildschirm anheften",
+      "previewLabel": "Vorschau",
+      "undo": "Rückgängig (Ctrl+Z)",
+      "undoLabel": "Rückgängig",
+      "redo": "Wiederherstellen (Ctrl+Y)",
+      "redoLabel": "Wiederherstellen",
+      "unpinTile": "Lösen"
+    },
+    "formatSample": {
+      "boldText": "Fetter Text",
+      "codeText": "Code",
+      "headingText": "Überschrift",
+      "italicText": "Kursiver Text",
+      "listItem": "Listenpunkt",
+      "quoteText": "Blockzitat"
+    },
+    "search": {
+      "empty": "Noch keine Notizen",
+      "noResults": "Keine passenden Notizen"
+    },
+    "sidebar": {
+      "clearSearch": "Suche löschen",
+      "importMarkdown": "Datei importieren",
+      "newNote": "Neue Notiz",
+      "searchPlaceholder": "Notizen suchen…"
+    },
+    "images": {
+      "cleanUnused": "Ungenutzte Bilder aufräumen",
+      "cleaned": "{{count}} Bild(er) aufgeräumt",
+      "cleanedNone": "Keine ungenutzten Bilder"
+    },
+    "statusBar": {
+      "byteSize": "{{size}} KB",
+      "encoding": "UTF-8",
+      "format": "Markdown",
+      "lineNumber": "Zl {{count}}",
+      "saveState": {
+        "dirty": "Ungespeichert",
+        "error": "Speichern fehlgeschlagen",
+        "idle": "Keine Auswahl",
+        "saved": "Gespeichert",
+        "saving": "Speichert"
+      },
+      "columnNumber": "Sp {{count}}",
+      "totalLines": "{{count}} Zeilen"
+    },
+    "toolbar": {
+      "bold": "Fett",
+      "code": "Code",
+      "heading": "Überschrift",
+      "hr": "Horizontale Linie",
+      "italic": "Kursiv",
+      "ol": "Geordnete Liste",
+      "quote": "Blockzitat",
+      "ul": "Ungeordnete Liste"
+    },
+    "window": {
+      "close": "Schließen",
+      "collapseSidebar": "Seitenleiste einklappen",
+      "expandSidebar": "Seitenleiste ausklappen",
+      "maximize": "Maximieren",
+      "minimize": "Minimieren",
+      "about": "Über",
+      "quickNotepad": "Quick-Notiz",
+      "restore": "Wiederherstellen",
+      "settings": "Einstellungen"
+    },
+    "sourceFile": {
+      "label": "Quelldatei synchronisieren · {{path}}"
+    },
+    "sourceConflict": {
+      "title": "Quelldatei geändert",
+      "description": "MiniNote hat den aktuellen Inhalt gespeichert; die Quelldatei wurde ebenfalls von einer anderen App geändert. Wähle den nächsten Schritt, damit nichts ungewollt überschrieben wird.",
+      "keepLocal": "Nur in MiniNote speichern",
+      "reloadDisk": "Quelldatei laden",
+      "forceOverwrite": "Quelldatei überschreiben",
+      "keptLocal": "MiniNote-Inhalt behalten; noch nicht in die Quelldatei geschrieben"
+    },
+    "sourceSync": {
+      "missing": "Die Quelldatei fehlt oder ist nicht zugänglich. Der aktuelle Inhalt wurde in MiniNote gespeichert.",
+      "failed": "Der aktuelle Inhalt wurde in MiniNote gespeichert, aber die Quelldatei konnte nicht synchronisiert werden."
+    }
+  },
+  "noteMenu": {
+    "delete": "Notiz löschen",
+    "moveToCategory": "In Kategorie verschieben…",
+    "exportMarkdown": "Markdown exportieren",
+    "exportMint": "Mint exportieren"
+  },
+  "notepad": {
+    "button": {
+      "clear": "Leeren"
+    },
+    "emptyState": "Keine Notizen verfügbar",
+    "error": {
+      "copyUnsupported": "Kopieren wird in dieser Umgebung nicht unterstützt"
+    },
+    "placeholder": {
+      "content": "Schreiben Sie etwas…",
+      "title": "Titel (optional)"
+    },
+    "status": {
+      "copied": "Kopiert",
+      "empty": "Leer",
+      "opened": "Geöffnet",
+      "saveFailed": "Speichern fehlgeschlagen",
+      "saved": "Gespeichert",
+      "unsaved": "Ungespeichert"
+    },
+    "tab": {
+      "edit": "Bearbeiten",
+      "new": "Neu",
+      "open": "Öffnen"
+    },
+    "tooltip": {
+      "close": "Schließen",
+      "openInEditor": "Im Editor öffnen",
+      "pinToTile": "An Kachel heften"
+    },
+    "confirmDiscard": "Nicht gespeicherter Inhalt wird gelöscht. Fortfahren?"
+  },
+  "settings": {
+    "autoSave": {
+      "externalFile": "Verknüpfte Quelldateien automatisch synchronisieren",
+      "note": "Notizen automatisch speichern",
+      "surface": "Oberflächennotizen automatisch speichern"
+    },
+    "autostart": "Beim Starten öffnen",
+    "closeTitle": "Einstellungen schließen",
+    "closeToTray": "In den Infobereich minimieren",
+    "defaultView": {
+      "edit": "Bearbeiten",
+      "label": "Standardansicht",
+      "preview": "Vorschau",
+      "split": "Geteilt"
+    },
+    "fontSize": {
+      "editor": "Editor-Schriftgröße",
+      "surface": "Oberflächen-Schriftgröße"
+    },
+    "locale": {
+      "enUS": "English",
+      "label": "Sprache",
+      "zhCN": "简体中文",
+      "zhTW": "繁體中文",
+      "de": "Deutsch",
+      "es": "Español",
+      "fr": "Français",
+      "it": "Italiano",
+      "ja": "日本語",
+      "ko": "한국어",
+      "ptBR": "Português",
+      "ru": "Русский"
+    },
+    "notesDir": "Notizverzeichnis",
+    "notesDirSwitchConfirm": "Beim Wechsel des Notizverzeichnisses wird nur die lokale Notizbibliothek gewechselt. Notizen im aktuellen Verzeichnis werden nicht automatisch migriert. Fortfahren?",
+    "openAtCursor": "Mit Tastenkürzel in Cursor-Nähe öffnen",
+    "quickNoteShortcut": "Quick-Notiz-Tastenkürzel",
+    "rememberSurfaceSize": "Oberflächengröße merken",
+    "tabIndentSize": "Tab-Einzugsbreite",
+    "selectFolder": "Ordner auswählen",
+    "shortcut": {
+      "cancelHint": "Esc zum Abbrechen",
+      "checkFailed": "Tastenkürzel-Überprüfung fehlgeschlagen",
+      "checking": "Überprüfe Tastenkürzel...",
+      "cleared": "Tastenkürzel gelöscht",
+      "clickToRecord": "Klicken zum Aufnehmen",
+      "conflict": {
+        "current": "Tastenkürzel {{shortcut}} wird bereits verwendet",
+        "invalid": "Tastenkürzel {{shortcut}} wird nicht unterstützt",
+        "none": "Kein Konflikt für {{shortcut}} erkannt",
+        "registered": "Tastenkürzel {{shortcut}} wird möglicherweise vom System oder einer anderen App belegt",
+        "system": "Tastenkürzel {{shortcut}} steht im Konflikt mit einem System-Tastenkürzel",
+        "unknown": "Überprüfung abgeschlossen, temporäres Tastenkürzel konnte jedoch nicht freigegeben werden"
+      },
+      "forQuickNote": "Öffnet das Quick-Notiz-Fenster",
+      "needsModifier": "Tastenkürzel muss Ctrl, Option/Alt oder Command/Meta enthalten",
+      "notSet": "Nicht festgelegt",
+      "pressHint": "Tastenkürzel drücken…; Delete zum Löschen.",
+      "check": "Prüfen",
+      "checkingShort": "Prüfe"
+    },
+    "theme": {
+      "dark": "Dunkel",
+      "label": "Design",
+      "light": "Hell",
+      "system": "System"
+    },
+    "tileColor": {
+      "custom": "Benutzerdefiniert",
+      "followTheme": "Design folgen",
+      "label": "Kachelfarbe"
+    },
+    "tileCtrlClose": "Ctrl+Rechtsklick zum Schließen der Kachel",
+    "tileRenderMarkdown": "Markdown auf Kachel rendern",
+    "renderHtmlMarkdown": "Sichere HTML-Tags in Markdown rendern",
+    "title": "Einstellungen",
+    "update": {
+      "advanced": "Erweitert",
+      "allowPrerelease": "Vorabversionen zulassen",
+      "autoCheck": "Automatisch nach Aktualisierungen suchen",
+      "autoDownload": "Neue Versionen automatisch herunterladen",
+      "available": "Neue Version {{version}} verfügbar",
+      "busy": "Arbeitet",
+      "cancel": "Download abbrechen",
+      "cancelRequested": "Abbruch angefordert",
+      "cancelled": "Download abgebrochen",
+      "channel": {
+        "beta": "Beta",
+        "stable": "Stabil"
+      },
+      "check": "Nach Aktualisierungen suchen",
+      "checking": "Überprüfung…",
+      "currentVersion": "Aktuelle Version: {{version}}",
+      "error": {
+        "alreadyRunning": "Eine Aktualisierungsaufgabe läuft bereits",
+        "cancelUnavailable": "Es gibt keine Aktualisierungsaufgabe zum Abbrechen",
+        "checkInterrupted": "Die letzte Aktualisierungsprüfung wurde unterbrochen und wurde auf Leerlauf zurückgesetzt",
+        "checkTaskJoinFailed": "Aktualisierungsprüfung konnte nicht abgeschlossen werden",
+        "downloadAssetMismatch": "Aktualisierungspaket-Info stimmt nicht mit dem letzten Prüfergebnis überein; bitte erneut nach Aktualisierungen suchen",
+        "downloadClientUnavailable": "Der Download-Client ist nicht verfügbar; bitte versuchen Sie es später erneut",
+        "downloadHashMismatch": "Der Hash der heruntergeladenen Datei stimmt nicht überein",
+        "downloadHttpStatus": "Die Download-Anfrage ist fehlgeschlagen. Bitte versuchen Sie es später erneut.",
+        "downloadInterrupted": "Der letzte Download wurde unterbrochen; bitte erneut herunterladen",
+        "downloadManifestUnavailable": "Das GitHub-Aktualisierungsmanifest ist für diese Phase nicht konfiguriert",
+        "downloadManifestUnreadable": "Das GitHub-Aktualisierungsmanifest konnte nicht gelesen werden",
+        "downloadNetwork": "Die Netzwerkverbindung wurde während des Downloads unterbrochen; bitte versuchen Sie es später erneut",
+        "downloadNotReady": "Es ist kein Aktualisierungspaket zum Herunterladen bereit",
+        "downloadRedirectInvalid": "Ungültige Download-Weiterleitungs-URL",
+        "downloadRedirectLoop": "Zu viele Download-Weiterleitungen; bitte versuchen Sie es später erneut",
+        "downloadSizeMismatch": "Die Größe der heruntergeladenen Datei stimmt nicht überein",
+        "downloadSourceInvalid": "Der Download-Quellparameter ist ungültig",
+        "downloadTaskJoinFailed": "Die Download-Aufgabe konnte nicht ordnungsgemäß abgeschlossen werden",
+        "downloadTimeout": "Download-Anfrage abgelaufen; bitte versuchen Sie es später erneut",
+        "downloadUrlInvalid": "Die Download-URL ist ungültig oder nicht HTTPS",
+        "downloadUrlNotAllowed": "Der Download-URL-Host ist nicht in der Positivliste",
+        "downloadVersionMismatch": "Download-Version stimmt nicht mit der geprüften Version überein; bitte erneut nach Aktualisierungen suchen",
+        "githubApi": "GitHub-API-Anfrage fehlgeschlagen; Überprüfen Sie Ihre Netzwerkverbindung und versuchen Sie es erneut",
+        "githubNoAssets": "Keine verwendbaren Assets im GitHub-Release gefunden",
+        "githubRateLimited": "GitHub-API-Ratenlimit überschritten; bitte versuchen Sie es später erneut",
+        "helperNotFound": "Aktualisierungshilfsprogramm wurde nicht gefunden",
+        "installAssetExtractFailed": "Das heruntergeladene Aktualisierungs-Asset konnte nicht entpackt werden",
+        "installAssetHashMismatch": "Hash-Überprüfung des Aktualisierungspakets fehlgeschlagen",
+        "installAssetMissing": "Aktualisierungspaket fehlt oder ist nicht lesbar",
+        "installAssetSizeMismatch": "Größenüberprüfung des Aktualisierungspakets fehlgeschlagen",
+        "installCleanupFailed": "Aufräumen temporärer Dateien nach der Installation fehlgeschlagen",
+        "installHelperFailed": "Ausführung des Aktualisierungshilfsprogramms fehlgeschlagen",
+        "installHelperHandshakeFailed": "Das Aktualisierungshilfsprogramm war nicht bereit, bevor die App versucht hat zu beenden",
+        "installHelperInvalidArguments": "Argumente des Aktualisierungshilfsprogramms sind ungültig",
+        "installInstallerBusy": "Ein anderer Installer läuft bereits. Bitte versuchen Sie es später erneut.",
+        "installInstallerCancelled": "Der Aktualisierungs-Installer wurde abgebrochen",
+        "installInstallerFailed": "Der Aktualisierungs-Installer konnte nicht abgeschlossen werden",
+        "installInstallerFatal": "Der Aktualisierungs-Installer hat einen fatalen Fehler zurückgegeben",
+        "installInstallerTimedOut": "Der Aktualisierungs-Installer hat vor dem Abschluss das Zeitlimit überschritten",
+        "installInsufficientSpace": "Nicht genügend freier Speicherplatz zum Installieren der Aktualisierung",
+        "installInterrupted": "Die letzte Installation wurde nicht abgeschlossen; bitte wiederholen Sie die Installation",
+        "installLogWriteFailed": "Installationsprotokoll konnte nicht geschrieben werden",
+        "installNotReady": "Keine heruntergeladene Aktualisierung bereit zur Installation",
+        "installRelaunchFailed": "Die App konnte nach der Aktualisierung nicht erneut geöffnet werden",
+        "installReplaceFailed": "Die aktuelle Installation konnte nicht ersetzt werden",
+        "installSaveFailed": "Automatisches Speichern offener Inhalte vor der Installation fehlgeschlagen. Beheben Sie dies und versuchen Sie es erneut.",
+        "installSaveTimedOut": "Zeitlimit beim Warten auf das Speichern offener Fenster vor der Installation überschritten",
+        "installSpawnFailed": "Aktualisierungshilfsprogramm konnte nicht gestartet werden",
+        "installStateWriteFailed": "Installationsstatusdatei konnte nicht geschrieben werden",
+        "installTargetMissing": "Das aktuelle Installationsziel existiert nicht mehr",
+        "installTaskJoinFailed": "Installationsaufgabe konnte nicht abgeschlossen werden",
+        "installUnsupportedKind": "Dieser Installationstyp unterstützt noch keine In-App-Installation",
+        "installVersionMismatch": "Die App wurde nach der Installation mit der alten Version erneut geöffnet. Wiederholen Sie die Installation direkt.",
+        "installWaitTimedOut": "Zeitlimit beim Warten auf das Beenden der App vor der Installation überschritten",
+        "manifestAppIdMismatch": "Das Aktualisierungsmanifest gehört nicht zu dieser Anwendung",
+        "manifestAssetNotFound": "Kein passendes Aktualisierungspaket für die aktuelle Plattform gefunden",
+        "manifestInvalid": "Ungültiges Aktualisierungsmanifest-Format",
+        "manifestMissingAssets": "Das Aktualisierungsmanifest enthält keine herunterladbaren Assets",
+        "manifestUnsupportedSchema": "Das Aktualisierungsmanifest verwendet eine nicht unterstützte Schemaversion",
+        "platformUnsupported": "Diese Plattform oder dieser Installationstyp unterstützt noch keine In-App-Aktualisierungen",
+        "portableManualOnly": "Portable Builds müssen manuell durch Ersetzen des heruntergeladenen Pakets aktualisiert werden",
+        "providerFixtureUnreadable": "Das lokale Aktualisierungsmanifest-Fixture konnte nicht gelesen werden",
+        "providerNotConfigured": "Die Aktualisierungsquelle wurde nicht mit einem Testmanifest konfiguriert",
+        "secureStoreUnavailable": "Systemsicherheitsspeicher ist nicht verfügbar. Versuchen Sie es später erneut.",
+        "sourceNotConfigured": "Aktualisierungsquellen sind nicht konfiguriert; diese Phase unterstützt nur lokale Manifest-Injektion",
+        "stateCorrupted": "Die Aktualisierungsstatusdatei ist beschädigt und wurde zurückgesetzt",
+        "stateLockTimeout": "Zeitlimit beim Warten auf die Sperre der Aktualisierungsstatusdatei überschritten; bitte versuchen Sie es später erneut",
+        "versionInvalid": "Ungültiges Versionsformat"
+      },
+      "confirmInstall": "Die App wird offene Inhalte speichern, sich schließen, die Aktualisierung installieren und nach Abschluss wieder öffnen. Fortfahren?",
+      "download": "Aktualisierung herunterladen",
+      "downloaded": "Version {{version}} wurde heruntergeladen",
+      "interval": {
+        "custom": "{{hours}} Stunden",
+        "daily": "Täglich",
+        "label": "Prüffrequenz",
+        "weekly": "Wöchentlich"
+      },
+      "install": "Installieren & Neustarten",
+      "installFailed": "Der letzte Installationsversuch ist fehlgeschlagen. Überprüfen Sie das Protokoll und versuchen Sie es erneut oder laden Sie erneut herunter.",
+      "installFailedTitle": "Aktualisierungsinstallation fehlgeschlagen",
+      "installPreparing": "Vorbereitung zum Beenden der App und Installieren der Aktualisierung...",
+      "installRetry": "Installation wiederholen",
+      "installScheduled": "Ein veralteter ausstehender Installationsstatus wurde gefunden. Klicken Sie erneut auf Installieren & Neustarten, um das Ersetzen der App abzuschließen.",
+      "installValidated": "Die App wird sich schließen, um die Aktualisierung zu installieren, und nach Abschluss wieder öffnen.",
+      "latestVersion": "Ausstehende Version: {{version}}",
+      "loading": "Aktualisierungseinstellungen werden gelesen...",
+      "notAvailable": "Sie haben die neueste Version",
+      "saved": "Aktualisierungseinstellungen gespeichert",
+      "settingsTitle": "Aktualisierungseinstellungen",
+      "speed": "Geschwindigkeit: {{speed}}",
+      "checkSource": {
+        "label": "API-Quelle prüfen",
+        "github": "GitHub"
+      },
+      "source": {
+        "github": "GitHub",
+        "label": "Downloadquelle"
+      },
+      "title": "Aktualisierungen",
+      "manualDownloadHint": "Lade die neueste Version auf GitHub Releases herunter und installiere sie.",
+      "openRelease": "Release-Seite öffnen"
+    },
+    "visibilityShortcut": "Ein-/Ausblenden-Tastenkürzel",
+    "background": {
+      "label": "Hintergrundbild",
+      "default": "Standardhintergrund",
+      "choose": "Auswählen",
+      "clear": "Hintergrundbild löschen",
+      "dim": "Überlagerung",
+      "scale": "Skalierung",
+      "positionX": "Horizontal",
+      "positionY": "Vertikal",
+      "blur": "Unschärfe",
+      "fit": {
+        "cover": "Abdecken",
+        "contain": "Einpassen",
+        "repeat": "Wiederholen"
+      }
+    }
+  },
+  "tile": {
+    "empty": "Leer"
+  },
+  "dialogs": {
+    "import": {
+      "title": "Datei importieren"
+    },
+    "exportMarkdown": {
+      "title": "Markdown exportieren"
+    },
+    "exportMint": {
+      "title": "Mint exportieren"
+    },
+    "filters": {
+      "mint": "Mint-Dokument",
+      "markdown": "Markdown-Dokument",
+      "text": "Textdatei"
+    }
+  }
+}

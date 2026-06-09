@@ -1,0 +1,304 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version (e.g. v1.1.0), defaults to latest tag"
+        required: false
+        type: string
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  prepare-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      version: ${{ steps.resolve.outputs.version }}
+      created: ${{ steps.release.outputs.created }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Resolve version
+        id: resolve
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            INPUT="${{ github.event.inputs.version }}"
+            if [ -n "$INPUT" ]; then
+              VERSION="$(echo "$INPUT" | sed 's/^v//')"
+            else
+              VERSION="$(git describe --tags --abbrev=0 | sed 's/^v//')"
+            fi
+          else
+            VERSION="${GITHUB_REF_NAME#v}"
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Building MiniNote $VERSION"
+
+      - name: Create or update draft release
+        id: release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: v${{ steps.resolve.outputs.version }}
+        run: |
+          ver="${{ steps.resolve.outputs.version }}"
+          cat > release-body.md << EOF
+          Windows 版：\`mininote-${ver}-windows-x64-setup.exe\`（安装包）、\`mininote-${ver}-windows-x64.exe\`（便携版）。
+
+          macOS Apple Silicon 版：\`mininote-${ver}-macos-arm64.dmg\`。
+          EOF
+
+          if gh release view "$TAG_NAME" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release edit "$TAG_NAME" --repo "$GITHUB_REPOSITORY" --draft --notes-file release-body.md
+            echo "created=false" >> "$GITHUB_OUTPUT"
+          else
+            gh release create "$TAG_NAME" --repo "$GITHUB_REPOSITORY" --draft --title "MiniNote $ver" --notes-file release-body.md --verify-tag
+            echo "created=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  build-windows:
+    needs: prepare-release
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Set version
+        shell: pwsh
+        run: |
+          $ver = "${{ needs.prepare-release.outputs.version }}"
+          node scripts/set-version.mjs $ver
+
+      - name: Preload Tauri NSIS toolchain
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          function Get-FileWithRetry {
+            param(
+              [Parameter(Mandatory = $true)][string]$Uri,
+              [Parameter(Mandatory = $true)][string]$OutFile,
+              [Parameter(Mandatory = $true)][string]$Sha1
+            )
+
+            for ($attempt = 1; $attempt -le 5; $attempt++) {
+              try {
+                if (Test-Path $OutFile) {
+                  Remove-Item $OutFile -Force
+                }
+
+                Write-Host "Downloading $Uri (attempt $attempt/5)"
+                Invoke-WebRequest -Uri $Uri -OutFile $OutFile -TimeoutSec 180
+
+                $actual = (Get-FileHash -Path $OutFile -Algorithm SHA1).Hash.ToUpperInvariant()
+                if ($actual -ne $Sha1.ToUpperInvariant()) {
+                  throw "SHA1 mismatch for $OutFile. Expected $Sha1, got $actual."
+                }
+
+                return
+              } catch {
+                Write-Warning $_
+                if ($attempt -eq 5) {
+                  throw
+                }
+                Start-Sleep -Seconds (10 * $attempt)
+              }
+            }
+          }
+
+          $tauriTools = Join-Path $env:LOCALAPPDATA 'tauri'
+          $nsisPath = Join-Path $tauriTools 'NSIS'
+          New-Item -ItemType Directory -Path $tauriTools -Force | Out-Null
+
+          $requiredFiles = @(
+            'makensis.exe',
+            'Bin/makensis.exe',
+            'Stubs/lzma-x86-unicode',
+            'Stubs/lzma_solid-x86-unicode',
+            'Plugins/x86-unicode/additional/nsis_tauri_utils.dll',
+            'Include/MUI2.nsh',
+            'Include/FileFunc.nsh',
+            'Include/x64.nsh',
+            'Include/nsDialogs.nsh',
+            'Include/WinMessages.nsh',
+            'Include/Win/COM.nsh',
+            'Include/Win/Propkey.nsh',
+            'Include/Win/RestartManager.nsh'
+          )
+
+          $missingRequiredFile = $false
+          if (-not (Test-Path $nsisPath)) {
+            $missingRequiredFile = $true
+          } else {
+            foreach ($file in $requiredFiles) {
+              if (-not (Test-Path (Join-Path $nsisPath $file))) {
+                $missingRequiredFile = $true
+                break
+              }
+            }
+          }
+
+          if ($missingRequiredFile) {
+            if (Test-Path $nsisPath) {
+              Remove-Item $nsisPath -Recurse -Force
+            }
+
+            $zipPath = Join-Path $env:RUNNER_TEMP 'nsis-3.11.zip'
+            Get-FileWithRetry `
+              -Uri 'https://github.com/tauri-apps/binary-releases/releases/download/nsis-3.11/nsis-3.11.zip' `
+              -OutFile $zipPath `
+              -Sha1 'EF7FF767E5CBD9EDD22ADD3A32C9B8F4500BB10D'
+
+            $extractedPath = Join-Path $tauriTools 'nsis-3.11'
+            if (Test-Path $extractedPath) {
+              Remove-Item $extractedPath -Recurse -Force
+            }
+
+            Expand-Archive -Path $zipPath -DestinationPath $tauriTools -Force
+            Rename-Item -Path $extractedPath -NewName 'NSIS'
+          }
+
+          $pluginDir = Join-Path $nsisPath 'Plugins/x86-unicode/additional'
+          $pluginPath = Join-Path $pluginDir 'nsis_tauri_utils.dll'
+          New-Item -ItemType Directory -Path $pluginDir -Force | Out-Null
+
+          $pluginNeedsDownload = -not (Test-Path $pluginPath)
+          if (-not $pluginNeedsDownload) {
+            $actualPluginSha1 = (Get-FileHash -Path $pluginPath -Algorithm SHA1).Hash.ToUpperInvariant()
+            $pluginNeedsDownload = $actualPluginSha1 -ne '75197FEE3C6A814FE035788D1C34EAD39349B860'
+          }
+
+          if ($pluginNeedsDownload) {
+            Get-FileWithRetry `
+              -Uri 'https://github.com/tauri-apps/nsis-tauri-utils/releases/download/nsis_tauri_utils-v0.5.3/nsis_tauri_utils.dll' `
+              -OutFile $pluginPath `
+              -Sha1 '75197FEE3C6A814FE035788D1C34EAD39349B860'
+          }
+
+          Write-Host "Tauri NSIS toolchain is ready at $nsisPath"
+
+      - name: Build
+        run: npm run tauri build
+
+      - name: Rename portable binary
+        shell: pwsh
+        run: |
+          $ver = "${{ needs.prepare-release.outputs.version }}"
+          Copy-Item src-tauri/target/release/mininote.exe "mininote_$ver.exe"
+
+      - name: Upload release assets
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: v${{ needs.prepare-release.outputs.version }}
+        run: |
+          $ver = "${{ needs.prepare-release.outputs.version }}"
+          $releaseDir = 'release-assets'
+          New-Item -ItemType Directory -Path $releaseDir -Force | Out-Null
+
+          $setupSource = Get-ChildItem -Path 'src-tauri/target/release/bundle/nsis' -File -Recurse -Filter '*.exe' | Sort-Object Length -Descending | Select-Object -First 1
+          if (-not $setupSource) {
+            throw 'No Windows NSIS installer found.'
+          }
+
+          $setupAsset = Join-Path $releaseDir "mininote-${ver}-windows-x64-setup.exe"
+          $portableAsset = Join-Path $releaseDir "mininote-${ver}-windows-x64.exe"
+          Copy-Item $setupSource.FullName $setupAsset -Force
+          Copy-Item "mininote_$ver.exe" $portableAsset -Force
+
+          $files = @(
+            (Resolve-Path $setupAsset).Path,
+            (Resolve-Path $portableAsset).Path
+          )
+          gh release upload $env:TAG_NAME $files --clobber --repo $env:GITHUB_REPOSITORY
+
+  build-macos-aarch64:
+    needs: prepare-release
+    runs-on: macos-15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Set version & disable signing
+        run: |
+          ver="${{ needs.prepare-release.outputs.version }}"
+          node scripts/set-version.mjs "$ver" --disable-macos-signing
+
+      - name: Build
+        run: npm run tauri build -- --target aarch64-apple-darwin
+
+      - name: Upload release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: v${{ needs.prepare-release.outputs.version }}
+        run: |
+          ver="${{ needs.prepare-release.outputs.version }}"
+          mkdir -p release-assets
+          dmg_source="$(find src-tauri/target/aarch64-apple-darwin/release/bundle/dmg -type f -name '*.dmg' | sort | head -n 1)"
+          if [ -z "$dmg_source" ]; then
+            echo "No macOS aarch64 DMG release asset found." >&2
+            exit 1
+          fi
+          dmg_asset="release-assets/mininote-${ver}-macos-arm64.dmg"
+          cp "$dmg_source" "$dmg_asset"
+          xattr -cr "$dmg_asset"
+          gh release upload "$TAG_NAME" "$dmg_asset" --clobber --repo "$GITHUB_REPOSITORY"
+
+  publish-release:
+    needs: [prepare-release, build-windows, build-macos-aarch64]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: v${{ needs.prepare-release.outputs.version }}
+        run: |
+          gh release edit "$TAG_NAME" --repo "$GITHUB_REPOSITORY" --draft=false
+
+  cleanup-release:
+    needs: [prepare-release, build-windows, build-macos-aarch64]
+    if: failure() && needs.prepare-release.outputs.created == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Delete draft release after failed build
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: v${{ needs.prepare-release.outputs.version }}
+        run: |
+          gh release delete "$TAG_NAME" --repo "$GITHUB_REPOSITORY" --cleanup-tag --yes || true

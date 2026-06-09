@@ -1,0 +1,440 @@
+{
+  "about": {
+    "closeTitle": "정보 닫기",
+    "feedback": "피드백",
+    "github": "GitHub",
+    "license": "라이선스",
+    "productName": "MiniNote",
+    "summary": "가볍고 세련된 최신 로컬 메모 도구",
+    "tipPrefix": "팁:",
+    "title": "정보",
+    "version": "버전: v{{version}}"
+  },
+  "common": {
+    "back": "뒤로",
+    "blankNote": "빈 메모",
+    "cancel": "취소",
+    "default": "기본값",
+    "delete": "삭제",
+    "noteCount": "메모 {{count}}개",
+    "operationFailed": "작업에 실패했습니다",
+    "save": "저장",
+    "untitledNote": "제목 없는 메모",
+    "untitledFile": "제목 없는 파일",
+    "wordCount": "{{count}}자",
+    "wordCountUnit": "자"
+  },
+  "contextMenu": {
+    "edit": {
+      "copy": "복사",
+      "cut": "잘라내기",
+      "paste": "붙여넣기",
+      "selectAll": "모두 선택"
+    },
+    "tile": {
+      "close": "고정 해제",
+      "copy": "복사",
+      "save": "저장",
+      "switchToPad": "창으로 전환"
+    }
+  },
+  "errors": {
+    "categoryAlreadyExists": "카테고리 \"{{category}}\"이(가) 이미 존재합니다",
+    "categoryNameEmpty": "카테고리 이름은 비워둘 수 없습니다",
+    "categoryNameInvalidChars": "카테고리 이름에 특수 문자를 포함할 수 없습니다",
+    "categoryNotFound": "카테고리 \"{{category}}\"을(를) 찾을 수 없습니다",
+    "desktopConfig": "데스크톱 설정 업데이트에 실패했습니다",
+    "duplicateShortcut": "표시/숨기기 단축키와 빠른 메모 단축키는 같을 수 없습니다",
+    "imagePasteFailed": "이미지 붙여넣기에 실패했습니다",
+    "imageTooLarge": "이미지 파일이 너무 큽니다(최대 {{maxMb}} MB)",
+    "noPool": "메모장 윈도우 풀이 아직 초기화되지 않았습니다",
+    "noteNotFound": "메모를 찾을 수 없습니다",
+    "unsupportedFile": ".mint, .md, .txt 파일만 지원됩니다",
+    "unsupportedImageFormat": "지원하지 않는 이미지 형식입니다",
+    "unsupportedShortcut": "{{field}} 설정이 올바르지 않습니다",
+    "unsupportedShortcutGeneric": "단축키 설정이 올바르지 않습니다",
+    "fileTooLarge": "파일이 너무 큽니다(최대 {{maxMb}} MB)"
+  },
+  "markdown": {
+    "copied": "복사됨",
+    "copy": "복사",
+    "emptyHint": "현재 메모의 미리보기",
+    "alert": {
+      "note": "메모",
+      "tip": "팁",
+      "important": "중요",
+      "warning": "경고",
+      "caution": "주의"
+    }
+  },
+  "main": {
+    "category": {
+      "confirmDelete": "\"{{category}}\"을(를) 삭제하시겠습니까?",
+      "confirmDeleteAction": "삭제 확인",
+      "delete": "카테고리 삭제",
+      "emptyFolder": "빈 폴더",
+      "new": "새 카테고리",
+      "placeholder": "카테고리 이름 입력…",
+      "rename": "이름 변경",
+      "uncategorized": "미분류"
+    },
+    "editor": {
+      "confirmDelete": "삭제하시겠습니까?",
+      "contentPlaceholder": "작성을 시작하세요…",
+      "emptyHint": "메모를 선택하거나 새로 만드세요",
+      "pinToTile": "화면에 고정",
+      "previewLabel": "미리보기",
+      "undo": "실행 취소 (Ctrl+Z)",
+      "undoLabel": "실행 취소",
+      "redo": "다시 실행 (Ctrl+Y)",
+      "redoLabel": "다시 실행",
+      "unpinTile": "고정 해제"
+    },
+    "formatSample": {
+      "boldText": "굵은 텍스트",
+      "codeText": "코드",
+      "headingText": "제목",
+      "italicText": "기울임꼴 텍스트",
+      "listItem": "목록 항목",
+      "quoteText": "인용문"
+    },
+    "search": {
+      "empty": "메모가 없습니다",
+      "noResults": "일치하는 메모가 없습니다"
+    },
+    "sidebar": {
+      "clearSearch": "검색 지우기",
+      "importMarkdown": "파일 가져오기",
+      "newNote": "새 메모",
+      "searchPlaceholder": "메모 검색…"
+    },
+    "images": {
+      "cleanUnused": "사용하지 않는 이미지 정리",
+      "cleaned": "이미지 {{count}}개를 정리했습니다",
+      "cleanedNone": "사용하지 않는 이미지가 없습니다"
+    },
+    "statusBar": {
+      "byteSize": "{{size}} KB",
+      "encoding": "UTF-8",
+      "format": "Markdown",
+      "lineNumber": "줄 {{count}}",
+      "saveState": {
+        "dirty": "저장 안 됨",
+        "error": "저장 실패",
+        "idle": "선택 없음",
+        "saved": "저장됨",
+        "saving": "저장 중"
+      },
+      "columnNumber": "열 {{count}}",
+      "totalLines": "{{count}}줄"
+    },
+    "toolbar": {
+      "bold": "굵게",
+      "code": "코드",
+      "heading": "제목",
+      "hr": "구분선",
+      "italic": "기울임꼴",
+      "ol": "번호 매기기 목록",
+      "quote": "인용문",
+      "ul": "글머리 기호 목록"
+    },
+    "window": {
+      "close": "닫기",
+      "collapseSidebar": "사이드바 접기",
+      "expandSidebar": "사이드바 펼치기",
+      "maximize": "최대화",
+      "minimize": "최소화",
+      "about": "정보",
+      "quickNotepad": "빠른 메모",
+      "restore": "복원",
+      "settings": "설정"
+    },
+    "sourceFile": {
+      "label": "원본 파일 동기화 · {{path}}"
+    },
+    "sourceConflict": {
+      "title": "원본 파일이 변경됨",
+      "description": "MiniNote에 현재 내용은 저장되었습니다. 원본 파일도 다른 앱에서 수정되었습니다. 보존할 내용을 덮어쓰지 않도록 다음 작업을 선택하세요.",
+      "keepLocal": "MiniNote에만 저장",
+      "reloadDisk": "원본 파일 불러오기",
+      "forceOverwrite": "원본 파일 덮어쓰기",
+      "keptLocal": "MiniNote 내용은 유지하고 원본 파일에는 아직 쓰지 않았습니다"
+    },
+    "sourceSync": {
+      "missing": "원본 파일이 없거나 접근할 수 없어 현재 내용은 MiniNote에 저장되었습니다",
+      "failed": "현재 내용은 MiniNote에 저장되었지만 원본 파일 동기화에 실패했습니다"
+    }
+  },
+  "noteMenu": {
+    "delete": "메모 삭제",
+    "moveToCategory": "카테고리로 이동…",
+    "exportMarkdown": "Markdown 내보내기",
+    "exportMint": "Mint 내보내기"
+  },
+  "notepad": {
+    "button": {
+      "clear": "지우기"
+    },
+    "emptyState": "사용 가능한 메모가 없습니다",
+    "error": {
+      "copyUnsupported": "이 환경에서는 복사를 지원하지 않습니다"
+    },
+    "placeholder": {
+      "content": "내용을 입력하세요…",
+      "title": "제목 (선택사항)"
+    },
+    "status": {
+      "copied": "복사됨",
+      "empty": "비어 있음",
+      "opened": "열림",
+      "saveFailed": "저장 실패",
+      "saved": "저장됨",
+      "unsaved": "저장 안 됨"
+    },
+    "tab": {
+      "edit": "편집",
+      "new": "새 메모",
+      "open": "열기"
+    },
+    "tooltip": {
+      "close": "닫기",
+      "openInEditor": "편집기에서 열기",
+      "pinToTile": "타일에 고정"
+    },
+    "confirmDiscard": "저장하지 않은 내용을 지웁니다. 계속할까요?"
+  },
+  "settings": {
+    "autoSave": {
+      "externalFile": "연결된 원본 파일 자동 동기화",
+      "note": "메모 자동 저장",
+      "surface": "서피스 메모 자동 저장"
+    },
+    "autostart": "시작 시 실행",
+    "closeTitle": "설정 닫기",
+    "closeToTray": "트레이로 최소화",
+    "defaultView": {
+      "edit": "편집",
+      "label": "기본 보기",
+      "preview": "미리보기",
+      "split": "분할"
+    },
+    "fontSize": {
+      "editor": "편집기 글꼴 크기",
+      "surface": "서피스 글꼴 크기"
+    },
+    "locale": {
+      "enUS": "English",
+      "label": "언어",
+      "zhCN": "简体中文",
+      "zhTW": "繁體中文",
+      "de": "Deutsch",
+      "es": "Español",
+      "fr": "Français",
+      "it": "Italiano",
+      "ja": "日本語",
+      "ko": "한국어",
+      "ptBR": "Português",
+      "ru": "Русский"
+    },
+    "notesDir": "메모 디렉토리",
+    "notesDirSwitchConfirm": "메모 디렉토리를 변경하면 로컬 메모 라이브러리만 전환됩니다. 현재 디렉토리의 메모는 자동으로 이동되지 않습니다. 계속할까요?",
+    "openAtCursor": "단축키로 커서 근처에서 열기",
+    "quickNoteShortcut": "빠른 메모 단축키",
+    "rememberSurfaceSize": "서피스 크기 기억",
+    "tabIndentSize": "Tab 들여쓰기 너비",
+    "selectFolder": "폴더 선택",
+    "shortcut": {
+      "cancelHint": "Esc로 취소",
+      "checkFailed": "단축키 확인에 실패했습니다",
+      "checking": "단축키 확인 중...",
+      "cleared": "단축키가 지워졌습니다",
+      "clickToRecord": "클릭하여 녹음",
+      "conflict": {
+        "current": "단축키 {{shortcut}}이(가) 현재 사용 중입니다",
+        "invalid": "단축키 {{shortcut}}은(는) 지원되지 않습니다",
+        "none": "단축키 {{shortcut}}에 대한 충돌이 감지되지 않았습니다",
+        "registered": "단축키 {{shortcut}}이(가) 시스템이나 다른 앱에서 사용 중일 수 있습니다",
+        "system": "단축키 {{shortcut}}이(가) 시스템 단축키와 충돌합니다",
+        "unknown": "확인이 완료되었지만 임시 단축키를 해제하지 못했습니다"
+      },
+      "forQuickNote": "빠른 메모 창을 엽니다",
+      "needsModifier": "단축키에 Ctrl, Option/Alt 또는 Command/Meta가 포함되어야 합니다",
+      "notSet": "설정 안 됨",
+      "pressHint": "단축키를 누르세요... 지우려면 Delete를 누르세요.",
+      "check": "검사",
+      "checkingShort": "검사 중"
+    },
+    "theme": {
+      "dark": "다크",
+      "label": "테마",
+      "light": "라이트",
+      "system": "시스템"
+    },
+    "tileColor": {
+      "custom": "사용자 지정",
+      "followTheme": "테마 따르기",
+      "label": "타일 색상"
+    },
+    "tileCtrlClose": "Ctrl+우클릭으로 타일 닫기",
+    "tileRenderMarkdown": "타일에서 Markdown 렌더링",
+    "renderHtmlMarkdown": "안전한 HTML 태그 렌더링",
+    "title": "설정",
+    "update": {
+      "advanced": "고급",
+      "allowPrerelease": "시험판 버전 허용",
+      "autoCheck": "자동으로 업데이트 확인",
+      "autoDownload": "새 버전 자동 다운로드",
+      "available": "새 버전 {{version}}을(를) 사용할 수 있습니다",
+      "busy": "작업 중",
+      "cancel": "다운로드 취소",
+      "cancelRequested": "취소 요청됨",
+      "cancelled": "다운로드 취소됨",
+      "channel": {
+        "beta": "베타",
+        "stable": "안정"
+      },
+      "check": "업데이트 확인",
+      "checking": "확인 중...",
+      "currentVersion": "현재 버전: {{version}}",
+      "error": {
+        "alreadyRunning": "업데이트 작업이 이미 실행 중입니다",
+        "cancelUnavailable": "취소할 업데이트 작업이 없습니다",
+        "checkInterrupted": "마지막 업데이트 확인이 중단되어 유휴 상태로 초기화되었습니다",
+        "checkTaskJoinFailed": "업데이트 확인 작업이 완료되지 못했습니다",
+        "downloadAssetMismatch": "업데이트 패키지 정보가 마지막 확인 결과와 일치하지 않습니다. 업데이트를 다시 확인해 주세요",
+        "downloadClientUnavailable": "다운로드 클라이언트를 사용할 수 없습니다. 나중에 다시 시도해 주세요",
+        "downloadHashMismatch": "다운로드한 파일의 해시가 일치하지 않습니다",
+        "downloadHttpStatus": "다운로드 요청에 실패했습니다. 나중에 다시 시도해 주세요.",
+        "downloadInterrupted": "마지막 다운로드가 중단되었습니다. 다시 다운로드해 주세요",
+        "downloadManifestUnavailable": "GitHub 업데이트 매니페스트가 이 단계에 대해 설정되지 않았습니다",
+        "downloadManifestUnreadable": "GitHub 업데이트 매니페스트를 읽을 수 없습니다",
+        "downloadNetwork": "다운로드 중 네트워크 연결이 중단되었습니다. 나중에 다시 시도해 주세요",
+        "downloadNotReady": "다운로드할 준비가 된 업데이트 패키지가 없습니다",
+        "downloadRedirectInvalid": "잘못된 다운로드 리디렉션 URL입니다",
+        "downloadRedirectLoop": "다운로드 리디렉션이 너무 많습니다. 나중에 다시 시도해 주세요",
+        "downloadSizeMismatch": "다운로드한 파일 크기가 일치하지 않습니다",
+        "downloadSourceInvalid": "다운로드 소스 매개변수가 올바르지 않습니다",
+        "downloadTaskJoinFailed": "다운로드 작업이 정상적으로 완료되지 못했습니다",
+        "downloadTimeout": "다운로드 요청 시간이 초과되었습니다. 나중에 다시 시도해 주세요",
+        "downloadUrlInvalid": "다운로드 URL이 올바르지 않거나 HTTPS가 아닙니다",
+        "downloadUrlNotAllowed": "다운로드 URL 호스트가 허용 목록에 없습니다",
+        "downloadVersionMismatch": "다운로드 버전이 확인된 버전과 일치하지 않습니다. 업데이트를 다시 확인해 주세요",
+        "githubApi": "GitHub API 요청에 실패했습니다. 네트워크를 확인하고 다시 시도해 주세요",
+        "githubNoAssets": "GitHub Release에서 사용 가능한 에셋을 찾을 수 없습니다",
+        "githubRateLimited": "GitHub API 속도 제한을 초과했습니다. 나중에 다시 시도해 주세요",
+        "helperNotFound": "업데이트 도우미 실행 파일을 찾을 수 없습니다",
+        "installAssetExtractFailed": "다운로드한 업데이트 에셋의 압축을 풀 수 없습니다",
+        "installAssetHashMismatch": "업데이트 패키지 해시 검증에 실패했습니다",
+        "installAssetMissing": "업데이트 패키지가 없거나 읽을 수 없습니다",
+        "installAssetSizeMismatch": "업데이트 패키지 크기 검증에 실패했습니다",
+        "installCleanupFailed": "설치 후 임시 파일 정리에 실패했습니다",
+        "installHelperFailed": "업데이트 도우미 실행에 실패했습니다",
+        "installHelperHandshakeFailed": "앱이 종료되기 전에 업데이트 도우미가 준비되지 않았습니다",
+        "installHelperInvalidArguments": "업데이트 도우미 인수가 올바르지 않습니다",
+        "installInstallerBusy": "다른 설치 프로그램이 이미 실행 중입니다. 나중에 다시 시도해 주세요.",
+        "installInstallerCancelled": "업데이트 설치 프로그램이 취소되었습니다",
+        "installInstallerFailed": "업데이트 설치 프로그램이 완료되지 못했습니다",
+        "installInstallerFatal": "업데이트 설치 프로그램에서 치명적인 오류가 발생했습니다",
+        "installInstallerTimedOut": "업데이트 설치 프로그램이 완료 전에 시간 초과되었습니다",
+        "installInsufficientSpace": "업데이트를 설치할 충분한 디스크 공간이 없습니다",
+        "installInterrupted": "마지막 설치가 완료되지 않았습니다. 설치를 다시 시도해 주세요",
+        "installLogWriteFailed": "설치 로그를 쓸 수 없습니다",
+        "installNotReady": "설치할 준비가 된 다운로드된 업데이트가 없습니다",
+        "installRelaunchFailed": "업데이트 후 앱을 다시 열 수 없습니다",
+        "installReplaceFailed": "현재 설치를 교체하지 못했습니다",
+        "installSaveFailed": "설치 전 열린 콘텐츠의 자동 저장에 실패했습니다. 해결한 후 다시 시도해 주세요.",
+        "installSaveTimedOut": "설치 전 열린 창의 저장 대기 시간이 초과되었습니다",
+        "installSpawnFailed": "업데이트 도우미를 시작하지 못했습니다",
+        "installStateWriteFailed": "설치 상태 파일을 쓸 수 없습니다",
+        "installTargetMissing": "현재 설치 대상이 더 이상 존재하지 않습니다",
+        "installTaskJoinFailed": "설치 작업이 완료되지 못했습니다",
+        "installUnsupportedKind": "이 설치 유형은 아직 앱 내 설치를 지원하지 않습니다",
+        "installVersionMismatch": "설치 후 앱이 이전 버전으로 다시 열렸습니다. 직접 설치를 다시 시도해 주세요.",
+        "installWaitTimedOut": "설치 전 앱 종료 대기 시간이 초과되었습니다",
+        "manifestAppIdMismatch": "업데이트 매니페스트가 이 애플리케이션에 속하지 않습니다",
+        "manifestAssetNotFound": "현재 플랫폼에 맞는 업데이트 패키지를 찾을 수 없습니다",
+        "manifestInvalid": "업데이트 매니페스트 형식이 올바르지 않습니다",
+        "manifestMissingAssets": "업데이트 매니페스트에 다운로드 가능한 에셋이 없습니다",
+        "manifestUnsupportedSchema": "업데이트 매니페스트가 지원되지 않는 스키마 버전을 사용합니다",
+        "platformUnsupported": "이 플랫폼이나 설치 유형은 아직 앱 내 업데이트를 지원하지 않습니다",
+        "portableManualOnly": "포터블 빌드는 다운로드한 패키지를 교체하여 수동으로 업데이트해야 합니다",
+        "providerFixtureUnreadable": "로컬 업데이트 매니페스트 픽스처를 읽을 수 없습니다",
+        "providerNotConfigured": "업데이트 소스가 테스트 매니페스트로 설정되지 않았습니다",
+        "secureStoreUnavailable": "시스템 보안 저장소를 사용할 수 없습니다. 나중에 다시 시도해 주세요.",
+        "sourceNotConfigured": "업데이트 소스가 설정되지 않았습니다. 이 단계는 로컬 매니페스트 주입만 지원합니다",
+        "stateCorrupted": "업데이트 상태 파일이 손상되어 초기화되었습니다",
+        "stateLockTimeout": "업데이트 상태 파일 잠금 대기 시간이 초과되었습니다. 나중에 다시 시도해 주세요",
+        "versionInvalid": "버전 형식이 올바르지 않습니다"
+      },
+      "confirmInstall": "앱이 열린 콘텐츠를 저장하고 닫은 후 업데이트를 설치하고 완료되면 다시 열립니다. 계속하시겠습니까?",
+      "download": "업데이트 다운로드",
+      "downloaded": "버전 {{version}}의 다운로드가 완료되었습니다",
+      "interval": {
+        "custom": "{{hours}}시간",
+        "daily": "매일",
+        "label": "확인 빈도",
+        "weekly": "매주"
+      },
+      "install": "설치 및 재시작",
+      "installFailed": "최근 설치 시도에 실패했습니다. 로그를 확인하고 다시 시도하거나 다시 다운로드해 주세요.",
+      "installFailedTitle": "업데이트 설치 실패",
+      "installPreparing": "앱을 종료하고 업데이트를 설치할 준비를 하고 있습니다...",
+      "installRetry": "설치 다시 시도",
+      "installScheduled": "이전 대기 설치 상태가 발견되었습니다. 앱 교체를 완료하려면 '설치 및 재시작'을 다시 클릭해 주세요.",
+      "installValidated": "앱이 업데이트를 설치하기 위해 닫히고 완료되면 다시 열립니다.",
+      "latestVersion": "대기 중인 버전: {{version}}",
+      "loading": "업데이트 설정 읽는 중...",
+      "notAvailable": "최신 버전을 사용 중입니다",
+      "saved": "업데이트 설정이 저장되었습니다",
+      "settingsTitle": "업데이트 설정",
+      "speed": "속도: {{speed}}",
+      "checkSource": {
+        "label": "API 소스 확인",
+        "github": "GitHub"
+      },
+      "source": {
+        "github": "GitHub",
+        "label": "다운로드 소스"
+      },
+      "title": "업데이트",
+      "manualDownloadHint": "GitHub Releases에서 최신 버전을 내려받아 설치하세요.",
+      "openRelease": "Release 페이지 열기"
+    },
+    "visibilityShortcut": "창 표시/숨기기 단축키",
+    "background": {
+      "label": "배경 이미지",
+      "default": "기본 배경",
+      "choose": "선택",
+      "clear": "배경 이미지 지우기",
+      "dim": "오버레이",
+      "scale": "크기",
+      "positionX": "가로",
+      "positionY": "세로",
+      "blur": "흐림",
+      "fit": {
+        "cover": "채우기",
+        "contain": "맞추기",
+        "repeat": "반복"
+      }
+    }
+  },
+  "tile": {
+    "empty": "비어 있음"
+  },
+  "dialogs": {
+    "import": {
+      "title": "파일 가져오기"
+    },
+    "exportMarkdown": {
+      "title": "Markdown 내보내기"
+    },
+    "exportMint": {
+      "title": "Mint 내보내기"
+    },
+    "filters": {
+      "mint": "Mint 문서",
+      "markdown": "Markdown 문서",
+      "text": "텍스트 파일"
+    }
+  }
+}

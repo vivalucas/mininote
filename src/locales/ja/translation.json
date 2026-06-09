@@ -1,0 +1,440 @@
+{
+  "about": {
+    "closeTitle": "バージョン情報を閉じる",
+    "feedback": "フィードバック",
+    "github": "GitHub",
+    "license": "ライセンス",
+    "productName": "MiniNote",
+    "summary": "軽量・エレガント・モダンなローカルメモツール",
+    "tipPrefix": "ヒント:",
+    "title": "バージョン情報",
+    "version": "バージョン: v{{version}}"
+  },
+  "common": {
+    "back": "戻る",
+    "blankNote": "空のノート",
+    "cancel": "キャンセル",
+    "default": "デフォルト",
+    "delete": "削除",
+    "noteCount": "ノート {{count}} 件",
+    "operationFailed": "操作に失敗しました",
+    "save": "保存",
+    "untitledNote": "無題のノート",
+    "untitledFile": "無題のファイル",
+    "wordCount": "{{count}} 文字",
+    "wordCountUnit": "文字"
+  },
+  "contextMenu": {
+    "edit": {
+      "copy": "コピー",
+      "cut": "切り取り",
+      "paste": "貼り付け",
+      "selectAll": "すべて選択"
+    },
+    "tile": {
+      "close": "ピン留めを解除",
+      "copy": "コピー",
+      "save": "保存",
+      "switchToPad": "ウィンドウに切り替え"
+    }
+  },
+  "errors": {
+    "categoryAlreadyExists": "カテゴリ「{{category}}」はすでに存在します",
+    "categoryNameEmpty": "カテゴリ名は空にできません",
+    "categoryNameInvalidChars": "カテゴリ名に特殊文字は使用できません",
+    "categoryNotFound": "カテゴリ「{{category}}」が見つかりません",
+    "desktopConfig": "デスクトップ設定の更新に失敗しました",
+    "duplicateShortcut": "表示/非表示ショートカットとクイックメモショートカットは同じにできません",
+    "imagePasteFailed": "画像の貼り付けに失敗しました",
+    "imageTooLarge": "画像ファイルが大きすぎます（上限 {{maxMb}} MB）",
+    "noPool": "メモ帳ウィンドウプールがまだ初期化されていません",
+    "noteNotFound": "ノートが見つかりません",
+    "unsupportedFile": ".mint、.md、.txtファイルのみ対応しています",
+    "unsupportedImageFormat": "未対応の画像形式です",
+    "unsupportedShortcut": "{{field}} の設定が無効です",
+    "unsupportedShortcutGeneric": "ショートカット設定が無効です",
+    "fileTooLarge": "ファイルが大きすぎます（上限 {{maxMb}} MB）"
+  },
+  "markdown": {
+    "copied": "コピーしました",
+    "copy": "コピー",
+    "emptyHint": "現在のノートのプレビュー",
+    "alert": {
+      "note": "メモ",
+      "tip": "ヒント",
+      "important": "重要",
+      "warning": "警告",
+      "caution": "注意"
+    }
+  },
+  "main": {
+    "category": {
+      "confirmDelete": "「{{category}}」を削除しますか？",
+      "confirmDeleteAction": "削除を確認",
+      "delete": "カテゴリを削除",
+      "emptyFolder": "空のフォルダ",
+      "new": "新規カテゴリ",
+      "placeholder": "カテゴリ名を入力…",
+      "rename": "名前を変更",
+      "uncategorized": "未分類"
+    },
+    "editor": {
+      "confirmDelete": "削除しますか？",
+      "contentPlaceholder": "書き始める…",
+      "emptyHint": "ノートを選択または作成してください",
+      "pinToTile": "画面に固定",
+      "previewLabel": "プレビュー",
+      "undo": "元に戻す (Ctrl+Z)",
+      "undoLabel": "元に戻す",
+      "redo": "やり直す (Ctrl+Y)",
+      "redoLabel": "やり直す",
+      "unpinTile": "固定を解除"
+    },
+    "formatSample": {
+      "boldText": "太字テキスト",
+      "codeText": "コード",
+      "headingText": "見出し",
+      "italicText": "イタリックテキスト",
+      "listItem": "リスト項目",
+      "quoteText": "引用"
+    },
+    "search": {
+      "empty": "ノートがありません",
+      "noResults": "一致するノートがありません"
+    },
+    "sidebar": {
+      "clearSearch": "検索をクリア",
+      "importMarkdown": "ファイルをインポート",
+      "newNote": "新規ノート",
+      "searchPlaceholder": "ノートを検索…"
+    },
+    "images": {
+      "cleanUnused": "未使用の画像を削除",
+      "cleaned": "画像 {{count}} 件を削除しました",
+      "cleanedNone": "未使用の画像はありません"
+    },
+    "statusBar": {
+      "byteSize": "{{size}} KB",
+      "encoding": "UTF-8",
+      "format": "Markdown",
+      "lineNumber": "{{count}} 行目",
+      "saveState": {
+        "dirty": "未保存",
+        "error": "保存失敗",
+        "idle": "未選択",
+        "saved": "保存済み",
+        "saving": "保存中"
+      },
+      "columnNumber": "列 {{count}}",
+      "totalLines": "{{count}} 行"
+    },
+    "toolbar": {
+      "bold": "太字",
+      "code": "コード",
+      "heading": "見出し",
+      "hr": "水平線",
+      "italic": "イタリック",
+      "ol": "番号付きリスト",
+      "quote": "引用",
+      "ul": "箇条書き"
+    },
+    "window": {
+      "close": "閉じる",
+      "collapseSidebar": "サイドバーを折りたたむ",
+      "expandSidebar": "サイドバーを展開",
+      "maximize": "最大化",
+      "minimize": "最小化",
+      "about": "バージョン情報",
+      "quickNotepad": "クイックメモ",
+      "restore": "元のサイズに戻す",
+      "settings": "設定"
+    },
+    "sourceFile": {
+      "label": "元ファイルを同期 · {{path}}"
+    },
+    "sourceConflict": {
+      "title": "元ファイルが変更されました",
+      "description": "MiniNote は現在の内容を保存しました。元ファイルも別のアプリで変更されています。残したい変更を上書きしないよう、次の操作を選んでください。",
+      "keepLocal": "MiniNote だけに保存",
+      "reloadDisk": "元ファイルを読み込む",
+      "forceOverwrite": "元ファイルを上書き",
+      "keptLocal": "MiniNote の内容を保持し、元ファイルには書き戻していません"
+    },
+    "sourceSync": {
+      "missing": "元ファイルが見つからないかアクセスできません。現在の内容は MiniNote に保存されました。",
+      "failed": "現在の内容は MiniNote に保存されましたが、元ファイルの同期に失敗しました。"
+    }
+  },
+  "noteMenu": {
+    "delete": "ノートを削除",
+    "moveToCategory": "カテゴリに移動…",
+    "exportMarkdown": "Markdown をエクスポート",
+    "exportMint": "Mint をエクスポート"
+  },
+  "notepad": {
+    "button": {
+      "clear": "クリア"
+    },
+    "emptyState": "利用可能なノートがありません",
+    "error": {
+      "copyUnsupported": "この環境ではコピーに対応していません"
+    },
+    "placeholder": {
+      "content": "何か書きましょう…",
+      "title": "タイトル（任意）"
+    },
+    "status": {
+      "copied": "コピーしました",
+      "empty": "空",
+      "opened": "開きました",
+      "saveFailed": "保存に失敗しました",
+      "saved": "保存済み",
+      "unsaved": "未保存"
+    },
+    "tab": {
+      "edit": "編集",
+      "new": "新規",
+      "open": "開く"
+    },
+    "tooltip": {
+      "close": "閉じる",
+      "openInEditor": "エディタで開く",
+      "pinToTile": "タイルにピン留め"
+    },
+    "confirmDiscard": "未保存の内容を消去します。続行しますか？"
+  },
+  "settings": {
+    "autoSave": {
+      "externalFile": "リンク元ファイルを自動同期",
+      "note": "ノートを自動保存",
+      "surface": "サーフェスノートを自動保存"
+    },
+    "autostart": "起動時に自動起動",
+    "closeTitle": "設定を閉じる",
+    "closeToTray": "トレイに最小化",
+    "defaultView": {
+      "edit": "編集",
+      "label": "デフォルトの表示",
+      "preview": "プレビュー",
+      "split": "分割"
+    },
+    "fontSize": {
+      "editor": "エディタのフォントサイズ",
+      "surface": "サーフェスのフォントサイズ"
+    },
+    "locale": {
+      "enUS": "English",
+      "label": "言語",
+      "zhCN": "简体中文",
+      "zhTW": "繁體中文",
+      "de": "Deutsch",
+      "es": "Español",
+      "fr": "Français",
+      "it": "Italiano",
+      "ja": "日本語",
+      "ko": "한국어",
+      "ptBR": "Português",
+      "ru": "Русский"
+    },
+    "notesDir": "ノートの保存先",
+    "notesDirSwitchConfirm": "ノートの保存先を変更するとローカルのノートライブラリだけが切り替わります。現在の保存先にあるノートは自動移行されません。続行しますか？",
+    "openAtCursor": "ショートカットでカーソル付近に開く",
+    "quickNoteShortcut": "クイックメモショートカット",
+    "rememberSurfaceSize": "サーフェスのサイズを記憶",
+    "tabIndentSize": "タブのインデント幅",
+    "selectFolder": "フォルダを選択",
+    "shortcut": {
+      "cancelHint": "Escでキャンセル",
+      "checkFailed": "ショートカットの確認に失敗しました",
+      "checking": "ショートカットを確認中...",
+      "cleared": "ショートカットをクリアしました",
+      "clickToRecord": "クリックして記録",
+      "conflict": {
+        "current": "ショートカット {{shortcut}} は現在使用中です",
+        "invalid": "ショートカット {{shortcut}} は対応していません",
+        "none": "ショートカット {{shortcut}} に競合は検出されませんでした",
+        "registered": "ショートカット {{shortcut}} はシステムまたは他のアプリに割り当てられている可能性があります",
+        "system": "ショートカット {{shortcut}} はシステムショートカットと競合しています",
+        "unknown": "確認は完了しましたが、一時的なショートカットの解放に失敗しました"
+      },
+      "forQuickNote": "クイックメモウィンドウを開きます",
+      "needsModifier": "ショートカットにはCtrl、Option/Alt、またはCommand/Metaを含める必要があります",
+      "notSet": "未設定",
+      "pressHint": "ショートカットを押してください… Deleteでクリア",
+      "check": "確認",
+      "checkingShort": "確認中"
+    },
+    "theme": {
+      "dark": "ダーク",
+      "label": "テーマ",
+      "light": "ライト",
+      "system": "システム"
+    },
+    "tileColor": {
+      "custom": "カスタム",
+      "followTheme": "テーマに従う",
+      "label": "タイルの色"
+    },
+    "tileCtrlClose": "Ctrl+右クリックでタイルを閉じる",
+    "tileRenderMarkdown": "タイルでMarkdownをレンダリング",
+    "renderHtmlMarkdown": "安全な HTML タグを Markdown で表示",
+    "title": "設定",
+    "update": {
+      "advanced": "詳細",
+      "allowPrerelease": "プレリリース版を許可",
+      "autoCheck": "アップデートを自動確認",
+      "autoDownload": "新しいバージョンを自動ダウンロード",
+      "available": "新しいバージョン {{version}} が利用可能です",
+      "busy": "処理中",
+      "cancel": "ダウンロードをキャンセル",
+      "cancelRequested": "キャンセル要求を送信しました",
+      "cancelled": "ダウンロードをキャンセルしました",
+      "channel": {
+        "beta": "ベータ",
+        "stable": "安定版"
+      },
+      "check": "アップデートを確認",
+      "checking": "確認中...",
+      "currentVersion": "現在のバージョン: {{version}}",
+      "error": {
+        "alreadyRunning": "アップデートタスクはすでに実行中です",
+        "cancelUnavailable": "キャンセルするアップデートタスクがありません",
+        "checkInterrupted": "前回のアップデート確認が中断され、アイドル状態にリセットされました",
+        "checkTaskJoinFailed": "アップデート確認タスクの完了に失敗しました",
+        "downloadAssetMismatch": "アップデートパッケージの情報が前回の確認結果と一致しません。再度確認してください",
+        "downloadClientUnavailable": "ダウンロードクライアントが利用できません。後でもう一度お試しください",
+        "downloadHashMismatch": "ダウンロードしたファイルのハッシュが一致しません",
+        "downloadHttpStatus": "ダウンロードリクエストが失敗しました。後でもう一度お試しください。",
+        "downloadInterrupted": "前回のダウンロードが中断されました。再度ダウンロードしてください",
+        "downloadManifestUnavailable": "GitHubのアップデートマニフェストがこのステージ用に設定されていません",
+        "downloadManifestUnreadable": "GitHubのアップデートマニフェストを読み取れませんでした",
+        "downloadNetwork": "ダウンロード中にネットワーク接続が中断されました。後でもう一度お試しください",
+        "downloadNotReady": "ダウンロード可能なアップデートパッケージがありません",
+        "downloadRedirectInvalid": "ダウンロード先のリダイレクトURLが無効です",
+        "downloadRedirectLoop": "ダウンロードのリダイレクトが多すぎます。後でもう一度お試しください",
+        "downloadSizeMismatch": "ダウンロードしたファイルのサイズが一致しません",
+        "downloadSourceInvalid": "ダウンロード元のパラメータが無効です",
+        "downloadTaskJoinFailed": "ダウンロードタスクが正常に完了しませんでした",
+        "downloadTimeout": "ダウンロードリクエストがタイムアウトしました。後でもう一度お試しください",
+        "downloadUrlInvalid": "ダウンロードURLが無効またはHTTPSではありません",
+        "downloadUrlNotAllowed": "ダウンロードURLのホストが許可リストにありません",
+        "downloadVersionMismatch": "ダウンロードバージョンが確認済みのバージョンと一致しません。再度確認してください",
+        "githubApi": "GitHub APIリクエストが失敗しました。ネットワークを確認して再度お試しください",
+        "githubNoAssets": "GitHubリリースに利用可能なアセットが見つかりません",
+        "githubRateLimited": "GitHub APIのレート制限に達しました。後でもう一度お試しください",
+        "helperNotFound": "アップデートヘルパーの実行ファイルが見つかりません",
+        "installAssetExtractFailed": "ダウンロードしたアセットの展開に失敗しました",
+        "installAssetHashMismatch": "アップデートパッケージのハッシュ検証に失敗しました",
+        "installAssetMissing": "アップデートパッケージが見つからないか読み取れません",
+        "installAssetSizeMismatch": "アップデートパッケージのサイズ検証に失敗しました",
+        "installCleanupFailed": "インストール後のテンポラリファイルの削除に失敗しました",
+        "installHelperFailed": "アップデートヘルパーの実行に失敗しました",
+        "installHelperHandshakeFailed": "アップデートヘルパーがアプリ終了前に準備完了になりませんでした",
+        "installHelperInvalidArguments": "アップデートヘルパーの引数が無効です",
+        "installInstallerBusy": "別のインストーラーが実行中です。後でもう一度お試しください。",
+        "installInstallerCancelled": "アップデートインストーラーがキャンセルされました",
+        "installInstallerFailed": "アップデートインストーラーが正常に完了しませんでした",
+        "installInstallerFatal": "アップデートインストーラーが致命的なエラーを返しました",
+        "installInstallerTimedOut": "アップデートインストーラーがタイムアウトしました",
+        "installInsufficientSpace": "アップデートをインストールするためのディスク容量が不足しています",
+        "installInterrupted": "前回のインストールが完了しませんでした。再度インストールしてください",
+        "installLogWriteFailed": "インストールログの書き込みに失敗しました",
+        "installNotReady": "インストール可能なアップデートがダウンロードされていません",
+        "installRelaunchFailed": "アップデート後にアプリを再起動できませんでした",
+        "installReplaceFailed": "現在のインストールの置換に失敗しました",
+        "installSaveFailed": "インストール前の自動保存に失敗しました。問題を解決して再度お試しください。",
+        "installSaveTimedOut": "インストール前のウィンドウ保存待ちがタイムアウトしました",
+        "installSpawnFailed": "アップデートヘルパーの起動に失敗しました",
+        "installStateWriteFailed": "インストール状態ファイルの書き込みに失敗しました",
+        "installTargetMissing": "現在のインストール先が存在しません",
+        "installTaskJoinFailed": "インストールタスクの完了に失敗しました",
+        "installUnsupportedKind": "このインストールタイプはアプリ内インストールに対応していません",
+        "installVersionMismatch": "インストール後に古いバージョンでアプリが再起動しました。直接インストールをやり直してください。",
+        "installWaitTimedOut": "インストール前のアプリ終了待ちがタイムアウトしました",
+        "manifestAppIdMismatch": "アップデートマニフェストがこのアプリケーションのものではありません",
+        "manifestAssetNotFound": "現在のプラットフォームに対応するアップデートパッケージが見つかりません",
+        "manifestInvalid": "アップデートマニフェストの形式が無効です",
+        "manifestMissingAssets": "アップデートマニフェストにダウンロード可能なアセットが含まれていません",
+        "manifestUnsupportedSchema": "アップデートマニフェストが未対応のスキーマバージョンを使用しています",
+        "platformUnsupported": "このプラットフォームまたはインストールタイプはアプリ内アップデートに対応していません",
+        "portableManualOnly": "ポータブル版はダウンロードしたパッケージに手動で置換する必要があります",
+        "providerFixtureUnreadable": "ローカルのアップデートマニフェストフィクスチャを読み取れませんでした",
+        "providerNotConfigured": "アップデート元にテスト用マニフェストが設定されていません",
+        "secureStoreUnavailable": "システムのセキュアストレージが利用できません。後でもう一度お試しください。",
+        "sourceNotConfigured": "アップデート元が設定されていません。このステージではローカルマニフェストの注入のみ対応しています",
+        "stateCorrupted": "アップデート状態ファイルが破損しているためリセットされました",
+        "stateLockTimeout": "アップデート状態ファイルのロック待ちがタイムアウトしました。後でもう一度お試しください",
+        "versionInvalid": "バージョン形式が無効です"
+      },
+      "confirmInstall": "アプリは開いている内容を保存してから閉じ、アップデートをインストールし、完了後に再起動します。続行しますか？",
+      "download": "アップデートをダウンロード",
+      "downloaded": "バージョン {{version}} のダウンロードが完了しました",
+      "interval": {
+        "custom": "{{hours}} 時間ごと",
+        "daily": "毎日",
+        "label": "確認頻度",
+        "weekly": "毎週"
+      },
+      "install": "インストールして再起動",
+      "installFailed": "最新のインストールに失敗しました。ログを確認して再試行するか、再度ダウンロードしてください。",
+      "installFailedTitle": "アップデートのインストールに失敗しました",
+      "installPreparing": "アプリを終了してアップデートをインストールする準備をしています...",
+      "installRetry": "インストールを再試行",
+      "installScheduled": "レガシーの保留中インストール状態が検出されました。アプリの置換を完了するには、もう一度「インストールして再起動」をクリックしてください。",
+      "installValidated": "アプリを閉じてアップデートをインストールし、完了後に再起動します。",
+      "latestVersion": "保留中のバージョン: {{version}}",
+      "loading": "アップデート設定を読み込み中...",
+      "notAvailable": "最新バージョンです",
+      "saved": "アップデート設定を保存しました",
+      "settingsTitle": "アップデート設定",
+      "speed": "速度: {{speed}}",
+      "checkSource": {
+        "label": "APIソースを確認",
+        "github": "GitHub"
+      },
+      "source": {
+        "github": "GitHub",
+        "label": "ダウンロード元"
+      },
+      "title": "アップデート",
+      "manualDownloadHint": "GitHub Releases から最新版をダウンロードしてインストールしてください。",
+      "openRelease": "Release ページを開く"
+    },
+    "visibilityShortcut": "ウィンドウの表示/非表示ショートカット",
+    "background": {
+      "label": "背景画像",
+      "default": "デフォルトの背景",
+      "choose": "選択",
+      "clear": "背景画像をクリア",
+      "dim": "オーバーレイ",
+      "scale": "スケール",
+      "positionX": "水平",
+      "positionY": "垂直",
+      "blur": "ぼかし",
+      "fit": {
+        "cover": "カバー",
+        "contain": "コンテイン",
+        "repeat": "繰り返し"
+      }
+    }
+  },
+  "tile": {
+    "empty": "空"
+  },
+  "dialogs": {
+    "import": {
+      "title": "ファイルをインポート"
+    },
+    "exportMarkdown": {
+      "title": "Markdown をエクスポート"
+    },
+    "exportMint": {
+      "title": "Mint をエクスポート"
+    },
+    "filters": {
+      "mint": "Mint ドキュメント",
+      "markdown": "Markdown ドキュメント",
+      "text": "テキストファイル"
+    }
+  }
+}

@@ -1,0 +1,440 @@
+{
+  "about": {
+    "closeTitle": "Chiudi Informazioni",
+    "feedback": "Feedback",
+    "github": "GitHub",
+    "license": "Licenza",
+    "productName": "MiniNote",
+    "summary": "Uno strumento di presa note locale leggero, elegante e moderno",
+    "tipPrefix": "Suggerimento:",
+    "title": "Informazioni",
+    "version": "Versione: v{{version}}"
+  },
+  "common": {
+    "back": "Indietro",
+    "blankNote": "Nota vuota",
+    "cancel": "Annulla",
+    "default": "Predefinito",
+    "delete": "Elimina",
+    "noteCount": "{{count}} nota/e",
+    "operationFailed": "Operazione fallita",
+    "save": "Salva",
+    "untitledNote": "Nota senza titolo",
+    "untitledFile": "File senza titolo",
+    "wordCount": "{{count}} caratteri",
+    "wordCountUnit": "caratteri"
+  },
+  "contextMenu": {
+    "edit": {
+      "copy": "Copia",
+      "cut": "Taglia",
+      "paste": "Incolla",
+      "selectAll": "Seleziona tutto"
+    },
+    "tile": {
+      "close": "Sgancia",
+      "copy": "Copia",
+      "save": "Salva",
+      "switchToPad": "Passa alla finestra"
+    }
+  },
+  "errors": {
+    "categoryAlreadyExists": "La categoria \"{{category}}\" esiste già",
+    "categoryNameEmpty": "Il nome della categoria non può essere vuoto",
+    "categoryNameInvalidChars": "Il nome della categoria non può contenere caratteri speciali",
+    "categoryNotFound": "Categoria \"{{category}}\" non trovata",
+    "desktopConfig": "Aggiornamento della configurazione desktop fallito",
+    "duplicateShortcut": "La scorciatoia Mostra/Nascondi non può essere uguale alla scorciatoia Nota rapida",
+    "imagePasteFailed": "Incollamento dell'immagine fallito",
+    "imageTooLarge": "File immagine troppo grande (max {{maxMb}} MB)",
+    "noPool": "Il pool delle finestre del blocco note non è ancora stato inizializzato",
+    "noteNotFound": "Nota non trovata",
+    "unsupportedFile": "Sono supportati solo i file .mint, .md e .txt",
+    "unsupportedImageFormat": "Formato immagine non supportato",
+    "unsupportedShortcut": "La configurazione di {{field}} non è valida",
+    "unsupportedShortcutGeneric": "La configurazione della scorciatoia non è valida",
+    "fileTooLarge": "File troppo grande (max {{maxMb}} MB)"
+  },
+  "markdown": {
+    "copied": "Copiato",
+    "copy": "Copia",
+    "emptyHint": "Anteprima della nota corrente",
+    "alert": {
+      "note": "Nota",
+      "tip": "Suggerimento",
+      "important": "Importante",
+      "warning": "Avviso",
+      "caution": "Attenzione"
+    }
+  },
+  "main": {
+    "category": {
+      "confirmDelete": "Eliminare \"{{category}}\"?",
+      "confirmDeleteAction": "Conferma eliminazione",
+      "delete": "Elimina categoria",
+      "emptyFolder": "Cartella vuota",
+      "new": "Nuova categoria",
+      "placeholder": "Inserisci il nome della categoria…",
+      "rename": "Rinomina",
+      "uncategorized": "Senza categoria"
+    },
+    "editor": {
+      "confirmDelete": "Confermare eliminazione?",
+      "contentPlaceholder": "Inizia a scrivere…",
+      "emptyHint": "Seleziona o crea una nota",
+      "pinToTile": "Fissa allo schermo",
+      "previewLabel": "Anteprima",
+      "undo": "Annulla (Ctrl+Z)",
+      "undoLabel": "Annulla",
+      "redo": "Ripristina (Ctrl+Y)",
+      "redoLabel": "Ripristina",
+      "unpinTile": "Rimuovi fissaggio"
+    },
+    "formatSample": {
+      "boldText": "Testo in grassetto",
+      "codeText": "Codice",
+      "headingText": "Intestazione",
+      "italicText": "Testo in corsivo",
+      "listItem": "Elemento elenco",
+      "quoteText": "Citazione"
+    },
+    "search": {
+      "empty": "Nessuna nota presente",
+      "noResults": "Nessuna nota corrispondente"
+    },
+    "sidebar": {
+      "clearSearch": "Cancella ricerca",
+      "importMarkdown": "Importa file",
+      "newNote": "Nuova nota",
+      "searchPlaceholder": "Cerca note…"
+    },
+    "images": {
+      "cleanUnused": "Pulisci immagini inutilizzate",
+      "cleaned": "{{count}} immagine/i pulite",
+      "cleanedNone": "Nessuna immagine inutilizzata"
+    },
+    "statusBar": {
+      "byteSize": "{{size}} KB",
+      "encoding": "UTF-8",
+      "format": "Markdown",
+      "lineNumber": "Riga {{count}}",
+      "saveState": {
+        "dirty": "Non salvato",
+        "error": "Salvataggio fallito",
+        "idle": "Nessuna selezione",
+        "saved": "Salvato",
+        "saving": "Salvataggio in corso"
+      },
+      "columnNumber": "Col {{count}}",
+      "totalLines": "{{count}} righe"
+    },
+    "toolbar": {
+      "bold": "Grassetto",
+      "code": "Codice",
+      "heading": "Intestazione",
+      "hr": "Linea orizzontale",
+      "italic": "Corsivo",
+      "ol": "Elenco ordinato",
+      "quote": "Citazione",
+      "ul": "Elenco non ordinato"
+    },
+    "window": {
+      "close": "Chiudi",
+      "collapseSidebar": "Comprimi barra laterale",
+      "expandSidebar": "Espandi barra laterale",
+      "maximize": "Massimizza",
+      "minimize": "Riduci a icona",
+      "about": "Informazioni",
+      "quickNotepad": "Nota rapida",
+      "restore": "Ripristina",
+      "settings": "Impostazioni"
+    },
+    "sourceFile": {
+      "label": "Sincronizza file sorgente · {{path}}"
+    },
+    "sourceConflict": {
+      "title": "File sorgente modificato",
+      "description": "MiniNote ha salvato il contenuto attuale; anche il file di origine è stato modificato da un’altra app. Scegli il passaggio successivo per evitare sovrascritture indesiderate.",
+      "keepLocal": "Salva solo in MiniNote",
+      "reloadDisk": "Carica file di origine",
+      "forceOverwrite": "Sovrascrivi file di origine",
+      "keptLocal": "Contenuto MiniNote mantenuto senza scriverlo nel file sorgente"
+    },
+    "sourceSync": {
+      "missing": "Il file sorgente manca o non è accessibile. Il contenuto attuale è stato salvato in MiniNote.",
+      "failed": "Il contenuto attuale è stato salvato in MiniNote, ma la sincronizzazione del file sorgente non è riuscita."
+    }
+  },
+  "noteMenu": {
+    "delete": "Elimina nota",
+    "moveToCategory": "Sposta nella categoria…",
+    "exportMarkdown": "Esporta Markdown",
+    "exportMint": "Esporta Mint"
+  },
+  "notepad": {
+    "button": {
+      "clear": "Cancella"
+    },
+    "emptyState": "Nessuna nota disponibile",
+    "error": {
+      "copyUnsupported": "La copia non è supportata in questo ambiente"
+    },
+    "placeholder": {
+      "content": "Scrivi qualcosa…",
+      "title": "Titolo (facoltativo)"
+    },
+    "status": {
+      "copied": "Copiato",
+      "empty": "Vuoto",
+      "opened": "Aperto",
+      "saveFailed": "Salvataggio fallito",
+      "saved": "Salvato",
+      "unsaved": "Non salvato"
+    },
+    "tab": {
+      "edit": "Modifica",
+      "new": "Nuovo",
+      "open": "Apri"
+    },
+    "tooltip": {
+      "close": "Chiudi",
+      "openInEditor": "Apri nell'editor",
+      "pinToTile": "Fissa alla tile"
+    },
+    "confirmDiscard": "Il contenuto non salvato verrà cancellato. Continuare?"
+  },
+  "settings": {
+    "autoSave": {
+      "externalFile": "Sincronizza automaticamente i file sorgente collegati",
+      "note": "Salvataggio automatico delle note",
+      "surface": "Salvataggio automatico delle note in superficie"
+    },
+    "autostart": "Avvio all'accensione",
+    "closeTitle": "Chiudi Impostazioni",
+    "closeToTray": "Chiudi nel vassoio",
+    "defaultView": {
+      "edit": "Modifica",
+      "label": "Vista predefinita",
+      "preview": "Anteprima",
+      "split": "Divisa"
+    },
+    "fontSize": {
+      "editor": "Dimensione carattere dell'editor",
+      "surface": "Dimensione carattere della superficie"
+    },
+    "locale": {
+      "enUS": "English",
+      "label": "Lingua",
+      "zhCN": "简体中文",
+      "zhTW": "繁體中文",
+      "de": "Deutsch",
+      "es": "Español",
+      "fr": "Français",
+      "it": "Italiano",
+      "ja": "日本語",
+      "ko": "한국어",
+      "ptBR": "Português",
+      "ru": "Русский"
+    },
+    "notesDir": "Cartella delle note",
+    "notesDirSwitchConfirm": "Cambiare la cartella delle note cambia solo la libreria locale. Le note nella cartella attuale non verranno migrate automaticamente. Continuare?",
+    "openAtCursor": "Apri vicino al cursore con scorciatoia",
+    "quickNoteShortcut": "Scorciatoia Nota rapida",
+    "rememberSurfaceSize": "Ricorda dimensione della superficie",
+    "tabIndentSize": "Larghezza rientro tabulazione",
+    "selectFolder": "Seleziona cartella",
+    "shortcut": {
+      "cancelHint": "Esc per annullare",
+      "checkFailed": "Verifica scorciatoia fallita",
+      "checking": "Verifica scorciatoia in corso...",
+      "cleared": "Scorciatoia cancellata",
+      "clickToRecord": "Clicca per registrare",
+      "conflict": {
+        "current": "La scorciatoia {{shortcut}} è attualmente in uso",
+        "invalid": "La scorciatoia {{shortcut}} non è supportata",
+        "none": "Nessun conflitto rilevato per {{shortcut}}",
+        "registered": "La scorciatoia {{shortcut}} potrebbe essere occupata dal sistema o da un'altra app",
+        "system": "La scorciatoia {{shortcut}} è in conflitto con una scorciatoia di sistema",
+        "unknown": "Verifica completata, ma impossibile rilasciare la scorciatoia temporanea"
+      },
+      "forQuickNote": "Apre la finestra Nota rapida",
+      "needsModifier": "La scorciatoia deve includere Ctrl, Option/Alt o Command/Meta",
+      "notSet": "Non impostata",
+      "pressHint": "Premi la scorciatoia...; premi Canc per cancellare.",
+      "check": "Verifica",
+      "checkingShort": "Verifica"
+    },
+    "theme": {
+      "dark": "Scuro",
+      "label": "Tema",
+      "light": "Chiaro",
+      "system": "Sistema"
+    },
+    "tileColor": {
+      "custom": "Personalizzato",
+      "followTheme": "Segui tema",
+      "label": "Colore della tile"
+    },
+    "tileCtrlClose": "Ctrl+Click destro per chiudere la tile",
+    "tileRenderMarkdown": "Renderizza Markdown sulla tile",
+    "renderHtmlMarkdown": "Renderizza tag HTML sicuri in Markdown",
+    "title": "Impostazioni",
+    "update": {
+      "advanced": "Avanzate",
+      "allowPrerelease": "Consenti versioni prerelease",
+      "autoCheck": "Controlla aggiornamenti automaticamente",
+      "autoDownload": "Scarica nuove versioni automaticamente",
+      "available": "Nuova versione {{version}} disponibile",
+      "busy": "In corso",
+      "cancel": "Annulla download",
+      "cancelRequested": "Annullamento richiesto",
+      "cancelled": "Download annullato",
+      "channel": {
+        "beta": "beta",
+        "stable": "stabile"
+      },
+      "check": "Controlla aggiornamenti",
+      "checking": "Verifica in corso...",
+      "currentVersion": "Versione corrente: {{version}}",
+      "error": {
+        "alreadyRunning": "Un'attività di aggiornamento è già in esecuzione",
+        "cancelUnavailable": "Non c'è nessuna attività di aggiornamento da annullare",
+        "checkInterrupted": "L'ultimo controllo aggiornamenti è stato interrotto ed è stato reimpostato allo stato inattivo",
+        "checkTaskJoinFailed": "L'attività di controllo aggiornamenti non è riuscita a completarsi",
+        "downloadAssetMismatch": "Le informazioni sul pacchetto di aggiornamento non corrispondono all'ultimo risultato del controllo; ripeti il controllo aggiornamenti",
+        "downloadClientUnavailable": "Il client di download non è disponibile; riprova più tardi",
+        "downloadHashMismatch": "L'hash del file scaricato non corrisponde",
+        "downloadHttpStatus": "La richiesta di download è fallita. Riprova più tardi.",
+        "downloadInterrupted": "L'ultimo download è stato interrotto; scarica di nuovo",
+        "downloadManifestUnavailable": "Il manifesto di aggiornamento GitHub non è configurato per questo stage",
+        "downloadManifestUnreadable": "Il manifesto di aggiornamento GitHub non è stato letto",
+        "downloadNetwork": "La connessione di rete è stata interrotta durante il download; riprova più tardi",
+        "downloadNotReady": "Non c'è nessun pacchetto di aggiornamento pronto per il download",
+        "downloadRedirectInvalid": "URL di reindirizzamento del download non valido",
+        "downloadRedirectLoop": "Troppi reindirizzamenti di download; riprova più tardi",
+        "downloadSizeMismatch": "La dimensione del file scaricato non corrisponde",
+        "downloadSourceInvalid": "Il parametro sorgente del download non è valido",
+        "downloadTaskJoinFailed": "L'attività di download non è riuscita a completarsi correttamente",
+        "downloadTimeout": "La richiesta di download è scaduta; riprova più tardi",
+        "downloadUrlInvalid": "L'URL di download non è valido o non è HTTPS",
+        "downloadUrlNotAllowed": "L'host dell'URL di download non è nella lista consentita",
+        "downloadVersionMismatch": "La versione scaricata non corrisponde alla versione verificata; ripeti il controllo aggiornamenti",
+        "githubApi": "Richiesta API GitHub fallita; controlla la rete e riprova",
+        "githubNoAssets": "Nessun asset utilizzabile trovato nella Release GitHub",
+        "githubRateLimited": "Limite di frequenza API GitHub superato; riprova più tardi",
+        "helperNotFound": "L'eseguibile dell'helper di aggiornamento non è stato trovato",
+        "installAssetExtractFailed": "Impossibile estrarre l'asset di aggiornamento scaricato",
+        "installAssetHashMismatch": "Verifica dell'hash del pacchetto di aggiornamento fallita",
+        "installAssetMissing": "Il pacchetto di aggiornamento manca o non è leggibile",
+        "installAssetSizeMismatch": "Verifica della dimensione del pacchetto di aggiornamento fallita",
+        "installCleanupFailed": "Pulizia dei file temporanei dopo l'installazione fallita",
+        "installHelperFailed": "Esecuzione dell'helper di aggiornamento fallita",
+        "installHelperHandshakeFailed": "L'helper di aggiornamento non è diventato pronto prima che l'app provasse a uscire",
+        "installHelperInvalidArguments": "Gli argomenti dell'helper di aggiornamento non sono validi",
+        "installInstallerBusy": "Un altro installatore è già in esecuzione. Riprova più tardi.",
+        "installInstallerCancelled": "L'installatore di aggiornamento è stato annullato",
+        "installInstallerFailed": "L'installatore di aggiornamento non è riuscito a completarsi",
+        "installInstallerFatal": "L'installatore di aggiornamento ha restituito un errore fatale",
+        "installInstallerTimedOut": "L'installatore di aggiornamento è scaduto prima del completamento",
+        "installInsufficientSpace": "Non c'è abbastanza spazio libero su disco per installare l'aggiornamento",
+        "installInterrupted": "L'ultima installazione non è stata completata; riprova l'installazione",
+        "installLogWriteFailed": "Impossibile scrivere il log di installazione",
+        "installNotReady": "Nessun aggiornamento scaricato pronto per l'installazione",
+        "installRelaunchFailed": "L'app non è stata riaperta dopo l'aggiornamento",
+        "installReplaceFailed": "Sostituzione dell'installazione corrente fallita",
+        "installSaveFailed": "Salvataggio automatico del contenuto aperto fallito prima dell'installazione. Risolvi e riprova.",
+        "installSaveTimedOut": "Timeout in attesa del salvataggio delle finestre aperte prima dell'installazione",
+        "installSpawnFailed": "Avvio dell'helper di aggiornamento fallito",
+        "installStateWriteFailed": "Impossibile scrivere il file di stato dell'installazione",
+        "installTargetMissing": "Il target di installazione corrente non esiste più",
+        "installTaskJoinFailed": "L'attività di installazione non è riuscita a completarsi",
+        "installUnsupportedKind": "Questo tipo di installazione non supporta ancora l'installazione in-app",
+        "installVersionMismatch": "L'app si è riaperta con la vecchia versione dopo l'installazione. Riprova l'installazione direttamente.",
+        "installWaitTimedOut": "Timeout in attesa dell'uscita dell'app prima dell'installazione",
+        "manifestAppIdMismatch": "Il manifesto di aggiornamento non appartiene a questa applicazione",
+        "manifestAssetNotFound": "Nessun pacchetto di aggiornamento corrispondente trovato per la piattaforma corrente",
+        "manifestInvalid": "Formato del manifesto di aggiornamento non valido",
+        "manifestMissingAssets": "Il manifesto di aggiornamento non contiene asset scaricabili",
+        "manifestUnsupportedSchema": "Il manifesto di aggiornamento usa una versione schema non supportata",
+        "platformUnsupported": "Questa piattaforma o tipo di installazione non supporta ancora gli aggiornamenti in-app",
+        "portableManualOnly": "Le build portabili devono essere aggiornate manualmente sostituendo il pacchetto scaricato",
+        "providerFixtureUnreadable": "Il fixture locale del manifesto di aggiornamento non è stato letto",
+        "providerNotConfigured": "La sorgente di aggiornamento non è stata configurata con un manifesto di test",
+        "secureStoreUnavailable": "L'archivio sicuro di sistema non è disponibile. Riprova più tardi.",
+        "sourceNotConfigured": "Le sorgenti di aggiornamento non sono configurate; questo stage supporta solo l'iniezione locale del manifesto",
+        "stateCorrupted": "Il file di stato dell'aggiornamento è corrotto ed è stato reimpostato",
+        "stateLockTimeout": "Timeout in attesa del blocco del file di stato dell'aggiornamento; riprova più tardi",
+        "versionInvalid": "Formato versione non valido"
+      },
+      "confirmInstall": "L'app salverà il contenuto aperto, si chiuderà, installerà l'aggiornamento e si riaprirà al termine. Continuare?",
+      "download": "Scarica aggiornamento",
+      "downloaded": "La versione {{version}} è stata scaricata",
+      "interval": {
+        "custom": "{{hours}} ore",
+        "daily": "Quotidiano",
+        "label": "Frequenza di controllo",
+        "weekly": "Settimanale"
+      },
+      "install": "Installa e riavvia",
+      "installFailed": "L'ultimo tentativo di installazione è fallito. Controlla il log e riprova o scarica di nuovo.",
+      "installFailedTitle": "Installazione aggiornamento fallita",
+      "installPreparing": "Preparazione all'uscita dall'app e installazione dell'aggiornamento...",
+      "installRetry": "Riprova installazione",
+      "installScheduled": "È stato trovato uno stato di installazione in sospeso legacy. Clicca di nuovo su Installa e riavvia per completare la sostituzione dell'app.",
+      "installValidated": "L'app si chiuderà per installare l'aggiornamento e si riaprirà al termine.",
+      "latestVersion": "Versione in sospeso: {{version}}",
+      "loading": "Lettura impostazioni di aggiornamento...",
+      "notAvailable": "Hai già l'ultima versione",
+      "saved": "Impostazioni di aggiornamento salvate",
+      "settingsTitle": "Impostazioni aggiornamento",
+      "speed": "Velocità: {{speed}}",
+      "checkSource": {
+        "label": "Sorgente API di controllo",
+        "github": "GitHub"
+      },
+      "source": {
+        "github": "GitHub",
+        "label": "Sorgente di download"
+      },
+      "title": "Aggiornamenti",
+      "manualDownloadHint": "Scarica e installa l’ultima versione da GitHub Releases.",
+      "openRelease": "Apri pagina Release"
+    },
+    "visibilityShortcut": "Scorciatoia Mostra/Nascondi finestra",
+    "background": {
+      "label": "Immagine di sfondo",
+      "default": "Sfondo predefinito",
+      "choose": "Scegli",
+      "clear": "Cancella immagine di sfondo",
+      "dim": "Sovrapposizione",
+      "scale": "Scala",
+      "positionX": "Orizzontale",
+      "positionY": "Verticale",
+      "blur": "Sfocatura",
+      "fit": {
+        "cover": "Copri",
+        "contain": "Contieni",
+        "repeat": "Ripeti"
+      }
+    }
+  },
+  "tile": {
+    "empty": "Vuoto"
+  },
+  "dialogs": {
+    "import": {
+      "title": "Importa file"
+    },
+    "exportMarkdown": {
+      "title": "Esporta Markdown"
+    },
+    "exportMint": {
+      "title": "Esporta Mint"
+    },
+    "filters": {
+      "mint": "Documento Mint",
+      "markdown": "Documento Markdown",
+      "text": "File di testo"
+    }
+  }
+}
