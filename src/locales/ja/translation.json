@@ -104,6 +104,7 @@
     },
     "sidebar": {
       "clearSearch": "検索をクリア",
+      "importFolder": "フォルダをインポート",
       "importMarkdown": "ファイルをインポート",
       "newNote": "新規ノート",
       "searchPlaceholder": "ノートを検索…"
@@ -424,6 +425,9 @@
   "dialogs": {
     "import": {
       "title": "ファイルをインポート"
+    },
+    "importFolder": {
+      "title": "フォルダをインポート"
     },
     "exportMarkdown": {
       "title": "Markdown をエクスポート"

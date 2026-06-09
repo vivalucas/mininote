@@ -64,8 +64,17 @@ fn notes_import_markdown(
 }
 
 #[tauri::command]
-fn notes_export_markdown(id: String, path: String) -> Result<(), AppError> {
-    default_store()?.export_markdown_file(&id, &PathBuf::from(path))
+fn notes_import_markdown_folder(app: AppHandle, path: String) -> Result<Vec<Note>, AppError> {
+    let notes = default_store()?.import_markdown_folder(&PathBuf::from(path))?;
+    let _ = app.emit("notes-changed", ());
+    Ok(notes)
+}
+
+#[tauri::command]
+fn notes_export_markdown(app: AppHandle, id: String, path: String) -> Result<Note, AppError> {
+    let note = default_store()?.export_markdown_file(&id, &PathBuf::from(path))?;
+    let _ = app.emit("notes-changed", ());
+    Ok(note)
 }
 
 #[tauri::command]
@@ -363,6 +372,7 @@ pub fn run() {
             notes_update,
             notes_delete,
             notes_import_markdown,
+            notes_import_markdown_folder,
             notes_export_markdown,
             notes_sync_source_file,
             notes_reload_source_file,

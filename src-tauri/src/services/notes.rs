@@ -629,13 +629,60 @@ impl NoteStore {
         })
     }
 
-    pub fn export_markdown_file(&self, id: &str, path: &Path) -> Result<(), AppError> {
-        let note = self.read_note(id)?;
+    pub fn import_markdown_folder(&self, path: &Path) -> Result<Vec<Note>, AppError> {
+        if !path.is_dir() {
+            return Err(AppError::new("notDirectory", "请选择一个文件夹"));
+        }
+
+        let category = import_folder_category(path)?;
+        let mut files = Vec::new();
+        collect_supported_text_files(path, &mut files)?;
+
+        validate_importable_text_files(&files)?;
+
+        self.create_category(&category)?;
+
+        let mut notes = Vec::with_capacity(files.len());
+        for file in files {
+            notes.push(self.import_markdown_file(&file, &category)?);
+        }
+        Ok(notes)
+    }
+
+    pub fn export_markdown_file(&self, id: &str, path: &Path) -> Result<Note, AppError> {
+        self.ensure_storage()?;
+        let mut metadata_file = self.load_metadata()?;
+        let note = metadata_file
+            .notes
+            .iter_mut()
+            .find(|note| note.id == id)
+            .ok_or_else(|| AppError::note_not_found(id))?;
+        let content =
+            fs::read_to_string(self.note_path_in_category(&note.file_name, &note.category))?;
+
+        self.ensure_export_outside_notes_dir(path)?;
         if let Some(parent) = path.parent() {
             fs::create_dir_all(parent)?;
         }
-        write_text_atomic(path, &note.content)?;
-        Ok(())
+        write_text_atomic(path, &content)?;
+
+        note.source_path = Some(path.to_string_lossy().to_string());
+        note.source_modified_time = Some(file_modified_time_ms(path)?);
+        let result = Note {
+            id: note.id.clone(),
+            title: note.title.clone(),
+            file_name: note.file_name.clone(),
+            category: note.category.clone(),
+            source_path: note.source_path.clone(),
+            source_modified_time: note.source_modified_time,
+            created_at: note.created_at,
+            updated_at: note.updated_at,
+            word_count: note.word_count,
+            content,
+        };
+
+        self.save_metadata(&metadata_file)?;
+        Ok(result)
     }
 
     pub fn list_categories(&self) -> Result<Vec<String>, AppError> {
@@ -945,6 +992,25 @@ impl NoteStore {
         }
     }
 
+    fn ensure_export_outside_notes_dir(&self, path: &Path) -> Result<(), AppError> {
+        let Some(parent) = path.parent() else {
+            return Ok(());
+        };
+
+        let notes_dir = self.notes_dir()?;
+        let notes_dir = fs::canonicalize(&notes_dir).unwrap_or(notes_dir);
+        let parent = fs::canonicalize(parent).unwrap_or_else(|_| parent.to_path_buf());
+
+        if parent.starts_with(&notes_dir) {
+            return Err(AppError::new(
+                "unsafeExportPath",
+                "不能导出到 MiniNote 的内部笔记目录，请选择其他位置",
+            ));
+        }
+
+        Ok(())
+    }
+
     fn find_metadata(&self, id: &str) -> Result<NoteMetadata, AppError> {
         self.load_metadata()?
             .notes
@@ -1160,6 +1226,45 @@ fn is_supported_text_path(path: &Path) -> bool {
             )
         })
         .unwrap_or(false)
+}
+
+fn collect_supported_text_files(dir: &Path, files: &mut Vec<PathBuf>) -> Result<(), AppError> {
+    let mut entries = fs::read_dir(dir)?.collect::<Result<Vec<_>, _>>()?;
+    entries.sort_by_key(|entry| entry.path());
+
+    for entry in entries {
+        let path = entry.path();
+        let file_type = entry.file_type()?;
+
+        if file_type.is_dir() {
+            collect_supported_text_files(&path, files)?;
+        } else if file_type.is_file() && is_supported_text_path(&path) {
+            files.push(path);
+        }
+    }
+
+    Ok(())
+}
+
+fn import_folder_category(path: &Path) -> Result<String, AppError> {
+    let category = path
+        .file_name()
+        .map(|name| name.to_string_lossy().trim().to_string())
+        .filter(|name| !name.is_empty())
+        .ok_or_else(AppError::category_name_empty)?;
+    validate_category_name(&category)?;
+    Ok(category)
+}
+
+fn validate_importable_text_files(files: &[PathBuf]) -> Result<(), AppError> {
+    for file in files {
+        let file_size = fs::metadata(file)?.len();
+        if file_size > MAX_IMPORT_TEXT_SIZE {
+            return Err(AppError::file_too_large(MAX_IMPORT_TEXT_SIZE / 1024 / 1024));
+        }
+        let _ = fs::read_to_string(file)?;
+    }
+    Ok(())
 }
 
 fn imported_markdown_title(path: &Path, content: &str) -> String {
@@ -1484,6 +1589,83 @@ mod tests {
     }
 
     #[test]
+    fn imports_supported_text_files_from_folder_into_matching_category() {
+        let root = test_root("import-folder");
+        let source_dir = root.join("项目资料");
+        let nested_dir = source_dir.join("nested");
+        fs::create_dir_all(&nested_dir).expect("create source dirs");
+        fs::write(source_dir.join("a.md"), "# A\n正文").expect("write markdown");
+        fs::write(source_dir.join("b.mint"), "Mint 正文").expect("write mint");
+        fs::write(nested_dir.join("c.txt"), "Text 正文").expect("write text");
+        fs::write(nested_dir.join("ignored.png"), "image").expect("write ignored");
+        let store = NoteStore::new(root.join("store"));
+
+        let imported = store
+            .import_markdown_folder(&source_dir)
+            .expect("import folder");
+
+        assert_eq!(imported.len(), 3);
+        assert!(imported.iter().all(|note| note.category == "项目资料"));
+        assert_eq!(
+            store.list_categories().expect("list categories"),
+            vec!["项目资料"]
+        );
+        assert_eq!(store.list_notes().expect("list notes").len(), 3);
+
+        let mut titles = imported
+            .iter()
+            .map(|note| note.title.as_str())
+            .collect::<Vec<_>>();
+        titles.sort();
+        assert_eq!(titles, vec!["A", "b", "c"]);
+
+        let source_paths = imported
+            .iter()
+            .filter_map(|note| note.source_path.as_deref())
+            .collect::<Vec<_>>();
+        assert_eq!(source_paths.len(), 3);
+        assert!(source_paths.iter().any(|path| path.ends_with("a.md")));
+        assert!(source_paths.iter().any(|path| path.ends_with("b.mint")));
+        assert!(source_paths.iter().any(|path| path.ends_with("c.txt")));
+    }
+
+    #[test]
+    fn import_folder_creates_empty_category_when_no_supported_text_files() {
+        let root = test_root("import-empty-folder");
+        let source_dir = root.join("空分类");
+        fs::create_dir_all(&source_dir).expect("create source dir");
+        fs::write(source_dir.join("ignored.png"), "image").expect("write ignored");
+        let store = NoteStore::new(root.join("store"));
+
+        let imported = store
+            .import_markdown_folder(&source_dir)
+            .expect("import empty folder");
+
+        assert!(imported.is_empty());
+        assert_eq!(
+            store.list_categories().expect("list categories"),
+            vec!["空分类"]
+        );
+    }
+
+    #[test]
+    fn import_folder_preflights_all_files_before_creating_notes() {
+        let root = test_root("import-folder-preflight");
+        let source_dir = root.join("项目资料");
+        fs::create_dir_all(&source_dir).expect("create source dir");
+        fs::write(source_dir.join("a.md"), "# A\n正文").expect("write markdown");
+        fs::write(source_dir.join("broken.txt"), [0xff, 0xfe]).expect("write invalid text");
+        let store = NoteStore::new(root.join("store"));
+
+        store
+            .import_markdown_folder(&source_dir)
+            .expect_err("invalid text should fail folder import");
+
+        assert!(store.list_categories().expect("list categories").is_empty());
+        assert!(store.list_notes().expect("list notes").is_empty());
+    }
+
+    #[test]
     fn rejects_oversized_imported_text_files() {
         let root = test_root("import-file-too-large");
         let source_path = root.join("large.md");
@@ -1510,13 +1692,62 @@ mod tests {
             .expect("create note");
         let export_path = root.join("exports").join("导出.md");
 
-        store
+        let exported = store
             .export_markdown_file(&note.id, &export_path)
             .expect("export markdown");
 
         assert_eq!(
             fs::read_to_string(export_path).expect("read exported markdown"),
             content
+        );
+        let expected_source_path = root
+            .join("exports")
+            .join("导出.md")
+            .to_string_lossy()
+            .to_string();
+        assert_eq!(
+            exported.source_path.as_deref(),
+            Some(expected_source_path.as_str())
+        );
+        assert!(exported.source_modified_time.is_some());
+
+        store
+            .sync_source_file(
+                &note.id,
+                SyncSourceRequest {
+                    content: "导出后继续编辑".into(),
+                    expected_modified_time: exported.source_modified_time,
+                    force: false,
+                },
+            )
+            .expect("sync exported source");
+        assert_eq!(
+            fs::read_to_string(root.join("exports").join("导出.md"))
+                .expect("read synced exported source"),
+            "导出后继续编辑"
+        );
+    }
+
+    #[test]
+    fn rejects_exporting_into_internal_notes_storage() {
+        let root = test_root("export-internal-notes-dir");
+        let store = NoteStore::new(root.join("store"));
+        let note = store
+            .create_note(request("内部路径", "正文", ""))
+            .expect("create note");
+        let internal_path = store.note_path_in_category(&note.file_name, &note.category);
+
+        let error = store
+            .export_markdown_file(&note.id, &internal_path)
+            .expect_err("exporting into internal notes dir should fail");
+
+        assert_eq!(error.code, "unsafeExportPath");
+        assert_eq!(
+            store
+                .read_note(&note.id)
+                .expect("read note after failed export")
+                .source_path,
+            None
         );
     }
 

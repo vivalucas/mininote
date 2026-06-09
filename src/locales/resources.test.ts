@@ -24,6 +24,7 @@ describe("locale resources", () => {
   const sourceKeySet = new Set(sourceKeys);
   const requiredOverrideKeys = [
     "dialogs.import.title",
+    "dialogs.importFolder.title",
     "dialogs.exportMarkdown.title",
     "dialogs.exportMint.title",
     "dialogs.filters.mint",
@@ -38,6 +39,7 @@ describe("locale resources", () => {
     "main.sourceSync.failed",
     "main.statusBar.columnNumber",
     "main.statusBar.totalLines",
+    "main.sidebar.importFolder",
     "notepad.confirmDiscard",
     "settings.autoSave.externalFile",
     "settings.notesDirSwitchConfirm",

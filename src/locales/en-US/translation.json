@@ -53,7 +53,8 @@
     "unsupportedImageFormat": "Unsupported image format",
     "unsupportedShortcut": "{{field}} configuration is invalid",
     "unsupportedShortcutGeneric": "Shortcut configuration is invalid",
-    "fileTooLarge": "File too large (max {{maxMb}} MB)"
+    "fileTooLarge": "File too large (max {{maxMb}} MB)",
+    "unsafeExportPath": "Cannot export to MiniNote's internal notes directory. Choose another location."
   },
   "markdown": {
     "copied": "Copied",
@@ -104,6 +105,7 @@
     },
     "sidebar": {
       "clearSearch": "Clear search",
+      "importFolder": "Import Folder",
       "importMarkdown": "Import File",
       "newNote": "New Note",
       "searchPlaceholder": "Search notes…"
@@ -424,6 +426,9 @@
   "dialogs": {
     "import": {
       "title": "Import File"
+    },
+    "importFolder": {
+      "title": "Import Folder"
     },
     "exportMarkdown": {
       "title": "Export Markdown"

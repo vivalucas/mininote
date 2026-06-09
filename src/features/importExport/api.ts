@@ -42,14 +42,32 @@ export async function importMarkdownNote(category = ""): Promise<Note | null> {
   return importMarkdownPath(path, category);
 }
 
+export async function importMarkdownFolder(): Promise<Note[] | null> {
+  const path = await open({
+    title: t("dialogs.importFolder.title", { defaultValue: "导入文件夹" }),
+    multiple: false,
+    directory: true,
+  });
+
+  if (typeof path !== "string") {
+    return null;
+  }
+
+  return importMarkdownFolderPath(path);
+}
+
 export function importMarkdownPath(path: string, category = ""): Promise<Note> {
   return invoke("notes_import_markdown", { path, category });
+}
+
+export function importMarkdownFolderPath(path: string): Promise<Note[]> {
+  return invoke("notes_import_markdown_folder", { path });
 }
 
 export async function exportMarkdownNote(
   note: ExportableNote,
   format: ExportDocumentFormat = "markdown",
-): Promise<boolean> {
+): Promise<Note | null> {
   const path = await save({
     title: t(format === "mint" ? "dialogs.exportMint.title" : "dialogs.exportMarkdown.title", {
       defaultValue: format === "mint" ? "导出 Mint" : "导出 Markdown",
@@ -59,11 +77,10 @@ export async function exportMarkdownNote(
   });
 
   if (typeof path !== "string") {
-    return false;
+    return null;
   }
 
-  await invoke("notes_export_markdown", { id: note.id, path });
-  return true;
+  return invoke("notes_export_markdown", { id: note.id, path });
 }
 
 function exportFileName(

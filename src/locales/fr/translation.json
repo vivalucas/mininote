@@ -104,6 +104,7 @@
     },
     "sidebar": {
       "clearSearch": "Effacer la recherche",
+      "importFolder": "Importer un dossier",
       "importMarkdown": "Importer un fichier",
       "newNote": "Nouvelle note",
       "searchPlaceholder": "Rechercher des notes…"
@@ -424,6 +425,9 @@
   "dialogs": {
     "import": {
       "title": "Importer un fichier"
+    },
+    "importFolder": {
+      "title": "Importer un dossier"
     },
     "exportMarkdown": {
       "title": "Exporter Markdown"

@@ -1,7 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { open, save } from "@tauri-apps/plugin-dialog";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { exportMarkdownNote, importMarkdownNote } from "./api";
+import { exportMarkdownNote, importMarkdownFolder, importMarkdownNote } from "./api";
 
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: vi.fn(),
@@ -63,11 +63,53 @@ describe("importExport api", () => {
     expect(invoke).not.toHaveBeenCalled();
   });
 
-  test("exports a note to the selected text document path", async () => {
-    mockedSave.mockResolvedValue("D:\\exports\\读书笔记.mint");
-    mockedInvoke.mockResolvedValue(undefined);
+  test("imports the selected folder path through Rust", async () => {
+    mockedOpen.mockResolvedValue("D:\\notes\\项目资料");
+    mockedInvoke.mockResolvedValue([
+      {
+        id: "note-1",
+        title: "项目资料",
+        fileName: "note-1.md",
+        category: "项目资料",
+        createdAt: "2026-04-28T00:00:00Z",
+        updatedAt: "2026-04-28T00:00:00Z",
+        wordCount: 4,
+        content: "# 标题\n正文",
+      },
+    ]);
 
-    await expect(exportMarkdownNote({ id: "note-1", title: "读书笔记" })).resolves.toBe(true);
+    const notes = await importMarkdownFolder();
+
+    expect(open).toHaveBeenCalledWith({
+      title: "导入文件夹",
+      multiple: false,
+      directory: true,
+    });
+    expect(invoke).toHaveBeenCalledWith("notes_import_markdown_folder", {
+      path: "D:\\notes\\项目资料",
+    });
+    expect(notes?.[0]?.category).toBe("项目资料");
+  });
+
+  test("exports a note to the selected text document path", async () => {
+    const exportedNote = {
+      id: "note-1",
+      title: "读书笔记",
+      fileName: "note-1.md",
+      category: "",
+      sourcePath: "D:\\exports\\读书笔记.mint",
+      sourceModifiedTime: 123,
+      createdAt: "2026-04-28T00:00:00Z",
+      updatedAt: "2026-04-28T00:00:00Z",
+      wordCount: 4,
+      content: "# 标题\n正文",
+    };
+    mockedSave.mockResolvedValue("D:\\exports\\读书笔记.mint");
+    mockedInvoke.mockResolvedValue(exportedNote);
+
+    await expect(exportMarkdownNote({ id: "note-1", title: "读书笔记" })).resolves.toBe(
+      exportedNote,
+    );
 
     expect(save).toHaveBeenCalledWith({
       title: "导出 Markdown",
@@ -106,11 +148,23 @@ describe("importExport api", () => {
   });
 
   test("uses a mint file name for mint export", async () => {
+    const exportedNote = {
+      id: "note-1",
+      title: "读书笔记",
+      fileName: "note-1.md",
+      category: "",
+      sourcePath: "D:\\exports\\读书笔记.mint",
+      sourceModifiedTime: 123,
+      createdAt: "2026-04-28T00:00:00Z",
+      updatedAt: "2026-04-28T00:00:00Z",
+      wordCount: 4,
+      content: "# 标题\n正文",
+    };
     mockedSave.mockResolvedValue("D:\\exports\\读书笔记.mint");
-    mockedInvoke.mockResolvedValue(undefined);
+    mockedInvoke.mockResolvedValue(exportedNote);
 
     await expect(exportMarkdownNote({ id: "note-1", title: "读书笔记" }, "mint")).resolves.toBe(
-      true,
+      exportedNote,
     );
 
     expect(save).toHaveBeenCalledWith({

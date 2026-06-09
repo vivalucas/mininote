@@ -26,6 +26,7 @@ const LOCALIZED_ERROR_CODES = new Set([
   "unsupportedFile",
   "unsupportedImageFormat",
   "unsupportedShortcut",
+  "unsafeExportPath",
 ]);
 
 export function listNotes(): Promise<NoteMetadata[]> {
@@ -135,6 +136,10 @@ function getLocalizedAppErrorMessage(
     case "unsupportedFile":
       return translate("errors.unsupportedFile", {
         defaultValue: "只支持导入 .mint / .md / .txt 文件",
+      });
+    case "unsafeExportPath":
+      return translate("errors.unsafeExportPath", {
+        defaultValue: "不能导出到 MiniNote 的内部笔记目录，请选择其他位置",
       });
     case "categoryNameEmpty":
       return translate("errors.categoryNameEmpty", { defaultValue: "分类名不能为空" });

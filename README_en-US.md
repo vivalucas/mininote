@@ -18,19 +18,54 @@ MiniNote is a local-first desktop notes app. Open it, write immediately, keep ev
 - **Quick notes**: open a small note window from the tray or a global shortcut; it can appear near the mouse cursor.
 - **Desktop tiles**: pin a note on screen with custom colors and optional Markdown rendering.
 - **Markdown preview**: useful for everyday structured text, not intended to be a full Markdown IDE.
-- **Import and export**: supports `.mint`, `.md`, `.markdown`, and `.txt`.
-- **Source-file sync protection**: imported files can keep a source link; MiniNote checks for external changes before writing back.
+- **Import and export**: import a single file, or import a folder as a category; supports `.mint`, `.md`, `.markdown`, and `.txt`.
+- **Source-file sync protection**: imported files and exported files can keep a source link; MiniNote checks for external changes before writing back.
 - **Custom appearance**: theme, font size, background image, shortcuts, and close-to-tray behavior are configurable.
 
 ## Supported Formats
 
-| Format              | Use                                          |
-| ------------------- | -------------------------------------------- |
-| `.mint`             | MiniNote's default document type; UTF-8 text |
-| `.md` / `.markdown` | Markdown document                            |
-| `.txt`              | Standard plain text                          |
+| Format              | Use                                                          |
+| ------------------- | ------------------------------------------------------------ |
+| `.mint`             | MiniNote enhanced document; UTF-8 text with Markdown as base |
+| `.md` / `.markdown` | Markdown document                                            |
+| `.txt`              | Standard plain text                                          |
 
-All supported files can still be opened in a normal text editor. MiniNote does not write private metadata into the file body.
+All supported files can still be opened in a normal text editor. MiniNote does not turn the body into binary data, a compressed package, or a private container that only MiniNote can read.
+
+## `.mint` Format Design
+
+`.mint` is designed as MiniNote's enhanced Markdown text format. It is not a full HTML file and not a rich text file; Markdown remains the main authoring format, while MiniNote can add note-oriented enhancements inside clear safety boundaries.
+
+Design boundaries:
+
+- **Plain text first**: the file must remain readable UTF-8 text that can be copied and diffed.
+- **Markdown as the base**: headings, lists, quotes, code blocks, and tables are still written as Markdown.
+- **Safe HTML enhancements**: tags such as `<mark>`, `<u>`, `<kbd>`, `<sup>`, `<sub>`, `<details>`, and `<summary>` may be supported for note expression; scripts, iframes, forms, event attributes, `javascript:` links, and arbitrary CSS are not supported.
+- **Optional MiniNote header**: if future versions need to preserve title, category, render mode, tile color, or similar MiniNote properties, they should use a readable text header instead of hidden private data.
+- **Editor compatibility**: other text editors should still be able to read and edit the main body even if they ignore MiniNote-specific enhancements.
+
+Example:
+
+```markdown
+<!-- mininote
+version: 1
+renderHtml: safe
+-->
+
+# Meeting Notes
+
+This is **Markdown** content with a small amount of <mark>safe HTML</mark> for emphasis.
+
+<details>
+<summary>Action items</summary>
+
+- Follow up on the proposal
+- Confirm the schedule
+
+</details>
+```
+
+The current `.mint` import/export path still preserves plain text content. This design defines the direction for future enhancements: `.mint` should understand MiniNote better than `.md` without turning MiniNote into a rich text or web-page editor.
 
 ## Install and Update
 

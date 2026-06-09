@@ -104,6 +104,7 @@
     },
     "sidebar": {
       "clearSearch": "清除搜尋",
+      "importFolder": "匯入資料夾",
       "importMarkdown": "匯入檔案",
       "newNote": "新增筆記",
       "searchPlaceholder": "搜尋筆記…"
@@ -424,6 +425,9 @@
   "dialogs": {
     "import": {
       "title": "匯入檔案"
+    },
+    "importFolder": {
+      "title": "匯入資料夾"
     },
     "exportMarkdown": {
       "title": "匯出 Markdown"

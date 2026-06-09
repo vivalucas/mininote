@@ -104,6 +104,7 @@
     },
     "sidebar": {
       "clearSearch": "검색 지우기",
+      "importFolder": "폴더 가져오기",
       "importMarkdown": "파일 가져오기",
       "newNote": "새 메모",
       "searchPlaceholder": "메모 검색…"
@@ -424,6 +425,9 @@
   "dialogs": {
     "import": {
       "title": "파일 가져오기"
+    },
+    "importFolder": {
+      "title": "폴더 가져오기"
     },
     "exportMarkdown": {
       "title": "Markdown 내보내기"

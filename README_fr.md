@@ -18,8 +18,8 @@ MiniNote est une application de notes de bureau locale avant tout. Ouvrez-la, é
 - **Notes rapides** : ouvrez une petite fenêtre depuis la zone de notification ou un raccourci global ; elle peut apparaître près du curseur.
 - **Tuiles de bureau** : épinglez une note à l'écran avec des couleurs personnalisées et un rendu Markdown optionnel.
 - **Aperçu Markdown** : utile pour le texte structuré du quotidien, sans chercher à devenir un IDE Markdown complet.
-- **Importation et exportation** : prend en charge `.mint`, `.md`, `.markdown` et `.txt`.
-- **Protection de synchronisation avec le fichier source** : les fichiers importés peuvent conserver un lien source ; MiniNote vérifie les changements externes avant de réécrire.
+- **Importation et exportation** : importez un fichier seul ou un dossier comme catégorie ; prend en charge `.mint`, `.md`, `.markdown` et `.txt`.
+- **Protection de synchronisation avec le fichier source** : les fichiers importés et exportés peuvent conserver un lien source ; MiniNote vérifie les changements externes avant de réécrire.
 - **Apparence configurable** : thème, taille de police, image d'arrière-plan, raccourcis et fermeture dans la zone de notification sont réglables.
 
 ## Formats pris en charge

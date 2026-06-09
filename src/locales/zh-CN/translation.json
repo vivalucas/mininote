@@ -53,7 +53,8 @@
     "unsupportedImageFormat": "不支持的图片格式",
     "unsupportedShortcut": "{{field}} 配置无效",
     "unsupportedShortcutGeneric": "快捷键配置无效",
-    "fileTooLarge": "文件过大（上限 {{maxMb}} MB）"
+    "fileTooLarge": "文件过大（上限 {{maxMb}} MB）",
+    "unsafeExportPath": "不能导出到 MiniNote 的内部笔记目录，请选择其他位置"
   },
   "markdown": {
     "copied": "已复制",
@@ -104,6 +105,7 @@
     },
     "sidebar": {
       "clearSearch": "清空搜索",
+      "importFolder": "导入文件夹",
       "importMarkdown": "导入文件",
       "newNote": "新建笔记",
       "searchPlaceholder": "搜索笔记…"
@@ -424,6 +426,9 @@
   "dialogs": {
     "import": {
       "title": "导入文件"
+    },
+    "importFolder": {
+      "title": "导入文件夹"
     },
     "exportMarkdown": {
       "title": "导出 Markdown"

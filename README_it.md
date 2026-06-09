@@ -18,8 +18,8 @@ MiniNote è un'app per note desktop local-first. Aprila, scrivi subito, tieni tu
 - **Note rapide**: apri una piccola finestra dalla tray o con una scorciatoia globale; può apparire vicino al cursore.
 - **Riquadri desktop**: fissa una nota sullo schermo con colori personalizzati e rendering Markdown opzionale.
 - **Anteprima Markdown**: utile per testo strutturato quotidiano, senza voler essere un IDE Markdown completo.
-- **Importazione ed esportazione**: supporta `.mint`, `.md`, `.markdown` e `.txt`.
-- **Protezione della sincronizzazione con il file sorgente**: i file importati possono mantenere un collegamento alla sorgente; MiniNote controlla eventuali modifiche esterne prima di scrivere di nuovo.
+- **Importazione ed esportazione**: importa un singolo file o una cartella come categoria; supporta `.mint`, `.md`, `.markdown` e `.txt`.
+- **Protezione della sincronizzazione con il file sorgente**: i file importati ed esportati possono mantenere un collegamento alla sorgente; MiniNote controlla eventuali modifiche esterne prima di scrivere di nuovo.
 - **Aspetto configurabile**: tema, dimensione del carattere, immagine di sfondo, scorciatoie e chiusura nella tray sono regolabili.
 
 ## Formati supportati

@@ -8,6 +8,7 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import type { AboutPanelProps } from "./AboutPanel";
 import {
   exportMarkdownNote,
+  importMarkdownFolder,
   importMarkdownNote,
   importMarkdownPath,
 } from "../features/importExport/api";
@@ -1321,6 +1322,34 @@ export function MainWindow({
     }
   };
 
+  const handleImportFolder = async () => {
+    setErrorMessage(null);
+    try {
+      if (selectedId && saveState === "dirty") {
+        const saved = await saveCurrentNote();
+        if (!saved) return;
+      }
+
+      const importedNotes = await importMarkdownFolder();
+      if (!importedNotes) return;
+
+      await refreshNotes();
+      const firstNote = importedNotes[0];
+      if (!firstNote) return;
+
+      if (firstNote.category) {
+        setCollapsedCategories((current) => {
+          const next = new Set(current);
+          next.delete(firstNote.category);
+          return next;
+        });
+      }
+      applyNote(firstNote);
+    } catch (error) {
+      setErrorMessage(getErrorMessage(error));
+    }
+  };
+
   const handleSelectNote = async (id: string) => {
     if (id === selectedId) return;
     setDeleteConfirm(false);
@@ -1380,13 +1409,16 @@ export function MainWindow({
         if (!saved) return;
       }
 
-      await exportMarkdownNote(
+      const exportedNote = await exportMarkdownNote(
         {
           id: note.id,
           title: note.id === selectedId ? title : note.title,
         },
         format,
       );
+      if (exportedNote) {
+        replaceNoteMetadata(exportedNote);
+      }
     } catch (error) {
       setErrorMessage(getErrorMessage(error));
     }
@@ -2000,6 +2032,26 @@ export function MainWindow({
                     <path d="M5 21h14" />
                   </svg>
                   <span>{t("main.sidebar.importMarkdown", { defaultValue: "导入文件" })}</span>
+                </button>
+                <button
+                  onClick={() => void handleImportFolder()}
+                  className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[12px] font-body text-ink-faint hover:text-bamboo hover:bg-bamboo-mist/50 transition-all cursor-pointer group"
+                >
+                  <svg
+                    width="13"
+                    height="13"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H10l2 2h5.5A2.5 2.5 0 0 1 20 8.5v7A2.5 2.5 0 0 1 17.5 18h-11A2.5 2.5 0 0 1 4 15.5z" />
+                    <path d="M12 9v5" />
+                    <path d="m9.5 11.5 2.5 2.5 2.5-2.5" />
+                  </svg>
+                  <span>{t("main.sidebar.importFolder", { defaultValue: "导入文件夹" })}</span>
                 </button>
               </div>
 
