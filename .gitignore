@@ -13,12 +13,24 @@ obj/
 !**/[Pp]ackages/build/
 
 ## Build results
+[Bb]uild/
 [Dd]ebug/
 [Rr]elease/
 x64/
 x86/
 *.dmg
 *.app
+*.dSYM/
+*.dSYM.zip
+*.xcresult/
+*.xcresult
+DerivedData/
+coverage/
+test-results/
+playwright-report/
+*.profraw
+*.gcda
+*.gcno
 
 ## Node / Tauri
 node_modules/
