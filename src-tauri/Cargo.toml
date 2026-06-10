@@ -1,6 +1,6 @@
 [package]
 name = "mininote"
-version = "1.0.1"
+version = "1.0.2"
 description = "A lightweight cross-platform desktop note app"
 authors = ["Lucas"]
 edition = "2021"
@@ -32,6 +32,8 @@ chrono = { version = "0.4", features = ["serde"] }
 uuid = { version = "1", features = ["v4", "serde"] }
 tauri-plugin-clipboard-manager = "2"
 tokio = { version = "1", features = ["time"] }
+notify = "7"
+notify-debouncer-mini = "0.5"
 trash = "5"
 keyring = { version = "3", features = ["apple-native", "windows-native", "linux-native"] }
 semver = "1"

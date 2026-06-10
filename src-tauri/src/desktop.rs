@@ -1,6 +1,9 @@
 use crate::{
     locales::{self, Locale},
-    services::notes::{default_store, AppConfig, AppError},
+    services::{
+        notes::{default_store, AppConfig, AppError},
+        source_watcher::SourceFileWatcher,
+    },
 };
 use serde::{Deserialize, Serialize};
 use std::{
@@ -1382,6 +1385,10 @@ pub fn setup_desktop(app: &mut App) -> Result<(), Box<dyn Error>> {
     setup_app_menu(app)?;
     setup_tray(app)?;
     schedule_notepad_prewarm(app.handle());
+
+    // Start watching external source files for changes
+    let source_watcher = SourceFileWatcher::start(app.handle().clone());
+    app.manage(source_watcher);
 
     DESKTOP_READY.store(true, Ordering::SeqCst);
 

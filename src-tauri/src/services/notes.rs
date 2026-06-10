@@ -228,8 +228,8 @@ impl From<tauri::Error> for AppError {
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
-struct MetadataFile {
-    notes: Vec<NoteMetadata>,
+pub(super) struct MetadataFile {
+    pub notes: Vec<NoteMetadata>,
 }
 
 #[derive(Debug, Clone)]
@@ -1053,6 +1053,10 @@ impl NoteStore {
         }
     }
 
+    pub(super) fn load_metadata_for_watcher(&self) -> Result<MetadataFile, AppError> {
+        self.load_metadata()
+    }
+
     fn save_metadata(&self, metadata: &MetadataFile) -> Result<(), AppError> {
         self.ensure_base_dir()?;
         write_json_atomic(&self.metadata_path(), metadata)
@@ -1166,7 +1170,7 @@ fn normalize_note_category(category: &str) -> Result<String, AppError> {
     Ok(category.to_string())
 }
 
-fn file_modified_time_ms(path: &Path) -> Result<f64, AppError> {
+pub(super) fn file_modified_time_ms(path: &Path) -> Result<f64, AppError> {
     let modified = fs::metadata(path)?.modified()?;
     let duration = modified
         .duration_since(std::time::UNIX_EPOCH)
@@ -1174,7 +1178,7 @@ fn file_modified_time_ms(path: &Path) -> Result<f64, AppError> {
     Ok(duration.as_secs_f64() * 1000.0)
 }
 
-fn same_modified_time(left: f64, right: f64) -> bool {
+pub(super) fn same_modified_time(left: f64, right: f64) -> bool {
     (left - right).abs() < 1.0
 }
 

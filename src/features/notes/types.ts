@@ -28,3 +28,8 @@ export interface SyncSourceRequest {
   expectedModifiedTime?: number;
   force?: boolean;
 }
+
+export interface SourceFileChangedPayload {
+  noteId: string;
+  title: string;
+}

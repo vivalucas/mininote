@@ -15,7 +15,7 @@ import { useImagePaste } from "../features/images/useImagePaste";
 import { useImageBaseDir } from "../features/images/useImageBaseDir";
 import { reportInstallPreparation } from "../features/update/api";
 import type { UpdateInstallPrepareRequest } from "../features/update/types";
-import type { Note, NoteMetadata } from "../features/notes/types";
+import type { Note, NoteMetadata, SourceFileChangedPayload } from "../features/notes/types";
 import {
   countNoteChars,
   formatShortDate,
@@ -150,6 +150,7 @@ export function NotePad({
   );
   const [isExiting, setIsExiting] = useState(false);
   const [sourceConflict, setSourceConflict] = useState<SourceConflictState | null>(null);
+  const [hasSourceUpdate, setHasSourceUpdate] = useState<string | null>(null);
   const titleRef = useRef<HTMLInputElement>(null);
   const contentRef = useRef<HTMLTextAreaElement>(null);
   const windowLabelRef = useRef("");
@@ -247,6 +248,28 @@ export function NotePad({
       void unlisten.then((fn) => fn());
     };
   }, [refreshNotes]);
+
+  useEffect(() => {
+    const unlisten = listen<SourceFileChangedPayload>("source-file-changed", (event) => {
+      const { noteId } = event.payload;
+      if (editingNoteId !== noteId) return;
+
+      if (statusRef.current !== "dirty") {
+        void getNote(noteId)
+          .then((note) => {
+            if (editingNoteId !== noteId) return;
+            applyNote(note);
+            setHasSourceUpdate(null);
+          })
+          .catch(() => undefined);
+      } else {
+        setHasSourceUpdate(noteId);
+      }
+    });
+    return () => {
+      void unlisten.then((fn) => fn());
+    };
+  }, [editingNoteId, applyNote]);
 
   useEffect(() => {
     if (isStandby.current) return;
@@ -632,6 +655,21 @@ export function NotePad({
     );
   }, [t]);
 
+  const handleViewSourceUpdate = useCallback(async () => {
+    if (!hasSourceUpdate) return;
+    try {
+      const note = await reloadNoteSourceFile(hasSourceUpdate);
+      applyNote(note);
+      setHasSourceUpdate(null);
+    } catch (error) {
+      setErrorMessage(getErrorMessage(error));
+    }
+  }, [hasSourceUpdate, applyNote]);
+
+  const handleDismissSourceUpdate = useCallback(() => {
+    setHasSourceUpdate(null);
+  }, []);
+
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if ((event.ctrlKey || event.metaKey) && event.key === "s") {
@@ -812,6 +850,41 @@ export function NotePad({
               </button>
             </div>
           </div>
+        </div>
+      )}
+      {hasSourceUpdate && (
+        <div className="flex items-center gap-2 px-4 py-1.5 bg-amber-50/80 border-b border-amber-200/50 text-amber-800 shrink-0">
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="shrink-0"
+          >
+            <path d="M21 12a9 9 0 1 1-6.22-8.56" />
+            <path d="M21 3v5h-5" />
+          </svg>
+          <span className="text-[11px] flex-1">
+            {t("main.sourceUpdate.available", { defaultValue: "外部文件已更新" })}
+          </span>
+          <button
+            type="button"
+            onClick={() => void handleViewSourceUpdate()}
+            className="text-[11px] px-2 py-0.5 rounded bg-amber-100 hover:bg-amber-200 transition-colors cursor-pointer"
+          >
+            {t("main.sourceUpdate.view", { defaultValue: "查看更新" })}
+          </button>
+          <button
+            type="button"
+            onClick={handleDismissSourceUpdate}
+            className="text-[11px] px-2 py-0.5 rounded hover:bg-amber-200/60 transition-colors cursor-pointer"
+          >
+            {t("main.sourceUpdate.ignore", { defaultValue: "忽略" })}
+          </button>
         </div>
       )}
       {isTile ? (

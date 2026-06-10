@@ -413,9 +413,16 @@ pub fn run() {
         .run(|app, event| {
             #[cfg(any(target_os = "macos", target_os = "ios", target_os = "android"))]
             if let tauri::RunEvent::Opened { urls } = event {
-                for url in urls {
-                    if let Some(file_path) = desktop::extract_file_url(&url) {
-                        desktop::handle_open_file_request(app, file_path);
+                if urls.is_empty() {
+                    // Dock icon clicked with no file URLs — restore the main window
+                    if let Err(e) = desktop::show_main_window(app) {
+                        eprintln!("failed to show main window on reopen: {e}");
+                    }
+                } else {
+                    for url in urls {
+                        if let Some(file_path) = desktop::extract_file_url(&url) {
+                            desktop::handle_open_file_request(app, file_path);
+                        }
                     }
                 }
             }

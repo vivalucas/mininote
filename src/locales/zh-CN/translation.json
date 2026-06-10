@@ -165,6 +165,11 @@
     "sourceSync": {
       "missing": "原文件不存在或不可访问，当前内容已保存到 MiniNote",
       "failed": "当前内容已保存到 MiniNote，但同步原文件失败"
+    },
+    "sourceUpdate": {
+      "available": "外部文件已更新",
+      "view": "查看更新",
+      "ignore": "忽略"
     }
   },
   "noteMenu": {

@@ -56,7 +56,7 @@ import {
 import { cleanUnusedImages } from "../features/images/api";
 import { useImagePaste } from "../features/images/useImagePaste";
 import { useImageBaseDir } from "../features/images/useImageBaseDir";
-import type { Note, NoteMetadata } from "../features/notes/types";
+import type { Note, NoteMetadata, SourceFileChangedPayload } from "../features/notes/types";
 import {
   countNoteChars,
   filterNotes,
@@ -395,6 +395,7 @@ export function MainWindow({
   const [categoryMenuClosing, setCategoryMenuClosing] = useState(false);
   const [categoryMenuConfirmDelete, setCategoryMenuConfirmDelete] = useState(false);
   const [sourceConflict, setSourceConflict] = useState<SourceConflictState | null>(null);
+  const [hasSourceUpdate, setHasSourceUpdate] = useState<string | null>(null);
   const contentRef = useRef<HTMLTextAreaElement>(null);
   const windowLabelRef = useRef("main");
   const imageBaseDir = useImageBaseDir();
@@ -824,6 +825,33 @@ export function MainWindow({
   }, [refreshNotes, loadNote, clearCurrentNote]);
 
   useEffect(() => {
+    const unlisten = listen<SourceFileChangedPayload>("source-file-changed", (event) => {
+      const { noteId } = event.payload;
+      const currentId = selectedIdRef.current;
+      if (currentId !== noteId) return;
+
+      if (saveStateRef.current !== "dirty") {
+        // Editor has no unsaved changes — silently refresh
+        void getNote(noteId)
+          .then((note) => {
+            if (selectedIdRef.current !== noteId) return;
+            setTitle(note.title);
+            setContent(note.content);
+            setSaveState("saved");
+            setHasSourceUpdate(null);
+          })
+          .catch(() => undefined);
+      } else {
+        // Editor has unsaved changes — show notification
+        setHasSourceUpdate(noteId);
+      }
+    });
+    return () => {
+      void unlisten.then((fn) => fn());
+    };
+  }, []);
+
+  useEffect(() => {
     function handleFocus() {
       void refreshNotes();
     }
@@ -1042,6 +1070,22 @@ export function MainWindow({
       }),
     );
   }, [t]);
+
+  const handleViewSourceUpdate = useCallback(async () => {
+    if (!hasSourceUpdate) return;
+    try {
+      const note = await reloadNoteSourceFile(hasSourceUpdate);
+      replaceNoteMetadata(note);
+      applyNote(note);
+      setHasSourceUpdate(null);
+    } catch (error) {
+      setErrorMessage(getErrorMessage(error));
+    }
+  }, [hasSourceUpdate, applyNote, replaceNoteMetadata]);
+
+  const handleDismissSourceUpdate = useCallback(() => {
+    setHasSourceUpdate(null);
+  }, []);
 
   const closeMainWindowAfterSave = useCallback(async () => {
     if (!(await ensureCurrentNoteSaved())) return;
@@ -1943,6 +1987,41 @@ export function MainWindow({
             </button>
           </div>
         </div>
+        {hasSourceUpdate && (
+          <div className="relative z-10 flex items-center gap-2 px-4 py-1.5 bg-amber-50/80 border-b border-amber-200/50 text-amber-800 shrink-0">
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="shrink-0"
+            >
+              <path d="M21 12a9 9 0 1 1-6.22-8.56" />
+              <path d="M21 3v5h-5" />
+            </svg>
+            <span className="text-[11px] flex-1">
+              {t("main.sourceUpdate.available", { defaultValue: "外部文件已更新" })}
+            </span>
+            <button
+              type="button"
+              onClick={() => void handleViewSourceUpdate()}
+              className="text-[11px] px-2 py-0.5 rounded bg-amber-100 hover:bg-amber-200 transition-colors cursor-pointer"
+            >
+              {t("main.sourceUpdate.view", { defaultValue: "查看更新" })}
+            </button>
+            <button
+              type="button"
+              onClick={handleDismissSourceUpdate}
+              className="text-[11px] px-2 py-0.5 rounded hover:bg-amber-200/60 transition-colors cursor-pointer"
+            >
+              {t("main.sourceUpdate.ignore", { defaultValue: "忽略" })}
+            </button>
+          </div>
+        )}
 
         <div className="relative z-10 flex flex-1 min-h-0">
           <div
