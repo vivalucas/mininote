@@ -169,7 +169,10 @@
     "sourceUpdate": {
       "available": "Source file updated",
       "view": "View update",
-      "ignore": "Ignore"
+      "ignore": "Ignore",
+      "confirmDiscard": "You have unsaved edits. Viewing the update will replace your current content.",
+      "confirmYes": "View anyway",
+      "cancel": "Cancel"
     }
   },
   "noteMenu": {

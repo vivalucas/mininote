@@ -396,6 +396,7 @@ export function MainWindow({
   const [categoryMenuConfirmDelete, setCategoryMenuConfirmDelete] = useState(false);
   const [sourceConflict, setSourceConflict] = useState<SourceConflictState | null>(null);
   const [hasSourceUpdate, setHasSourceUpdate] = useState<string | null>(null);
+  const [sourceUpdateConfirming, setSourceUpdateConfirming] = useState(false);
   const contentRef = useRef<HTMLTextAreaElement>(null);
   const windowLabelRef = useRef("main");
   const imageBaseDir = useImageBaseDir();
@@ -839,11 +840,13 @@ export function MainWindow({
             setContent(note.content);
             setSaveState("saved");
             setHasSourceUpdate(null);
+            setSourceUpdateConfirming(false);
           })
           .catch(() => undefined);
       } else {
         // Editor has unsaved changes — show notification
         setHasSourceUpdate(noteId);
+        setSourceUpdateConfirming(false);
       }
     });
     return () => {
@@ -1073,11 +1076,29 @@ export function MainWindow({
 
   const handleViewSourceUpdate = useCallback(async () => {
     if (!hasSourceUpdate) return;
+    if (saveStateRef.current === "dirty") {
+      setSourceUpdateConfirming(true);
+      return;
+    }
     try {
       const note = await reloadNoteSourceFile(hasSourceUpdate);
       replaceNoteMetadata(note);
       applyNote(note);
       setHasSourceUpdate(null);
+      setSourceUpdateConfirming(false);
+    } catch (error) {
+      setErrorMessage(getErrorMessage(error));
+    }
+  }, [hasSourceUpdate, applyNote, replaceNoteMetadata]);
+
+  const handleConfirmSourceUpdate = useCallback(async () => {
+    if (!hasSourceUpdate) return;
+    try {
+      const note = await reloadNoteSourceFile(hasSourceUpdate);
+      replaceNoteMetadata(note);
+      applyNote(note);
+      setHasSourceUpdate(null);
+      setSourceUpdateConfirming(false);
     } catch (error) {
       setErrorMessage(getErrorMessage(error));
     }
@@ -1085,6 +1106,7 @@ export function MainWindow({
 
   const handleDismissSourceUpdate = useCallback(() => {
     setHasSourceUpdate(null);
+    setSourceUpdateConfirming(false);
   }, []);
 
   const closeMainWindowAfterSave = useCallback(async () => {
@@ -1988,7 +2010,7 @@ export function MainWindow({
           </div>
         </div>
         {hasSourceUpdate && (
-          <div className="relative z-10 flex items-center gap-2 px-4 py-1.5 bg-amber-50/80 border-b border-amber-200/50 text-amber-800 shrink-0">
+          <div className="flex items-center gap-2 px-4 py-1.5 bg-amber-50/80 border-b border-amber-200/50 text-amber-800 shrink-0">
             <svg
               width="13"
               height="13"
@@ -2003,23 +2025,49 @@ export function MainWindow({
               <path d="M21 12a9 9 0 1 1-6.22-8.56" />
               <path d="M21 3v5h-5" />
             </svg>
-            <span className="text-[11px] flex-1">
-              {t("main.sourceUpdate.available", { defaultValue: "外部文件已更新" })}
-            </span>
-            <button
-              type="button"
-              onClick={() => void handleViewSourceUpdate()}
-              className="text-[11px] px-2 py-0.5 rounded bg-amber-100 hover:bg-amber-200 transition-colors cursor-pointer"
-            >
-              {t("main.sourceUpdate.view", { defaultValue: "查看更新" })}
-            </button>
-            <button
-              type="button"
-              onClick={handleDismissSourceUpdate}
-              className="text-[11px] px-2 py-0.5 rounded hover:bg-amber-200/60 transition-colors cursor-pointer"
-            >
-              {t("main.sourceUpdate.ignore", { defaultValue: "忽略" })}
-            </button>
+            {sourceUpdateConfirming ? (
+              <>
+                <span className="text-[11px] flex-1">
+                  {t("main.sourceUpdate.confirmDiscard", {
+                    defaultValue: "当前编辑还未保存，查看更新会替换掉现有内容",
+                  })}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => void handleConfirmSourceUpdate()}
+                  className="text-[11px] px-2 py-0.5 rounded bg-amber-200 hover:bg-amber-300 transition-colors cursor-pointer font-medium"
+                >
+                  {t("main.sourceUpdate.confirmYes", { defaultValue: "仍然查看" })}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSourceUpdateConfirming(false)}
+                  className="text-[11px] px-2 py-0.5 rounded hover:bg-amber-200/60 transition-colors cursor-pointer"
+                >
+                  {t("main.sourceUpdate.cancel", { defaultValue: "取消" })}
+                </button>
+              </>
+            ) : (
+              <>
+                <span className="text-[11px] flex-1">
+                  {t("main.sourceUpdate.available", { defaultValue: "外部文件已更新" })}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => void handleViewSourceUpdate()}
+                  className="text-[11px] px-2 py-0.5 rounded bg-amber-100 hover:bg-amber-200 transition-colors cursor-pointer"
+                >
+                  {t("main.sourceUpdate.view", { defaultValue: "查看更新" })}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDismissSourceUpdate}
+                  className="text-[11px] px-2 py-0.5 rounded hover:bg-amber-200/60 transition-colors cursor-pointer"
+                >
+                  {t("main.sourceUpdate.ignore", { defaultValue: "忽略" })}
+                </button>
+              </>
+            )}
           </div>
         )}
 

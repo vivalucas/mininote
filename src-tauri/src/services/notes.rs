@@ -896,16 +896,21 @@ impl NoteStore {
         let now = Utc::now();
         let new_file_name = self.file_name_for(id, &note.title);
         let note_path = self.note_path_in_category(&new_file_name, &note.category);
-        if let Some(parent) = note_path.parent() {
-            fs::create_dir_all(parent)?;
+        let content_changed = match fs::read_to_string(&note_path) {
+            Ok(existing) => existing != content,
+            Err(_) => true,
+        };
+        if content_changed {
+            if let Some(parent) = note_path.parent() {
+                fs::create_dir_all(parent)?;
+            }
+            write_text_atomic(&note_path, &content)?;
+            note.file_name = new_file_name;
+            note.updated_at = now;
+            note.word_count = count_words(&content);
+            note.preview = preview(&content);
         }
-        write_text_atomic(&note_path, &content)?;
-
-        note.file_name = new_file_name.clone();
         note.source_modified_time = Some(modified_time);
-        note.updated_at = now;
-        note.word_count = count_words(&content);
-        note.preview = preview(&content);
 
         let result = Note {
             id: note.id.clone(),

@@ -169,7 +169,10 @@
     "sourceUpdate": {
       "available": "外部文件已更新",
       "view": "查看更新",
-      "ignore": "忽略"
+      "ignore": "忽略",
+      "confirmDiscard": "当前编辑还未保存，查看更新会替换掉现有内容",
+      "confirmYes": "仍然查看",
+      "cancel": "取消"
     }
   },
   "noteMenu": {
