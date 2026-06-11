@@ -152,11 +152,13 @@ export function NotePad({
   const [sourceConflict, setSourceConflict] = useState<SourceConflictState | null>(null);
   const [hasSourceUpdate, setHasSourceUpdate] = useState<string | null>(null);
   const [sourceUpdateConfirming, setSourceUpdateConfirming] = useState(false);
+  const [pendingSourceUpdates, setPendingSourceUpdates] = useState<Set<string>>(() => new Set());
   const titleRef = useRef<HTMLInputElement>(null);
   const contentRef = useRef<HTMLTextAreaElement>(null);
   const windowLabelRef = useRef("");
   const statusRef = useRef<NotePadStatus>("empty");
   const sourceConflictRef = useRef(sourceConflict);
+  const pendingSourceUpdatesRef = useRef(pendingSourceUpdates);
   const allowNextWindowCloseRef = useRef(false);
   const isStandby = useRef(
     typeof window !== "undefined" &&
@@ -184,6 +186,7 @@ export function NotePad({
   );
   statusRef.current = status;
   sourceConflictRef.current = sourceConflict;
+  pendingSourceUpdatesRef.current = pendingSourceUpdates;
 
   function getAppErrorCode(error: unknown): string | null {
     if (error && typeof error === "object" && "code" in error) {
@@ -228,7 +231,13 @@ export function NotePad({
         }
         if (initialNoteId) {
           const note = await getNote(initialNoteId);
-          if (!cancelled) applyNote(note);
+          if (!cancelled) {
+            applyNote(note);
+            setHasSourceUpdate(
+              pendingSourceUpdatesRef.current.has(initialNoteId) ? initialNoteId : null,
+            );
+            setSourceUpdateConfirming(false);
+          }
         }
       } catch (error) {
         if (!cancelled) setErrorMessage(getErrorMessage(error));
@@ -253,21 +262,15 @@ export function NotePad({
   useEffect(() => {
     const unlisten = listen<SourceFileChangedPayload>("source-file-changed", (event) => {
       const { noteId } = event.payload;
+      setPendingSourceUpdates((current) => {
+        const next = new Set(current);
+        next.add(noteId);
+        return next;
+      });
       if (editingNoteId !== noteId) return;
 
-      if (statusRef.current !== "dirty") {
-        void getNote(noteId)
-          .then((note) => {
-            if (editingNoteId !== noteId) return;
-            applyNote(note);
-            setHasSourceUpdate(null);
-            setSourceUpdateConfirming(false);
-          })
-          .catch(() => undefined);
-      } else {
-        setHasSourceUpdate(noteId);
-        setSourceUpdateConfirming(false);
-      }
+      setHasSourceUpdate(noteId);
+      setSourceUpdateConfirming(false);
     });
     return () => {
       void unlisten.then((fn) => fn());
@@ -372,6 +375,13 @@ export function NotePad({
           expectedModifiedTime: note.sourceModifiedTime,
         });
         syncedSourceModifiedTime = synced.sourceModifiedTime;
+        setPendingSourceUpdates((current) => {
+          const next = new Set(current);
+          next.delete(note.id);
+          return next;
+        });
+        setHasSourceUpdate((current) => (current === note.id ? null : current));
+        setSourceUpdateConfirming(false);
       } catch (syncError) {
         const errorCode = getAppErrorCode(syncError);
         if (errorCode === "sourceFileConflict") {
@@ -623,6 +633,13 @@ export function NotePad({
         const metadata = metadataFromNote(note);
         return current.map((item) => (item.id === metadata.id ? metadata : item));
       });
+      setPendingSourceUpdates((current) => {
+        const next = new Set(current);
+        next.delete(sourceConflict.noteId);
+        return next;
+      });
+      setHasSourceUpdate(null);
+      setSourceUpdateConfirming(false);
       setSourceConflict(null);
     } catch (error) {
       setErrorMessage(getErrorMessage(error));
@@ -641,6 +658,13 @@ export function NotePad({
       setNotes((current) =>
         current.map((item) => (item.id === synced.id ? { ...item, ...synced } : item)),
       );
+      setPendingSourceUpdates((current) => {
+        const next = new Set(current);
+        next.delete(sourceConflict.noteId);
+        return next;
+      });
+      setHasSourceUpdate(null);
+      setSourceUpdateConfirming(false);
       setSourceConflict(null);
       setStatus("saved");
     } catch (error) {
@@ -667,6 +691,11 @@ export function NotePad({
     try {
       const note = await reloadNoteSourceFile(hasSourceUpdate);
       applyNote(note);
+      setPendingSourceUpdates((current) => {
+        const next = new Set(current);
+        next.delete(hasSourceUpdate);
+        return next;
+      });
       setHasSourceUpdate(null);
       setSourceUpdateConfirming(false);
     } catch (error) {
@@ -679,6 +708,11 @@ export function NotePad({
     try {
       const note = await reloadNoteSourceFile(hasSourceUpdate);
       applyNote(note);
+      setPendingSourceUpdates((current) => {
+        const next = new Set(current);
+        next.delete(hasSourceUpdate);
+        return next;
+      });
       setHasSourceUpdate(null);
       setSourceUpdateConfirming(false);
     } catch (error) {
@@ -687,9 +721,15 @@ export function NotePad({
   }, [hasSourceUpdate, applyNote]);
 
   const handleDismissSourceUpdate = useCallback(() => {
+    setPendingSourceUpdates((current) => {
+      if (!hasSourceUpdate) return current;
+      const next = new Set(current);
+      next.delete(hasSourceUpdate);
+      return next;
+    });
     setHasSourceUpdate(null);
     setSourceUpdateConfirming(false);
-  }, []);
+  }, [hasSourceUpdate]);
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
@@ -709,6 +749,8 @@ export function NotePad({
     try {
       const note = await getNote(noteId);
       applyNote(note);
+      setHasSourceUpdate(pendingSourceUpdatesRef.current.has(noteId) ? noteId : null);
+      setSourceUpdateConfirming(false);
       await switchSurfaceMode("pad");
     } catch (error) {
       setErrorMessage(getErrorMessage(error));

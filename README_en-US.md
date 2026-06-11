@@ -19,7 +19,7 @@ MiniNote is a local-first desktop notes app. Open it, write immediately, keep ev
 - **Desktop tiles**: pin a note on screen with custom colors and optional Markdown rendering.
 - **Markdown preview**: useful for everyday structured text, not intended to be a full Markdown IDE.
 - **Import and export**: import a single file, or import a folder as a category; supports `.mint`, `.md`, `.markdown`, and `.txt`.
-- **Source-file sync protection**: imported files and exported files can keep a source link; MiniNote checks for external changes before writing back.
+- **Source-file sync protection**: imported files and exported files can keep a source link; MiniNote surfaces external changes and checks again before writing back, avoiding silent overwrites.
 - **Custom appearance**: theme, font size, background image, shortcuts, and close-to-tray behavior are configurable.
 
 ## Supported Formats

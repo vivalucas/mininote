@@ -1,6 +1,6 @@
 [package]
 name = "mininote"
-version = "1.0.3"
+version = "1.0.4"
 description = "A lightweight cross-platform desktop note app"
 authors = ["Lucas"]
 edition = "2021"

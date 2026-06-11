@@ -479,8 +479,17 @@ impl NoteStore {
         if old_file_name != new_file_name || old_category != new_category {
             let old_path = self.note_path_in_category(&old_file_name, &old_category);
             if old_path.exists() && old_path != new_path {
-                trash::delete(&old_path)
-                    .map_err(|e| AppError::new("trash", format!("移入回收站失败: {e}")))?;
+                if let Err(trash_error) = trash::delete(&old_path) {
+                    if let Err(remove_error) = fs::remove_file(&old_path) {
+                        let _ = fs::remove_file(&new_path);
+                        return Err(AppError::new(
+                            "trash",
+                            format!(
+                                "移入回收站失败: {trash_error}; 删除旧文件也失败: {remove_error}"
+                            ),
+                        ));
+                    }
+                }
             }
         }
 

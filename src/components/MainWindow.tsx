@@ -397,6 +397,7 @@ export function MainWindow({
   const [sourceConflict, setSourceConflict] = useState<SourceConflictState | null>(null);
   const [hasSourceUpdate, setHasSourceUpdate] = useState<string | null>(null);
   const [sourceUpdateConfirming, setSourceUpdateConfirming] = useState(false);
+  const [pendingSourceUpdates, setPendingSourceUpdates] = useState<Set<string>>(() => new Set());
   const contentRef = useRef<HTMLTextAreaElement>(null);
   const windowLabelRef = useRef("main");
   const imageBaseDir = useImageBaseDir();
@@ -406,6 +407,8 @@ export function MainWindow({
   sourceConflictRef.current = sourceConflict;
   const selectedIdRef = useRef(selectedId);
   selectedIdRef.current = selectedId;
+  const pendingSourceUpdatesRef = useRef(pendingSourceUpdates);
+  pendingSourceUpdatesRef.current = pendingSourceUpdates;
 
   const selectedNote = useMemo(
     () => notes.find((note) => note.id === selectedId) ?? null,
@@ -578,6 +581,8 @@ export function MainWindow({
       const note = await getNote(id);
       applyNote(note);
       replaceNoteMetadata(note);
+      setHasSourceUpdate(pendingSourceUpdatesRef.current.has(id) ? id : null);
+      setSourceUpdateConfirming(false);
     },
     [applyNote, replaceNoteMetadata],
   );
@@ -828,26 +833,16 @@ export function MainWindow({
   useEffect(() => {
     const unlisten = listen<SourceFileChangedPayload>("source-file-changed", (event) => {
       const { noteId } = event.payload;
+      setPendingSourceUpdates((current) => {
+        const next = new Set(current);
+        next.add(noteId);
+        return next;
+      });
       const currentId = selectedIdRef.current;
       if (currentId !== noteId) return;
 
-      if (saveStateRef.current !== "dirty") {
-        // Editor has no unsaved changes — silently refresh
-        void getNote(noteId)
-          .then((note) => {
-            if (selectedIdRef.current !== noteId) return;
-            setTitle(note.title);
-            setContent(note.content);
-            setSaveState("saved");
-            setHasSourceUpdate(null);
-            setSourceUpdateConfirming(false);
-          })
-          .catch(() => undefined);
-      } else {
-        // Editor has unsaved changes — show notification
-        setHasSourceUpdate(noteId);
-        setSourceUpdateConfirming(false);
-      }
+      setHasSourceUpdate(noteId);
+      setSourceUpdateConfirming(false);
     });
     return () => {
       void unlisten.then((fn) => fn());
@@ -968,6 +963,13 @@ export function MainWindow({
           setNotes((current) =>
             current.map((item) => (item.id === synced.id ? { ...item, ...synced } : item)),
           );
+          setPendingSourceUpdates((current) => {
+            const next = new Set(current);
+            next.delete(note.id);
+            return next;
+          });
+          setHasSourceUpdate((current) => (current === note.id ? null : current));
+          setSourceUpdateConfirming(false);
         } catch (syncError) {
           const errorCode = getAppErrorCode(syncError);
           shouldClearError = false;
@@ -1038,6 +1040,13 @@ export function MainWindow({
       const note = await reloadNoteSourceFile(sourceConflict.noteId);
       replaceNoteMetadata(note);
       applyNote(note);
+      setPendingSourceUpdates((current) => {
+        const next = new Set(current);
+        next.delete(sourceConflict.noteId);
+        return next;
+      });
+      setHasSourceUpdate(null);
+      setSourceUpdateConfirming(false);
       setSourceConflict(null);
     } catch (error) {
       setErrorMessage(getErrorMessage(error));
@@ -1056,6 +1065,13 @@ export function MainWindow({
       setNotes((current) =>
         current.map((item) => (item.id === synced.id ? { ...item, ...synced } : item)),
       );
+      setPendingSourceUpdates((current) => {
+        const next = new Set(current);
+        next.delete(sourceConflict.noteId);
+        return next;
+      });
+      setHasSourceUpdate(null);
+      setSourceUpdateConfirming(false);
       setSourceConflict(null);
       setSaveState("saved");
       setErrorMessage(null);
@@ -1084,6 +1100,11 @@ export function MainWindow({
       const note = await reloadNoteSourceFile(hasSourceUpdate);
       replaceNoteMetadata(note);
       applyNote(note);
+      setPendingSourceUpdates((current) => {
+        const next = new Set(current);
+        next.delete(hasSourceUpdate);
+        return next;
+      });
       setHasSourceUpdate(null);
       setSourceUpdateConfirming(false);
     } catch (error) {
@@ -1097,6 +1118,11 @@ export function MainWindow({
       const note = await reloadNoteSourceFile(hasSourceUpdate);
       replaceNoteMetadata(note);
       applyNote(note);
+      setPendingSourceUpdates((current) => {
+        const next = new Set(current);
+        next.delete(hasSourceUpdate);
+        return next;
+      });
       setHasSourceUpdate(null);
       setSourceUpdateConfirming(false);
     } catch (error) {
@@ -1105,9 +1131,15 @@ export function MainWindow({
   }, [hasSourceUpdate, applyNote, replaceNoteMetadata]);
 
   const handleDismissSourceUpdate = useCallback(() => {
+    setPendingSourceUpdates((current) => {
+      if (!hasSourceUpdate) return current;
+      const next = new Set(current);
+      next.delete(hasSourceUpdate);
+      return next;
+    });
     setHasSourceUpdate(null);
     setSourceUpdateConfirming(false);
-  }, []);
+  }, [hasSourceUpdate]);
 
   const closeMainWindowAfterSave = useCallback(async () => {
     if (!(await ensureCurrentNoteSaved())) return;

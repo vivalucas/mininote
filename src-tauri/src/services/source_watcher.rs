@@ -25,7 +25,7 @@ type SharedDebouncer = Arc<Mutex<notify_debouncer_mini::Debouncer<notify::Recomm
 
 pub struct SourceFileWatcher {
     debouncer: SharedDebouncer,
-    watched_paths: Arc<Mutex<HashSet<PathBuf>>>,
+    watched_dirs: Arc<Mutex<HashSet<PathBuf>>>,
 }
 
 impl SourceFileWatcher {
@@ -33,7 +33,7 @@ impl SourceFileWatcher {
         let (tx, rx) = mpsc::channel();
         let debouncer = new_debouncer(DEBOUNCE_DURATION, tx).expect("failed to create debouncer");
         let debouncer = Arc::new(Mutex::new(debouncer));
-        let watched_paths: Arc<Mutex<HashSet<PathBuf>>> = Arc::new(Mutex::new(HashSet::new()));
+        let watched_dirs: Arc<Mutex<HashSet<PathBuf>>> = Arc::new(Mutex::new(HashSet::new()));
 
         // Spawn a thread to process debounced file events
         let app_clone = app.clone();
@@ -56,7 +56,7 @@ impl SourceFileWatcher {
 
         let watcher = Self {
             debouncer,
-            watched_paths,
+            watched_dirs,
         };
 
         // Initial watch setup
@@ -66,14 +66,14 @@ impl SourceFileWatcher {
 
         // Listen for notes-changed events to keep watch list in sync
         let debouncer_clone = Arc::clone(&watcher.debouncer);
-        let paths_clone = Arc::clone(&watcher.watched_paths);
+        let dirs_clone = Arc::clone(&watcher.watched_dirs);
         app.listen("notes-changed", move |_event| {
             // Short delay to let metadata.json finish writing
             thread::sleep(Duration::from_millis(50));
             if let (Ok(mut debouncer), Ok(mut watched)) =
-                (debouncer_clone.lock(), paths_clone.lock())
+                (debouncer_clone.lock(), dirs_clone.lock())
             {
-                let _ = refresh_watched_paths(&mut debouncer, &mut watched);
+                let _ = refresh_watched_dirs(&mut debouncer, &mut watched);
             }
         });
 
@@ -97,82 +97,77 @@ impl SourceFileWatcher {
             }
         };
 
-        // Find the note whose source_path matches the changed file.
-        // Canonicalize both paths to handle differences in separators,
-        // symlinks, and relative components across platforms.
-        let canonical_changed = std::fs::canonicalize(changed_path).ok();
-        let note_meta = metadata_file.notes.iter().find(|note| {
-            note.source_path
-                .as_ref()
-                .and_then(|sp| {
-                    let note_path = PathBuf::from(sp);
-                    let canonical_note = std::fs::canonicalize(&note_path).ok();
-                    match (canonical_note, canonical_changed.as_ref()) {
-                        (Some(a), Some(b)) => Some(a == *b),
-                        _ => Some(note_path == changed_path),
-                    }
-                })
-                .unwrap_or(false)
-        });
-
-        let note_meta = match note_meta {
-            Some(n) => n,
-            None => return,
-        };
-
-        let note_id = &note_meta.id;
-
-        // Check if the file was actually modified (mtime changed)
-        let current_mtime = match file_modified_time_ms(changed_path) {
-            Ok(m) => m,
-            Err(_) => return, // File may have been deleted
-        };
-
-        if let Some(recorded_mtime) = note_meta.source_modified_time {
-            if same_modified_time(current_mtime, recorded_mtime) {
-                return; // No real change
+        for note_meta in metadata_file.notes.iter() {
+            let Some(source_path) = note_meta.source_path.as_ref() else {
+                continue;
+            };
+            let source_path = PathBuf::from(source_path);
+            if !source_path_may_match_event(&source_path, changed_path) {
+                continue;
             }
-        }
 
-        // Reload the source file into MiniNote
-        match store.reload_source_file(note_id) {
-            Ok(reloaded) => {
-                let payload = SourceFileChangedPayload {
-                    note_id: reloaded.id,
-                    title: reloaded.title,
-                };
-                let _ = app.emit("source-file-changed", payload);
-                // Also notify the sidebar to refresh metadata (updatedAt, preview, etc.)
-                let _ = app.emit("notes-changed", ());
+            // Check if the file was actually modified (mtime changed).
+            let current_mtime = match file_modified_time_ms(&source_path) {
+                Ok(m) => m,
+                Err(_) => continue, // File may have been deleted
+            };
+
+            if let Some(recorded_mtime) = note_meta.source_modified_time {
+                if same_modified_time(current_mtime, recorded_mtime) {
+                    continue;
+                }
             }
-            Err(e) => {
-                eprintln!("source watcher: failed to reload note {}: {e}", note_id);
-            }
+
+            let payload = SourceFileChangedPayload {
+                note_id: note_meta.id.clone(),
+                title: note_meta.title.clone(),
+            };
+            let _ = app.emit("source-file-changed", payload);
         }
     }
 
     fn refresh_watch_list(&self) -> Result<(), Box<dyn std::error::Error>> {
         let mut debouncer = self.debouncer.lock().map_err(|e| e.to_string())?;
-        let mut watched = self.watched_paths.lock().map_err(|e| e.to_string())?;
-        refresh_watched_paths(&mut debouncer, &mut watched)
+        let mut watched = self.watched_dirs.lock().map_err(|e| e.to_string())?;
+        refresh_watched_dirs(&mut debouncer, &mut watched)
     }
 }
 
-fn refresh_watched_paths(
+fn source_path_may_match_event(source_path: &Path, changed_path: &Path) -> bool {
+    let canonical_source = std::fs::canonicalize(source_path).ok();
+    let canonical_changed = std::fs::canonicalize(changed_path).ok();
+    match (canonical_source, canonical_changed) {
+        (Some(source), Some(changed)) if source == changed => return true,
+        _ => {}
+    }
+
+    if source_path == changed_path {
+        return true;
+    }
+
+    match (source_path.parent(), changed_path.parent()) {
+        (Some(source_parent), Some(changed_parent)) => source_parent == changed_parent,
+        _ => false,
+    }
+}
+
+fn refresh_watched_dirs(
     debouncer: &mut notify_debouncer_mini::Debouncer<notify::RecommendedWatcher>,
     watched: &mut HashSet<PathBuf>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let store = default_store()?;
     let metadata_file = store.load_metadata_for_watcher()?;
 
-    let current_paths: HashSet<PathBuf> = metadata_file
+    let current_dirs: HashSet<PathBuf> = metadata_file
         .notes
         .iter()
         .filter_map(|note| {
             note.source_path.as_ref().and_then(|sp| {
                 let path = PathBuf::from(sp);
                 if path.is_file() {
-                    Some(path)
+                    path.parent().map(Path::to_path_buf)
+                } else if path.parent().is_some_and(Path::is_dir) {
+                    path.parent().map(Path::to_path_buf)
                 } else {
                     None
                 }
@@ -180,22 +175,23 @@ fn refresh_watched_paths(
         })
         .collect();
 
-    // Remove watches for paths no longer in source_path list
-    for path in watched.iter() {
-        if !current_paths.contains(path) {
-            let _ = debouncer.watcher().unwatch(path);
+    // Remove watches for directories no longer in the source_path list.
+    for dir in watched.iter() {
+        if !current_dirs.contains(dir) {
+            let _ = debouncer.watcher().unwatch(dir);
         }
     }
 
-    // Add watches for new paths
-    for path in &current_paths {
-        if !watched.contains(path) {
-            if let Err(e) = debouncer.watcher().watch(path, RecursiveMode::NonRecursive) {
-                eprintln!("source watcher: failed to watch {}: {e}", path.display());
+    // Watch parent directories rather than files so atomic rename-based writes
+    // keep producing events after the source file is replaced.
+    for dir in &current_dirs {
+        if !watched.contains(dir) {
+            if let Err(e) = debouncer.watcher().watch(dir, RecursiveMode::NonRecursive) {
+                eprintln!("source watcher: failed to watch {}: {e}", dir.display());
             }
         }
     }
 
-    *watched = current_paths;
+    *watched = current_dirs;
     Ok(())
 }
