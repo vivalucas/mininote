@@ -2,7 +2,16 @@
 
 # MiniNote
 
+[![GitHub Release](https://img.shields.io/github/v/release/vivalucas/mininote?style=flat-square)](https://github.com/vivalucas/mininote/releases) [![License](https://img.shields.io/github/license/vivalucas/mininote?style=flat-square)](LICENSE) [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey?style=flat-square)]()
+
 MiniNote 是一款本機優先的桌面便箋應用。打開就寫，內容保存在自己的電腦上，需要時把筆記釘在桌面，不需要帳號、雲端同步或複雜的知識庫流程。
+
+## 技术栈
+
+- **框架**: Tauri 2 (Rust)
+- **前端**: React 19 + TypeScript
+- **样式**: TailwindCSS
+- **性能**: 核心编辑器采用非受控架构与防抖渲染，实现长文本全速打字零卡顿体验。
 
 ## 適合做什麼
 

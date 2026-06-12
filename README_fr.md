@@ -2,7 +2,16 @@
 
 # MiniNote
 
+[![GitHub Release](https://img.shields.io/github/v/release/vivalucas/mininote?style=flat-square)](https://github.com/vivalucas/mininote/releases) [![License](https://img.shields.io/github/license/vivalucas/mininote?style=flat-square)](LICENSE) [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey?style=flat-square)]()
+
 MiniNote est une application de notes de bureau locale avant tout. Ouvrez-la, écrivez immédiatement, gardez tout sur votre machine et épinglez des notes sur le bureau quand vous en avez besoin. Pas de compte, pas de synchronisation cloud, pas de workflow lourd de base de connaissances.
+
+## Technology Stack
+
+- **Framework**: Tauri 2 (Rust)
+- **Frontend**: React 19 + TypeScript
+- **Styling**: TailwindCSS
+- **Performance**: Uncontrolled editor architecture with debounced rendering for zero-lag typing.
 
 ## À quoi elle sert
 

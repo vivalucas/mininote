@@ -2,7 +2,16 @@
 
 # MiniNote
 
+[![GitHub Release](https://img.shields.io/github/v/release/vivalucas/mininote?style=flat-square)](https://github.com/vivalucas/mininote/releases) [![License](https://img.shields.io/github/license/vivalucas/mininote?style=flat-square)](LICENSE) [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey?style=flat-square)]()
+
 MiniNote는 로컬 우선 데스크톱 메모 앱입니다. 열면 바로 쓰고, 모든 내용을 내 컴퓨터에 저장하며, 필요할 때 메모를 데스크톱에 고정할 수 있습니다. 계정, 클라우드 동기화, 무거운 지식 관리 흐름은 필요하지 않습니다.
+
+## Technology Stack
+
+- **Framework**: Tauri 2 (Rust)
+- **Frontend**: React 19 + TypeScript
+- **Styling**: TailwindCSS
+- **Performance**: Uncontrolled editor architecture with debounced rendering for zero-lag typing.
 
 ## 어떤 용도에 적합한가
 
