@@ -136,23 +136,23 @@ function applyFormat(
   const lineStart = before.lastIndexOf("\n") + 1;
   const currentLine = before.slice(lineStart);
 
-  let result: string;
+  let replacementStart = start;
+  let replacementEnd = end;
+  let replacementString = "";
   let cursorStart: number;
   let cursorEnd: number;
 
   switch (action) {
     case "bold": {
       const fallback = translate("main.formatSample.boldText", { defaultValue: "粗体文本" });
-      const wrapped = `**${selected || fallback}**`;
-      result = before + wrapped + after;
+      replacementString = `**${selected || fallback}**`;
       cursorStart = start + 2;
       cursorEnd = cursorStart + (selected || fallback).length;
       break;
     }
     case "italic": {
       const fallback = translate("main.formatSample.italicText", { defaultValue: "斜体文本" });
-      const wrapped = `*${selected || fallback}*`;
-      result = before + wrapped + after;
+      replacementString = `*${selected || fallback}*`;
       cursorStart = start + 1;
       cursorEnd = cursorStart + (selected || fallback).length;
       break;
@@ -161,25 +161,24 @@ function applyFormat(
       const prefix = currentLine.match(/^(#{1,5})\s/);
       if (prefix) {
         const newLevel = prefix[1].length < 5 ? "#".repeat(prefix[1].length + 1) : "#";
-        const beforeLine = value.slice(0, lineStart);
-        const afterPrefix = value.slice(lineStart + prefix[0].length);
-        result = beforeLine + newLevel + " " + afterPrefix;
+        replacementStart = lineStart;
+        replacementEnd = lineStart + prefix[0].length;
+        replacementString = newLevel + " ";
         const offset = newLevel.length + 1 - prefix[0].length;
         cursorStart = start + offset;
         cursorEnd = end + offset;
       } else if (currentLine.length > 0 && start === end) {
-        result = value.slice(0, lineStart) + "## " + value.slice(lineStart);
+        replacementStart = lineStart;
+        replacementEnd = lineStart;
+        replacementString = "## ";
         cursorStart = start + 3;
         cursorEnd = cursorStart;
       } else if (selected) {
-        result = before + `## ${selected}` + after;
+        replacementString = `## ${selected}`;
         cursorStart = start + 3;
         cursorEnd = cursorStart + selected.length;
       } else {
-        result =
-          before +
-          `## ${translate("main.formatSample.headingText", { defaultValue: "标题" })}` +
-          after;
+        replacementString = `## ${translate("main.formatSample.headingText", { defaultValue: "标题" })}`;
         cursorStart = start + 3;
         cursorEnd = cursorStart + 2;
       }
@@ -188,23 +187,21 @@ function applyFormat(
     case "hr": {
       const newlineBefore = before.endsWith("\n") || before === "" ? "" : "\n";
       const newlineAfter = after.startsWith("\n") || after === "" ? "" : "\n";
-      result = before + `${newlineBefore}---${newlineAfter}` + after;
+      replacementString = `${newlineBefore}---${newlineAfter}`;
       cursorStart = cursorEnd = before.length + newlineBefore.length + 3;
       break;
     }
     case "ul": {
       if (selected.includes("\n")) {
-        const lines = selected
+        replacementString = selected
           .split("\n")
           .map((l) => `- ${l}`)
           .join("\n");
-        result = before + lines + after;
         cursorStart = start;
-        cursorEnd = start + lines.length;
+        cursorEnd = start + replacementString.length;
       } else {
         const fallback = translate("main.formatSample.listItem", { defaultValue: "列表项" });
-        const item = `- ${selected || fallback}`;
-        result = before + item + after;
+        replacementString = `- ${selected || fallback}`;
         cursorStart = start + 2;
         cursorEnd = cursorStart + (selected || fallback).length;
       }
@@ -212,17 +209,15 @@ function applyFormat(
     }
     case "ol": {
       if (selected.includes("\n")) {
-        const lines = selected
+        replacementString = selected
           .split("\n")
           .map((l, i) => `${i + 1}. ${l}`)
           .join("\n");
-        result = before + lines + after;
         cursorStart = start;
-        cursorEnd = start + lines.length;
+        cursorEnd = start + replacementString.length;
       } else {
         const fallback = translate("main.formatSample.listItem", { defaultValue: "列表项" });
-        const item = `1. ${selected || fallback}`;
-        result = before + item + after;
+        replacementString = `1. ${selected || fallback}`;
         cursorStart = start + 3;
         cursorEnd = cursorStart + (selected || fallback).length;
       }
@@ -230,14 +225,12 @@ function applyFormat(
     }
     case "code": {
       if (selected.includes("\n")) {
-        const wrapped = "```\n" + selected + "\n```";
-        result = before + wrapped + after;
+        replacementString = "```\n" + selected + "\n```";
         cursorStart = start + 4;
         cursorEnd = cursorStart + selected.length;
       } else {
         const fallback = translate("main.formatSample.codeText", { defaultValue: "代码" });
-        const wrapped = `\`${selected || fallback}\``;
-        result = before + wrapped + after;
+        replacementString = `\`${selected || fallback}\``;
         cursorStart = start + 1;
         cursorEnd = cursorStart + (selected || fallback).length;
       }
@@ -245,17 +238,15 @@ function applyFormat(
     }
     case "quote": {
       if (selected.includes("\n")) {
-        const lines = selected
+        replacementString = selected
           .split("\n")
           .map((l) => `> ${l}`)
           .join("\n");
-        result = before + lines + after;
         cursorStart = start;
-        cursorEnd = start + lines.length;
+        cursorEnd = start + replacementString.length;
       } else {
         const fallback = translate("main.formatSample.quoteText", { defaultValue: "引用文本" });
-        const item = `> ${selected || fallback}`;
-        result = before + item + after;
+        replacementString = `> ${selected || fallback}`;
         cursorStart = start + 2;
         cursorEnd = cursorStart + (selected || fallback).length;
       }
@@ -263,12 +254,16 @@ function applyFormat(
     }
   }
 
+  const result = value.slice(0, replacementStart) + replacementString + value.slice(replacementEnd);
+  const scrollTop = textarea.scrollTop;
+
   textarea.focus();
-  textarea.setSelectionRange(0, value.length);
-  document.execCommand("insertText", false, result);
+  textarea.setSelectionRange(replacementStart, replacementEnd);
+  document.execCommand("insertText", false, replacementString);
   setContent(result);
   markDirty();
   requestAnimationFrame(() => {
+    textarea.scrollTop = scrollTop;
     textarea.setSelectionRange(cursorStart, cursorEnd);
   });
 }
