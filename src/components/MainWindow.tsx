@@ -918,6 +918,8 @@ export function MainWindow({
         category,
         sourcePath: selectedNote?.sourcePath,
         sourceModifiedTime: selectedNote?.sourceModifiedTime,
+        tileColor: selectedNote?.tileColor,
+        renderMarkdown: selectedNote?.renderMarkdown,
       });
       replaceNoteMetadata(note);
 

@@ -1,3 +1,4 @@
+use super::frontmatter::{format_mint_content, parse_mint_content, Frontmatter};
 use crate::json_io::{write_json_atomic, write_text_atomic};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
@@ -83,6 +84,10 @@ pub struct SaveNoteRequest {
     pub source_path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source_modified_time: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub tile_color: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub render_markdown: Option<bool>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -111,6 +116,10 @@ pub struct NoteMetadata {
     pub updated_at: DateTime<Utc>,
     pub word_count: usize,
     pub preview: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub tile_color: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub render_markdown: Option<bool>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -129,6 +138,10 @@ pub struct Note {
     pub updated_at: DateTime<Utc>,
     pub word_count: usize,
     pub content: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub tile_color: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub render_markdown: Option<bool>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -402,6 +415,8 @@ impl NoteStore {
             category: metadata.category,
             source_path: metadata.source_path,
             source_modified_time: metadata.source_modified_time,
+            tile_color: metadata.tile_color,
+            render_markdown: metadata.render_markdown,
             created_at: metadata.created_at,
             updated_at: metadata.updated_at,
             word_count: metadata.word_count,
@@ -427,6 +442,8 @@ impl NoteStore {
             category: category.clone(),
             source_path: request.source_path.clone(),
             source_modified_time: request.source_modified_time,
+            tile_color: request.tile_color.clone(),
+            render_markdown: request.render_markdown,
             created_at: now,
             updated_at: now,
             word_count,
@@ -445,6 +462,8 @@ impl NoteStore {
             category,
             source_path: metadata.source_path,
             source_modified_time: metadata.source_modified_time,
+            tile_color: metadata.tile_color,
+            render_markdown: metadata.render_markdown,
             created_at: now,
             updated_at: now,
             word_count,
@@ -498,6 +517,8 @@ impl NoteStore {
         note.category = new_category.clone();
         note.source_path = source_path;
         note.source_modified_time = source_modified_time;
+        note.tile_color = request.tile_color.clone();
+        note.render_markdown = request.render_markdown;
         note.updated_at = now;
         note.word_count = word_count;
         note.preview = preview(&request.content);
@@ -509,6 +530,8 @@ impl NoteStore {
             category: new_category,
             source_path: note.source_path.clone(),
             source_modified_time: note.source_modified_time,
+            tile_color: note.tile_color.clone(),
+            render_markdown: note.render_markdown,
             created_at: note.created_at,
             updated_at: note.updated_at,
             word_count: note.word_count,
@@ -626,15 +649,34 @@ impl NoteStore {
             return Err(AppError::file_too_large(MAX_IMPORT_TEXT_SIZE / 1024 / 1024));
         }
 
-        let content = fs::read_to_string(path)?;
-        let title = imported_markdown_title(path, &content);
+        let mut content = fs::read_to_string(path)?;
+        let mut title = imported_markdown_title(path, &content);
+        let mut final_category = category;
+        let mut tile_color = None;
+        let mut render_markdown = None;
+
+        if path.extension().and_then(|e| e.to_str()) == Some("mint") {
+            let (fm, body) = parse_mint_content(&content);
+            if let Some(t) = fm.title {
+                title = t;
+            }
+            if let Some(c) = fm.category {
+                final_category = normalize_note_category(&c).unwrap_or(final_category);
+            }
+            tile_color = fm.tile_color;
+            render_markdown = fm.render_markdown;
+            content = body.to_string();
+        }
+
         let source_modified_time = file_modified_time_ms(path).ok();
         self.create_note(SaveNoteRequest {
             title,
             content,
-            category,
+            category: final_category,
             source_path: Some(path.to_string_lossy().to_string()),
             source_modified_time,
+            tile_color,
+            render_markdown,
         })
     }
 
@@ -673,7 +715,18 @@ impl NoteStore {
         if let Some(parent) = path.parent() {
             fs::create_dir_all(parent)?;
         }
-        write_text_atomic(path, &content)?;
+        let mut export_content = content.clone();
+        if path.extension().and_then(|e| e.to_str()) == Some("mint") {
+            let fm = Frontmatter {
+                title: Some(note.title.clone()),
+                category: Some(note.category.clone()),
+                tile_color: note.tile_color.clone(),
+                render_markdown: note.render_markdown,
+            };
+            export_content = format_mint_content(&content, &fm);
+        }
+
+        write_text_atomic(path, &export_content)?;
 
         note.source_path = Some(path.to_string_lossy().to_string());
         note.source_modified_time = Some(file_modified_time_ms(path)?);
@@ -684,6 +737,8 @@ impl NoteStore {
             category: note.category.clone(),
             source_path: note.source_path.clone(),
             source_modified_time: note.source_modified_time,
+            tile_color: note.tile_color.clone(),
+            render_markdown: note.render_markdown,
             created_at: note.created_at,
             updated_at: note.updated_at,
             word_count: note.word_count,
@@ -900,7 +955,26 @@ impl NoteStore {
             return Err(AppError::source_file_missing(&source_path));
         }
 
-        let content = fs::read_to_string(&source)?;
+        let mut content = fs::read_to_string(&source)?;
+        if source.extension().and_then(|e| e.to_str()) == Some("mint") {
+            let (fm, body) = parse_mint_content(&content);
+            if let Some(t) = fm.title {
+                note.title = t;
+            }
+            if let Some(c) = fm.category {
+                if let Ok(normalized_category) = normalize_note_category(&c) {
+                    note.category = normalized_category;
+                }
+            }
+            if fm.tile_color.is_some() {
+                note.tile_color = fm.tile_color;
+            }
+            if fm.render_markdown.is_some() {
+                note.render_markdown = fm.render_markdown;
+            }
+            content = body.to_string();
+        }
+
         let modified_time = file_modified_time_ms(&source)?;
         let now = Utc::now();
         let new_file_name = self.file_name_for(id, &note.title);
@@ -928,6 +1002,8 @@ impl NoteStore {
             category: note.category.clone(),
             source_path: note.source_path.clone(),
             source_modified_time: note.source_modified_time,
+            tile_color: note.tile_color.clone(),
+            render_markdown: note.render_markdown,
             created_at: note.created_at,
             updated_at: note.updated_at,
             word_count: note.word_count,
@@ -1131,6 +1207,8 @@ impl NoteStore {
                 updated_at: modified,
                 word_count: count_words(&content),
                 preview: preview(&content),
+                tile_color: None,
+                render_markdown: None,
             });
         }
         Ok(())
@@ -1405,6 +1483,8 @@ mod tests {
             category: category.into(),
             source_path: None,
             source_modified_time: None,
+            tile_color: None,
+            render_markdown: None,
         }
     }
 
@@ -1876,6 +1956,8 @@ mod tests {
                     category: String::new(),
                     source_path: Some(other_path.to_string_lossy().to_string()),
                     source_modified_time: Some(1.0),
+                    tile_color: None,
+                    render_markdown: None,
                 },
             )
             .expect("update note");

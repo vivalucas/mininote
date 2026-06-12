@@ -145,6 +145,11 @@ export function NotePad({
   const [tileColorMode, setTileColorMode] = useState<TileColorMode>("system");
   const [surfaceFontSize, setSurfaceFontSize] = useState(14);
   const [tileRenderMarkdown, setTileRenderMarkdown] = useState(false);
+  const [noteTileColorOverride, setNoteTileColorOverride] = useState<string | null>(null);
+  const [noteRenderMarkdownOverride, setNoteRenderMarkdownOverride] = useState<boolean | null>(
+    null,
+  );
+  const [showNoteSettings, setShowNoteSettings] = useState(false);
   const [tileColor, setTileColor] = useState(() =>
     resolveTileColor("system", normalizeTileColor(initialTileColor)),
   );
@@ -211,6 +216,8 @@ export function NotePad({
     setContent(note.content);
     setMode("new");
     setStatus("opened");
+    setNoteTileColorOverride(note.tileColor ?? null);
+    setNoteRenderMarkdownOverride(note.renderMarkdown ?? null);
   }, []);
 
   useEffect(() => {
@@ -317,7 +324,14 @@ export function NotePad({
   }, [tileColorMode, tileColorRaw]);
 
   useEffect(() => {
-    if (tileColorMode !== "system") return;
+    if (noteTileColorOverride != null) {
+      setTileColor(resolveTileColor("custom", normalizeTileColor(noteTileColorOverride)));
+      return;
+    }
+    if (tileColorMode !== "system") {
+      setTileColor(resolveTileColor(tileColorMode, tileColorRaw));
+      return;
+    }
     const observer = new MutationObserver(() => {
       setTileColor(resolveTileColor("system", tileColorRaw));
     });
@@ -362,7 +376,13 @@ export function NotePad({
 
   const saveNote = useCallback(async () => {
     const existingCategory = notes.find((n) => n.id === editingNoteId)?.category ?? "";
-    const request = { title, content, category: existingCategory };
+    const request = {
+      title,
+      content,
+      category: existingCategory,
+      tileColor: noteTileColorOverride ?? undefined,
+      renderMarkdown: noteRenderMarkdownOverride ?? undefined,
+    };
     const note = editingNoteId
       ? await updateNote(editingNoteId, request)
       : await createNote(request);
@@ -982,7 +1002,7 @@ export function NotePad({
           content={errorMessage || content}
           color={tileColor}
           fontSize={surfaceFontSize}
-          renderMarkdown={!errorMessage && tileRenderMarkdown}
+          renderMarkdown={!errorMessage && (noteRenderMarkdownOverride ?? tileRenderMarkdown)}
           imageBaseDir={imageBaseDir ?? undefined}
           width="100%"
           className="h-full cursor-default"
@@ -1053,6 +1073,30 @@ export function NotePad({
 
               <div className="flex items-center gap-1.5">
                 <button
+                  onClick={() => setShowNoteSettings((prev) => !prev)}
+                  className={`group w-7 h-7 flex items-center justify-center rounded-lg transition-all duration-200 cursor-pointer ${
+                    showNoteSettings
+                      ? "text-bamboo bg-bamboo-mist/40"
+                      : "text-ink-ghost hover:text-ink-faint hover:bg-paper-warm"
+                  }`}
+                  title={t("notepad.tooltip.noteSettings", { defaultValue: "笔记局部设置" })}
+                >
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </button>
+
+                <button
                   onClick={() => void handlePin()}
                   className="group w-7 h-7 flex items-center justify-center rounded-lg transition-all duration-200 cursor-pointer text-ink-ghost hover:text-ink-faint hover:bg-paper-warm"
                   title={t("notepad.tooltip.pinToTile", { defaultValue: "转为磁贴" })}
@@ -1093,6 +1137,83 @@ export function NotePad({
             </div>
 
             <div className="mx-4 mt-1 h-px bg-paper-deep/50" />
+
+            {showNoteSettings && (
+              <div className="mx-4 mt-2 mb-1 px-3 py-2.5 rounded-lg bg-paper-warm border border-paper-deep/30 space-y-3 shadow-inner">
+                <div className="flex items-center justify-between">
+                  <label className="text-[11px] font-body text-ink-soft">
+                    {t("notepad.settings.tileColor", { defaultValue: "专属磁贴颜色" })}
+                  </label>
+                  <div className="flex items-center gap-1.5">
+                    {noteTileColorOverride && (
+                      <input
+                        type="color"
+                        value={normalizeTileColor(noteTileColorOverride)}
+                        onChange={(e) => {
+                          setNoteTileColorOverride(e.target.value);
+                          setStatus("dirty");
+                        }}
+                        className="w-5 h-5 rounded cursor-pointer border-none bg-transparent"
+                      />
+                    )}
+                    <button
+                      onClick={() => {
+                        setNoteTileColorOverride((prev) => (prev ? null : DEFAULT_TILE_COLOR));
+                        setStatus("dirty");
+                      }}
+                      className={`px-2 py-0.5 rounded text-[10px] transition-colors ${
+                        noteTileColorOverride
+                          ? "bg-red-400/10 text-red-500 hover:bg-red-400/20"
+                          : "bg-paper-deep/30 text-ink-faint hover:text-ink-soft hover:bg-paper-deep/50"
+                      }`}
+                    >
+                      {noteTileColorOverride
+                        ? t("notepad.settings.clearColor", { defaultValue: "恢复全局" })
+                        : t("notepad.settings.customColor", { defaultValue: "自定义" })}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <label className="text-[11px] font-body text-ink-soft">
+                    {t("notepad.settings.renderMarkdown", { defaultValue: "专属 Markdown 渲染" })}
+                  </label>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      onClick={() => {
+                        setNoteRenderMarkdownOverride((prev) =>
+                          prev == null ? !tileRenderMarkdown : !prev,
+                        );
+                        setStatus("dirty");
+                      }}
+                      className={`relative w-7 h-3.5 rounded-full transition-colors ${
+                        (noteRenderMarkdownOverride ?? tileRenderMarkdown)
+                          ? "bg-bamboo"
+                          : "bg-paper-deep/50"
+                      }`}
+                    >
+                      <div
+                        className={`absolute top-[2px] left-[2px] w-[10px] h-[10px] bg-white rounded-full transition-transform ${
+                          (noteRenderMarkdownOverride ?? tileRenderMarkdown)
+                            ? "translate-x-[14px]"
+                            : "translate-x-0"
+                        }`}
+                      />
+                    </button>
+                    <button
+                      onClick={() => {
+                        setNoteRenderMarkdownOverride(null);
+                        setStatus("dirty");
+                      }}
+                      disabled={noteRenderMarkdownOverride == null}
+                      className="px-2 py-0.5 rounded text-[10px] transition-colors disabled:opacity-30 disabled:cursor-not-allowed bg-paper-deep/30 text-ink-faint hover:text-ink-soft hover:bg-paper-deep/50"
+                    >
+                      {t("notepad.settings.followGlobal", { defaultValue: "跟随全局" })}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {mode === "new" ? (
               <div

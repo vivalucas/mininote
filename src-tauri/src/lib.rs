@@ -412,19 +412,26 @@ pub fn run() {
         .expect("error while building tauri application")
         .run(|app, event| {
             #[cfg(any(target_os = "macos", target_os = "ios", target_os = "android"))]
-            if let tauri::RunEvent::Opened { urls } = event {
-                if urls.is_empty() {
-                    // Dock icon clicked with no file URLs — restore the main window
-                    if let Err(e) = desktop::show_main_window(app) {
-                        eprintln!("failed to show main window on reopen: {e}");
-                    }
-                } else {
+            match &event {
+                tauri::RunEvent::Opened { urls } => {
                     for url in urls {
-                        if let Some(file_path) = desktop::extract_file_url(&url) {
+                        if let Some(file_path) = desktop::extract_file_url(url) {
                             desktop::handle_open_file_request(app, file_path);
                         }
                     }
                 }
+                #[cfg(target_os = "macos")]
+                tauri::RunEvent::Reopen {
+                    has_visible_windows,
+                    ..
+                } => {
+                    if !has_visible_windows {
+                        if let Err(e) = desktop::show_main_window(app) {
+                            eprintln!("failed to show main window on reopen: {e}");
+                        }
+                    }
+                }
+                _ => {}
             }
 
             #[cfg(not(any(target_os = "macos", target_os = "ios", target_os = "android")))]

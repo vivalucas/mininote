@@ -9,6 +9,8 @@ export interface NoteMetadata {
   updatedAt: string;
   wordCount: number;
   preview: string;
+  tileColor?: string;
+  renderMarkdown?: boolean;
 }
 
 export interface Note extends Omit<NoteMetadata, "preview"> {
@@ -21,6 +23,8 @@ export interface SaveNoteRequest {
   category: string;
   sourcePath?: string;
   sourceModifiedTime?: number;
+  tileColor?: string;
+  renderMarkdown?: boolean;
 }
 
 export interface SyncSourceRequest {
