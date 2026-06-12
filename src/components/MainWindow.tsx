@@ -54,6 +54,7 @@ import {
   updateNote,
 } from "../features/notes/api";
 import { cleanUnusedImages } from "../features/images/api";
+import { EditorToolbar } from "./editor/EditorToolbar";
 import { useImagePaste } from "../features/images/useImagePaste";
 import { useImageBaseDir } from "../features/images/useImageBaseDir";
 import type { Note, NoteMetadata, SourceFileChangedPayload } from "../features/notes/types";
@@ -119,13 +120,13 @@ interface SourceConflictState {
   expectedModifiedTime?: number;
 }
 
-type FormatAction = "bold" | "italic" | "heading" | "hr" | "ul" | "ol" | "code" | "quote";
+export type FormatAction = "bold" | "italic" | "heading" | "hr" | "ul" | "ol" | "code" | "quote";
 
-function applyFormat(
+export function applyFormat(
   textarea: HTMLTextAreaElement,
   action: FormatAction,
   translate: TFunction,
-  setContent: (v: string) => void,
+  updateEditorContent: (v: string) => void,
   markDirty: () => void,
 ) {
   const { selectionStart: start, selectionEnd: end, value } = textarea;
@@ -260,7 +261,7 @@ function applyFormat(
   textarea.focus();
   textarea.setSelectionRange(replacementStart, replacementEnd);
   document.execCommand("insertText", false, replacementString);
-  setContent(result);
+  updateEditorContent(result);
   markDirty();
   requestAnimationFrame(() => {
     textarea.scrollTop = scrollTop;
@@ -340,10 +341,38 @@ export function MainWindow({
     normalizeViewMode(initialConfig?.defaultViewMode ?? "split"),
   );
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [content, setContent] = useState("");
+  const contentRef = useRef<HTMLTextAreaElement>(null);
+  const [contentSnapshot, setContentSnapshot] = useState("");
+  const contentStateRef = useRef("");
+  const contentUpdateTimer = useRef<number>(0);
+
+  const updateEditorContent = useCallback((newContent: string) => {
+    if (contentRef.current && contentRef.current.value !== newContent) {
+      contentRef.current.value = newContent;
+    }
+    contentStateRef.current = newContent;
+    setContentSnapshot(newContent);
+  }, []);
+
+  const syncContentState = useCallback((newContent: string) => {
+    contentStateRef.current = newContent;
+    if (contentUpdateTimer.current) window.clearTimeout(contentUpdateTimer.current);
+    contentUpdateTimer.current = window.setTimeout(() => {
+      setContentSnapshot(newContent);
+    }, 150);
+  }, []);
+
   const [title, setTitle] = useState("");
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [cursorPosition, setCursorPosition] = useState({ line: 1, column: 1 });
+  const cursorUpdateTimer = useRef<number>(0);
+
+  const syncCursorPositionDebounced = useCallback((pos: { line: number; column: number }) => {
+    if (cursorUpdateTimer.current) window.clearTimeout(cursorUpdateTimer.current);
+    cursorUpdateTimer.current = window.setTimeout(() => {
+      setCursorPosition(pos);
+    }, 100);
+  }, []);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(initialErrorMessage);
@@ -393,7 +422,7 @@ export function MainWindow({
   const [hasSourceUpdate, setHasSourceUpdate] = useState<string | null>(null);
   const [sourceUpdateConfirming, setSourceUpdateConfirming] = useState(false);
   const [pendingSourceUpdates, setPendingSourceUpdates] = useState<Set<string>>(() => new Set());
-  const contentRef = useRef<HTMLTextAreaElement>(null);
+
   const windowLabelRef = useRef("main");
   const imageBaseDir = useImageBaseDir();
   const saveStateRef = useRef(saveState);
@@ -429,61 +458,6 @@ export function MainWindow({
       saved: t("main.statusBar.saveState.saved", { defaultValue: "已保存" }),
       error: t("main.statusBar.saveState.error", { defaultValue: "保存失败" }),
     }),
-    [t],
-  );
-  const toolbarButtons = useMemo<
-    { label: string; title: string; style: string; action: FormatAction }[]
-  >(
-    () => [
-      {
-        label: "B",
-        title: t("main.toolbar.bold", { defaultValue: "粗体" }),
-        style: "font-bold",
-        action: "bold",
-      },
-      {
-        label: "I",
-        title: t("main.toolbar.italic", { defaultValue: "斜体" }),
-        style: "italic",
-        action: "italic",
-      },
-      {
-        label: "H",
-        title: t("main.toolbar.heading", { defaultValue: "标题" }),
-        style: "font-bold",
-        action: "heading",
-      },
-      {
-        label: "—",
-        title: t("main.toolbar.hr", { defaultValue: "分割线" }),
-        style: "",
-        action: "hr",
-      },
-      {
-        label: "•",
-        title: t("main.toolbar.ul", { defaultValue: "无序列表" }),
-        style: "",
-        action: "ul",
-      },
-      {
-        label: "1.",
-        title: t("main.toolbar.ol", { defaultValue: "有序列表" }),
-        style: "font-mono text-[9px]",
-        action: "ol",
-      },
-      {
-        label: "<>",
-        title: t("main.toolbar.code", { defaultValue: "代码" }),
-        style: "font-mono text-[9px]",
-        action: "code",
-      },
-      {
-        label: "❝",
-        title: t("main.toolbar.quote", { defaultValue: "引用" }),
-        style: "",
-        action: "quote",
-      },
-    ],
     [t],
   );
   const viewModeOptions = useMemo(
@@ -534,14 +508,14 @@ export function MainWindow({
     [filteredNotes, categories],
   );
 
-  const lineCount = useMemo(() => content.split("\n").length, [content]);
-  const newlineFormat = useMemo(() => detectNewline(content), [content]);
+  const lineCount = useMemo(() => contentSnapshot.split("\n").length, [contentSnapshot]);
+  const newlineFormat = useMemo(() => detectNewline(contentSnapshot), [contentSnapshot]);
   const documentFormat = useMemo(() => getDocumentFormat(selectedSourcePath), [selectedSourcePath]);
   const byteSize = useMemo(
-    () => (new TextEncoder().encode(content).length / 1024).toFixed(1),
-    [content],
+    () => (new TextEncoder().encode(contentSnapshot).length / 1024).toFixed(1),
+    [contentSnapshot],
   );
-  const charCount = useMemo(() => countNoteChars(content), [content]);
+  const charCount = useMemo(() => countNoteChars(contentSnapshot), [contentSnapshot]);
 
   const syncCursorPosition = useCallback(() => {
     const textarea = contentRef.current;
@@ -552,7 +526,7 @@ export function MainWindow({
   const applyNote = useCallback((note: Note) => {
     setSelectedId(note.id);
     setTitle(note.title);
-    setContent(note.content);
+    updateEditorContent(note.content);
     setCursorPosition({ line: 1, column: 1 });
     setSaveState("saved");
     setErrorMessage(null);
@@ -592,7 +566,7 @@ export function MainWindow({
   const clearCurrentNote = useCallback(() => {
     setSelectedId(null);
     setTitle("");
-    setContent("");
+    updateEditorContent("");
     setCursorPosition({ line: 1, column: 1 });
     setSaveState("idle");
   }, []);
@@ -806,7 +780,7 @@ export function MainWindow({
               .then((note) => {
                 if (selectedIdRef.current !== currentId) return;
                 setTitle(note.title);
-                setContent(note.content);
+                updateEditorContent(note.content);
                 setSaveState("saved");
               })
               .catch(() => undefined);
@@ -940,7 +914,7 @@ export function MainWindow({
       const category = selectedNote?.category ?? "";
       const note = await updateNote(selectedId, {
         title,
-        content,
+        content: contentStateRef.current,
         category,
         sourcePath: selectedNote?.sourcePath,
         sourceModifiedTime: selectedNote?.sourceModifiedTime,
@@ -952,7 +926,7 @@ export function MainWindow({
       if (note.sourcePath) {
         try {
           const synced = await syncNoteSourceFile(note.id, {
-            content,
+            content: contentStateRef.current,
             expectedModifiedTime: note.sourceModifiedTime,
           });
           setNotes((current) =>
@@ -973,7 +947,7 @@ export function MainWindow({
             setSourceConflict({
               noteId: note.id,
               path: note.sourcePath,
-              content,
+              content: contentStateRef.current,
               expectedModifiedTime: note.sourceModifiedTime,
             });
           } else if (errorCode === "sourceFileMissing") {
@@ -995,7 +969,7 @@ export function MainWindow({
       setErrorMessage(getErrorMessage(error));
       return null;
     }
-  }, [content, replaceNoteMetadata, selectedId, selectedNote, title]);
+  }, [replaceNoteMetadata, selectedId, selectedNote, title]);
 
   const ensureCurrentNoteSaved = useCallback(async () => {
     if (sourceConflictRef.current) return false;
@@ -1613,14 +1587,18 @@ export function MainWindow({
   const ensureNoteSaved = useCallback(async (): Promise<string | null> => {
     if (selectedId) return selectedId;
     try {
-      const note = await createNote({ title, content, category: activeCategory });
+      const note = await createNote({
+        title,
+        content: contentStateRef.current,
+        category: activeCategory,
+      });
       replaceNoteMetadata(note);
       applyNote(note);
       return note.id;
     } catch {
       return null;
     }
-  }, [selectedId, title, content, activeCategory, replaceNoteMetadata, applyNote]);
+  }, [selectedId, title, activeCategory, replaceNoteMetadata, applyNote]);
 
   const {
     handlePaste: imagePasteHandler,
@@ -1629,7 +1607,7 @@ export function MainWindow({
   } = useImagePaste({
     noteId: selectedId,
     textareaRef: contentRef,
-    setContent,
+    setContent: updateEditorContent,
     markDirty,
     onEnsureNoteSaved: ensureNoteSaved,
     disabled: false,
@@ -1640,7 +1618,7 @@ export function MainWindow({
   const handleCleanUnusedImages = async () => {
     if (!selectedId) return;
     try {
-      const removed = await cleanUnusedImages(selectedId, content);
+      const removed = await cleanUnusedImages(selectedId, contentStateRef.current);
       if (removed.length > 0) {
         setErrorMessage(
           t("main.images.cleaned", {
@@ -1661,7 +1639,7 @@ export function MainWindow({
     if (!selectedId) return;
     const textarea = contentRef.current;
     if (runEditorCommand(textarea, "undo")) {
-      setContent(textarea?.value ?? content);
+      updateEditorContent(textarea?.value ?? contentStateRef.current);
       markDirty();
     }
   };
@@ -1670,7 +1648,7 @@ export function MainWindow({
     if (!selectedId) return;
     const textarea = contentRef.current;
     if (runEditorCommand(textarea, "redo")) {
-      setContent(textarea?.value ?? content);
+      updateEditorContent(textarea?.value ?? contentStateRef.current);
       markDirty();
     }
   };
@@ -2804,39 +2782,29 @@ export function MainWindow({
                       className="flex flex-col min-h-0 shrink-0"
                       style={{ width: viewMode === "split" ? `${splitRatio * 100}%` : "100%" }}
                     >
-                      <div className="flex items-center gap-0.5 px-4 pt-2 pb-1 shrink-0">
-                        {toolbarButtons.map((button) => (
-                          <button
-                            key={button.label}
-                            title={button.title}
-                            onMouseDown={(e) => e.preventDefault()}
-                            onClick={() => {
-                              if (contentRef.current) {
-                                applyFormat(
-                                  contentRef.current,
-                                  button.action,
-                                  t,
-                                  setContent,
-                                  markDirty,
-                                );
-                              }
-                            }}
-                            className={`w-6 h-6 flex items-center justify-center rounded text-[11px] text-ink-ghost hover:text-ink-faint hover:bg-paper-warm transition-all cursor-pointer ${button.style}`}
-                          >
-                            {button.label}
-                          </button>
-                        ))}
-                      </div>
+                      <EditorToolbar
+                        onApplyFormat={(action) => {
+                          if (contentRef.current) {
+                            applyFormat(
+                              contentRef.current,
+                              action,
+                              t,
+                              updateEditorContent,
+                              markDirty,
+                            );
+                          }
+                        }}
+                      />
 
                       <div className="flex-1 overflow-hidden px-5 pb-4">
                         <textarea
                           ref={contentRef}
                           data-tab-indent="true"
-                          value={content}
+                          defaultValue={contentSnapshot}
                           onChange={(event) => {
-                            setContent(event.target.value);
+                            syncContentState(event.target.value);
                             markDirty();
-                            setCursorPosition(
+                            syncCursorPositionDebounced(
                               getCursorPosition(event.target.value, event.target.selectionStart),
                             );
                           }}
@@ -2897,7 +2865,7 @@ export function MainWindow({
                         }`}
                       >
                         <LazyMarkdownPreview
-                          content={content}
+                          content={contentSnapshot}
                           fontSize={settingsConfig?.fontSize ?? 14}
                           renderHtml={settingsConfig?.renderHtmlMarkdown ?? false}
                           imageBaseDir={imageBaseDir ?? undefined}
@@ -2936,7 +2904,7 @@ export function MainWindow({
                 </span>
               </div>
               <div className="flex items-center gap-3 min-w-0">
-                {selectedId && content.includes("images/") && (
+                {selectedId && contentSnapshot.includes("images/") && (
                   <>
                     <button
                       type="button"
