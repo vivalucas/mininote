@@ -171,6 +171,7 @@ export function MainWindow({
   const contentStateRef = useRef("");
 
   const handleContentChange = useCallback((newContent: string) => {
+    // contentStateRef 立即更新，保证保存时用的是最新内容（ref 写操作不触发重渲染）
     contentStateRef.current = newContent;
     if (saveStateRef.current !== "saving") {
       setSaveState("dirty");

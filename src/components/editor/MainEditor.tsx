@@ -81,19 +81,25 @@ export const MainEditor = forwardRef<MainEditorRef, MainEditorProps>(function Ma
   const [cursorPosition, setCursorPosition] = useState({ line: 1, column: 1 });
   const cursorUpdateTimer = useRef<number>(0);
 
-  const syncCursorPositionDebounced = useCallback((pos: { line: number; column: number }) => {
+  // 光标位置防抖：停止打字 1.5s 后才更新状态栏显示，避免每次按键重渲染
+  const syncCursorPositionDebounced = useCallback(() => {
+    const textarea = contentRef.current;
+    if (!textarea) return;
+    const pos = getCursorPosition(textarea.value, textarea.selectionStart);
     if (cursorUpdateTimer.current) window.clearTimeout(cursorUpdateTimer.current);
     cursorUpdateTimer.current = window.setTimeout(() => {
       setCursorPosition(pos);
-    }, 10000);
+    }, 1500);
   }, []);
 
+  // 点击时立即同步光标位置（非连续输入，可以立即更新）
   const syncCursorPosition = useCallback(() => {
     const textarea = contentRef.current;
     if (!textarea) return;
     setCursorPosition(getCursorPosition(textarea.value, textarea.selectionStart));
   }, []);
 
+  // contentSnapshot 防抖：停止打字 5s 后才更新字数统计、预览等
   const syncContentState = useCallback((newContent: string) => {
     if (contentUpdateTimer.current) window.clearTimeout(contentUpdateTimer.current);
     contentUpdateTimer.current = window.setTimeout(() => {
@@ -179,13 +185,11 @@ export const MainEditor = forwardRef<MainEditorRef, MainEditorProps>(function Ma
               onChange={(event) => {
                 onChange(event.target.value);
                 syncContentState(event.target.value);
-                syncCursorPositionDebounced(
-                  getCursorPosition(event.target.value, event.target.selectionStart),
-                );
+                syncCursorPositionDebounced();
               }}
               onClick={syncCursorPosition}
-              onKeyUp={syncCursorPosition}
-              onSelect={syncCursorPosition}
+              onKeyUp={syncCursorPositionDebounced}
+              onSelect={syncCursorPositionDebounced}
               onPaste={imagePasteHandler}
               onDrop={imageDropHandler}
               onDragOver={imageDragOverHandler}

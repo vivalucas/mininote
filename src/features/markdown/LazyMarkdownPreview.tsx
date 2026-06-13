@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense } from "react";
 import type { MarkdownPreviewProps } from "./MarkdownPreview";
 
 const MarkdownPreviewImpl = lazy(() =>
@@ -6,18 +6,10 @@ const MarkdownPreviewImpl = lazy(() =>
 );
 
 export function LazyMarkdownPreview(props: MarkdownPreviewProps) {
-  const [debouncedContent, setDebouncedContent] = useState(props.content);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedContent(props.content);
-    }, 150);
-    return () => clearTimeout(timer);
-  }, [props.content]);
-
+  // contentSnapshot 在 MainEditor 中已经做了 5s 防抖，这里直接传递即可
   return (
     <Suspense fallback={null}>
-      <MarkdownPreviewImpl {...props} content={debouncedContent} />
+      <MarkdownPreviewImpl {...props} />
     </Suspense>
   );
 }
