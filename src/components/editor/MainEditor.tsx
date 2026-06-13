@@ -23,7 +23,7 @@ interface MainEditorProps {
   settingsConfig: AppConfig | null;
   imageBaseDir: string | null;
   documentFormat: string | null;
-  onChange: (content: string) => void;
+  onChange: (content: string, isComposing?: boolean) => void;
   onEnsureNoteSaved: () => Promise<string | null>;
   onCleanUnusedImages: () => void;
   t: TFunction;
@@ -75,6 +75,7 @@ export const MainEditor = forwardRef<MainEditorRef, MainEditorProps>(function Ma
   ref,
 ) {
   const contentRef = useRef<HTMLTextAreaElement>(null);
+  const isComposingRef = useRef(false);
   const [contentSnapshot, setContentSnapshot] = useState(initialContent);
   const contentUpdateTimer = useRef<number>(0);
 
@@ -183,8 +184,22 @@ export const MainEditor = forwardRef<MainEditorRef, MainEditorProps>(function Ma
               data-tab-indent="true"
               defaultValue={initialContent}
               onChange={(event) => {
-                onChange(event.target.value);
+                const composing =
+                  isComposingRef.current ||
+                  ("isComposing" in event.nativeEvent && Boolean(event.nativeEvent.isComposing));
+                onChange(event.target.value, composing);
                 syncContentState(event.target.value);
+                if (!composing) {
+                  syncCursorPositionDebounced();
+                }
+              }}
+              onCompositionStart={() => {
+                isComposingRef.current = true;
+              }}
+              onCompositionEnd={(event) => {
+                isComposingRef.current = false;
+                onChange(event.currentTarget.value, false);
+                syncContentState(event.currentTarget.value);
                 syncCursorPositionDebounced();
               }}
               onClick={syncCursorPosition}

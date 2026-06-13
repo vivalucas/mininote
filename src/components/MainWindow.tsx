@@ -169,14 +169,11 @@ export function MainWindow({
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const mainEditorRef = useRef<MainEditorRef>(null);
   const contentStateRef = useRef("");
-
-  const handleContentChange = useCallback((newContent: string) => {
-    // contentStateRef 立即更新，保证保存时用的是最新内容（ref 写操作不触发重渲染）
-    contentStateRef.current = newContent;
-    if (saveStateRef.current !== "saving") {
-      setSaveState("dirty");
-    }
-  }, []);
+  const contentVersionRef = useRef(0);
+  const editorComposingRef = useRef(false);
+  const autoSaveTimerRef = useRef<number>(0);
+  const saveInFlightRef = useRef(false);
+  const saveCurrentNoteRef = useRef<(() => Promise<Note | null>) | null>(null);
 
   const [title, setTitle] = useState("");
   const [saveState, setSaveState] = useState<SaveState>("idle");
@@ -201,6 +198,8 @@ export function MainWindow({
       : initialReminder;
   });
   const [settingsConfig, setSettingsConfig] = useState<AppConfig | null>(initialConfig ?? null);
+  const settingsConfigRef = useRef(settingsConfig);
+  settingsConfigRef.current = settingsConfig;
   const [savedNotesDir, setSavedNotesDir] = useState<string | null>(
     initialConfig?.notesDir ?? null,
   );
@@ -252,6 +251,49 @@ export function MainWindow({
   const updateStatusHydratedRef = useRef(initialUpdateStatus !== undefined);
 
   const selectedSourcePath = selectedNote?.sourcePath ?? null;
+
+  const queueAutoSave = useCallback(() => {
+    if (autoSaveTimerRef.current) {
+      window.clearTimeout(autoSaveTimerRef.current);
+      autoSaveTimerRef.current = 0;
+    }
+
+    if (editorComposingRef.current) return;
+
+    const currentId = selectedIdRef.current;
+    if (!currentId) return;
+
+    const currentNote = selectedNoteRef.current;
+    const config = settingsConfigRef.current;
+    const autoSaveEnabled = currentNote?.sourcePath
+      ? config?.externalFileAutoSave
+      : config?.noteAutoSave;
+    if (!autoSaveEnabled) return;
+
+    autoSaveTimerRef.current = window.setTimeout(() => {
+      autoSaveTimerRef.current = 0;
+      if (editorComposingRef.current || saveInFlightRef.current) {
+        queueAutoSave();
+        return;
+      }
+      void saveCurrentNoteRef.current?.();
+    }, 900);
+  }, []);
+
+  const handleContentChange = useCallback(
+    (newContent: string, isComposing = false) => {
+      contentStateRef.current = newContent;
+      contentVersionRef.current += 1;
+      editorComposingRef.current = isComposing;
+
+      if (!isComposing && saveStateRef.current !== "dirty") {
+        setSaveState("dirty");
+      }
+
+      queueAutoSave();
+    },
+    [queueAutoSave],
+  );
 
   const noteMenuTarget = useMemo(
     () => notes.find((note) => note.id === noteMenu?.noteId) ?? null,
@@ -701,13 +743,25 @@ export function MainWindow({
 
   const saveCurrentNote = useCallback(async () => {
     if (!selectedId) return null;
+    if (saveInFlightRef.current) {
+      queueAutoSave();
+      return null;
+    }
 
+    if (autoSaveTimerRef.current) {
+      window.clearTimeout(autoSaveTimerRef.current);
+      autoSaveTimerRef.current = 0;
+    }
+
+    const saveVersion = contentVersionRef.current;
+    const contentToSave = contentStateRef.current;
+    saveInFlightRef.current = true;
     setSaveState("saving");
     try {
       const category = selectedNote?.category ?? "";
       const note = await updateNote(selectedId, {
         title,
-        content: contentStateRef.current,
+        content: contentToSave,
         category,
         sourcePath: selectedNote?.sourcePath,
         sourceModifiedTime: selectedNote?.sourceModifiedTime,
@@ -721,7 +775,7 @@ export function MainWindow({
       if (note.sourcePath) {
         try {
           const synced = await syncNoteSourceFile(note.id, {
-            content: contentStateRef.current,
+            content: contentToSave,
             expectedModifiedTime: note.sourceModifiedTime,
           });
           setNotes((current) =>
@@ -742,7 +796,7 @@ export function MainWindow({
             setSourceConflict({
               noteId: note.id,
               path: note.sourcePath,
-              content: contentStateRef.current,
+              content: contentToSave,
               expectedModifiedTime: note.sourceModifiedTime,
             });
           } else if (errorCode === "sourceFileMissing") {
@@ -754,7 +808,14 @@ export function MainWindow({
         }
       }
 
-      setSaveState(shouldBlockLeaving ? "dirty" : "saved");
+      if (shouldBlockLeaving) {
+        setSaveState("dirty");
+      } else if (contentVersionRef.current !== saveVersion) {
+        setSaveState("dirty");
+        queueAutoSave();
+      } else {
+        setSaveState("saved");
+      }
       if (shouldClearError) {
         setErrorMessage(null);
       }
@@ -763,8 +824,12 @@ export function MainWindow({
       setSaveState("error");
       setErrorMessage(getErrorMessage(error));
       return null;
+    } finally {
+      saveInFlightRef.current = false;
     }
-  }, [replaceNoteMetadata, selectedId, selectedNote, title]);
+  }, [queueAutoSave, replaceNoteMetadata, selectedId, selectedNote, title]);
+
+  saveCurrentNoteRef.current = saveCurrentNote;
 
   const ensureCurrentNoteSaved = useCallback(async () => {
     if (sourceConflictRef.current) return false;
@@ -1026,26 +1091,13 @@ export function MainWindow({
   }, [saveCurrentNote]);
 
   useEffect(() => {
-    if (!selectedId || saveState !== "dirty") return undefined;
-    if (selectedSourcePath) {
-      if (!settingsConfig?.externalFileAutoSave) return undefined;
-    } else {
-      if (!settingsConfig?.noteAutoSave) return undefined;
-    }
-
-    const timer = window.setTimeout(() => {
-      void saveCurrentNote();
-    }, 900);
-
-    return () => window.clearTimeout(timer);
-  }, [
-    saveCurrentNote,
-    saveState,
-    selectedId,
-    selectedSourcePath,
-    settingsConfig?.noteAutoSave,
-    settingsConfig?.externalFileAutoSave,
-  ]);
+    return () => {
+      if (autoSaveTimerRef.current) {
+        window.clearTimeout(autoSaveTimerRef.current);
+        autoSaveTimerRef.current = 0;
+      }
+    };
+  }, []);
 
   const handleNewNote = async () => {
     setErrorMessage(null);

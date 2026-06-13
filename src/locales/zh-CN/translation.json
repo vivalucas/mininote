@@ -206,8 +206,16 @@
       "new": "新建",
       "open": "打开"
     },
+    "settings": {
+      "clearColor": "恢复全局",
+      "customColor": "自定义",
+      "followGlobal": "跟随全局",
+      "renderMarkdown": "专属 Markdown 渲染",
+      "tileColor": "专属磁贴颜色"
+    },
     "tooltip": {
       "close": "关闭",
+      "noteSettings": "笔记局部设置",
       "openInEditor": "在编辑器中打开",
       "pinToTile": "转为磁贴"
     },
