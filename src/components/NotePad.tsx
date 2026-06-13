@@ -136,7 +136,28 @@ export function NotePad({
   const [notes, setNotes] = useState<NoteMetadata[]>([]);
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
   const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const contentRef = useRef<HTMLTextAreaElement>(null);
+  const [contentSnapshot, setContentSnapshot] = useState("");
+  const contentStateRef = useRef("");
+  const contentUpdateTimer = useRef<number>(0);
+
+  const syncContentState = useCallback((newContent: string) => {
+    contentStateRef.current = newContent;
+    if (contentUpdateTimer.current) window.clearTimeout(contentUpdateTimer.current);
+    contentUpdateTimer.current = window.setTimeout(() => {
+      setContentSnapshot(newContent);
+    }, 5000);
+  }, []);
+
+  const updateEditorContent = useCallback((newContent: string) => {
+    if (contentRef.current && contentRef.current.value !== newContent) {
+      contentRef.current.value = newContent;
+    }
+    contentStateRef.current = newContent;
+    if (contentUpdateTimer.current) window.clearTimeout(contentUpdateTimer.current);
+    setContentSnapshot(newContent);
+  }, []);
+
   const [hoveredNote, setHoveredNote] = useState<string | null>(null);
   const [status, setStatus] = useState<NotePadStatus>("empty");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -159,7 +180,6 @@ export function NotePad({
   const [sourceUpdateConfirming, setSourceUpdateConfirming] = useState(false);
   const [pendingSourceUpdates, setPendingSourceUpdates] = useState<Set<string>>(() => new Set());
   const titleRef = useRef<HTMLInputElement>(null);
-  const contentRef = useRef<HTMLTextAreaElement>(null);
   const windowLabelRef = useRef("");
   const statusRef = useRef<NotePadStatus>("empty");
   const sourceConflictRef = useRef(sourceConflict);
@@ -213,7 +233,7 @@ export function NotePad({
   const applyNote = useCallback((note: Note) => {
     setEditingNoteId(note.id);
     setTitle(note.title);
-    setContent(note.content);
+    updateEditorContent(note.content);
     setMode("new");
     setStatus("opened");
     setNoteTileColorOverride(note.tileColor ?? null);
@@ -358,7 +378,7 @@ export function NotePad({
       hasEnteredOnce.current = true;
       setEditingNoteId(null);
       setTitle("");
-      setContent("");
+      updateEditorContent("");
       setMode("new");
       setStatus("empty");
       setErrorMessage(null);
@@ -378,7 +398,7 @@ export function NotePad({
     const existingCategory = notes.find((n) => n.id === editingNoteId)?.category ?? "";
     const request = {
       title,
-      content,
+      content: contentStateRef.current,
       category: existingCategory,
       tileColor: noteTileColorOverride ?? undefined,
       renderMarkdown: noteRenderMarkdownOverride ?? undefined,
@@ -391,7 +411,7 @@ export function NotePad({
     if (note.sourcePath) {
       try {
         const synced = await syncNoteSourceFile(note.id, {
-          content,
+          content: contentStateRef.current,
           expectedModifiedTime: note.sourceModifiedTime,
         });
         syncedSourceModifiedTime = synced.sourceModifiedTime;
@@ -408,7 +428,7 @@ export function NotePad({
           setSourceConflict({
             noteId: note.id,
             path: note.sourcePath,
-            content,
+            content: contentStateRef.current,
             expectedModifiedTime: note.sourceModifiedTime,
           });
           setStatus("dirty");
@@ -438,11 +458,11 @@ export function NotePad({
     });
     setStatus("saved");
     return savedNote;
-  }, [content, editingNoteId, notes, title]);
+  }, [editingNoteId, notes, title]);
 
   const hasDraftContent = useCallback(
-    () => Boolean(editingNoteId || title.trim() || content.trim()),
-    [content, editingNoteId, title],
+    () => Boolean(editingNoteId || title.trim() || contentStateRef.current.trim()),
+    [editingNoteId, title],
   );
 
   const ensureDraftSaved = useCallback(async () => {
@@ -584,7 +604,7 @@ export function NotePad({
   } = useImagePaste({
     noteId: editingNoteId,
     textareaRef: contentRef,
-    setContent,
+    setContent: updateEditorContent,
     markDirty: () => setStatus("dirty"),
     onEnsureNoteSaved: ensureNoteSaved,
     onError: setErrorMessage,
@@ -811,12 +831,12 @@ export function NotePad({
       if (!clipboard?.writeText) {
         throw new Error(t("notepad.error.copyUnsupported", { defaultValue: "当前环境不支持复制" }));
       }
-      await clipboard.writeText(content);
+      await clipboard.writeText(contentStateRef.current);
       setStatus("copied");
     } catch (error) {
       setErrorMessage(getErrorMessage(error));
     }
-  }, [content, t]);
+  }, [t]);
 
   useEffect(() => {
     function handleSurfaceActionRequest(event: Event) {
@@ -869,7 +889,7 @@ export function NotePad({
   const resetDraft = () => {
     setEditingNoteId(null);
     setTitle("");
-    setContent("");
+    updateEditorContent("");
     setMode("new");
     setStatus("empty");
     setErrorMessage(null);
@@ -999,7 +1019,7 @@ export function NotePad({
       {isTile ? (
         <Tile
           title={tileTitle || undefined}
-          content={errorMessage || content}
+          content={errorMessage || contentSnapshot}
           color={tileColor}
           fontSize={surfaceFontSize}
           renderMarkdown={!errorMessage && (noteRenderMarkdownOverride ?? tileRenderMarkdown)}
@@ -1242,9 +1262,9 @@ export function NotePad({
                 <textarea
                   ref={contentRef}
                   data-tab-indent="true"
-                  value={content}
+                  defaultValue={contentSnapshot}
                   onChange={(event) => {
-                    setContent(event.target.value);
+                    syncContentState(event.target.value);
                     setStatus("dirty");
                   }}
                   onPaste={imagePasteHandler}
@@ -1254,7 +1274,7 @@ export function NotePad({
                     if (event.key === "ArrowUp") {
                       const ta = contentRef.current;
                       if (ta && ta.selectionStart === ta.selectionEnd) {
-                        const textBeforeCursor = content.slice(0, ta.selectionStart);
+                        const textBeforeCursor = ta.value.slice(0, ta.selectionStart);
                         if (!textBeforeCursor.includes("\n")) {
                           event.preventDefault();
                           titleRef.current?.focus();
@@ -1274,7 +1294,7 @@ export function NotePad({
                 <div className="flex items-center justify-between mt-auto pt-2 border-t border-paper-deep/30 shrink-0">
                   <span className="text-[11px] text-ink-ghost font-mono tabular-nums truncate max-w-[170px]">
                     {errorMessage ??
-                      `${countNoteChars(content)} ${t("common.wordCountUnit", { defaultValue: "字" })} · ${statusLabel[status]}`}
+                      `${countNoteChars(contentSnapshot)} ${t("common.wordCountUnit", { defaultValue: "字" })} · ${statusLabel[status]}`}
                   </span>
                   <div className="flex items-center gap-2">
                     <button

@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { FormatAction } from "../MainWindow";
+import type { FormatAction } from "./editorUtils";
 
 interface EditorToolbarProps {
   onApplyFormat: (action: FormatAction) => void;

@@ -12,7 +12,7 @@ import {
   importMarkdownNote,
   importMarkdownPath,
 } from "../features/importExport/api";
-import { LazyMarkdownPreview } from "../features/markdown/LazyMarkdownPreview";
+
 import {
   chooseNotesDirectory,
   getConfig,
@@ -54,8 +54,7 @@ import {
   updateNote,
 } from "../features/notes/api";
 import { cleanUnusedImages } from "../features/images/api";
-import { EditorToolbar } from "./editor/EditorToolbar";
-import { useImagePaste } from "../features/images/useImagePaste";
+import { MainEditor, type MainEditorRef } from "./editor/MainEditor";
 import { useImageBaseDir } from "../features/images/useImageBaseDir";
 import type { Note, NoteMetadata, SourceFileChangedPayload } from "../features/notes/types";
 import {
@@ -120,179 +119,6 @@ interface SourceConflictState {
   expectedModifiedTime?: number;
 }
 
-export type FormatAction = "bold" | "italic" | "heading" | "hr" | "ul" | "ol" | "code" | "quote";
-
-export function applyFormat(
-  textarea: HTMLTextAreaElement,
-  action: FormatAction,
-  translate: TFunction,
-  updateEditorContent: (v: string) => void,
-  markDirty: () => void,
-) {
-  const { selectionStart: start, selectionEnd: end, value } = textarea;
-  const selected = value.slice(start, end);
-  const before = value.slice(0, start);
-  const after = value.slice(end);
-
-  const lineStart = before.lastIndexOf("\n") + 1;
-  const currentLine = before.slice(lineStart);
-
-  let replacementStart = start;
-  let replacementEnd = end;
-  let replacementString = "";
-  let cursorStart: number;
-  let cursorEnd: number;
-
-  switch (action) {
-    case "bold": {
-      const fallback = translate("main.formatSample.boldText", { defaultValue: "粗体文本" });
-      replacementString = `**${selected || fallback}**`;
-      cursorStart = start + 2;
-      cursorEnd = cursorStart + (selected || fallback).length;
-      break;
-    }
-    case "italic": {
-      const fallback = translate("main.formatSample.italicText", { defaultValue: "斜体文本" });
-      replacementString = `*${selected || fallback}*`;
-      cursorStart = start + 1;
-      cursorEnd = cursorStart + (selected || fallback).length;
-      break;
-    }
-    case "heading": {
-      const prefix = currentLine.match(/^(#{1,5})\s/);
-      if (prefix) {
-        const newLevel = prefix[1].length < 5 ? "#".repeat(prefix[1].length + 1) : "#";
-        replacementStart = lineStart;
-        replacementEnd = lineStart + prefix[0].length;
-        replacementString = newLevel + " ";
-        const offset = newLevel.length + 1 - prefix[0].length;
-        cursorStart = start + offset;
-        cursorEnd = end + offset;
-      } else if (currentLine.length > 0 && start === end) {
-        replacementStart = lineStart;
-        replacementEnd = lineStart;
-        replacementString = "## ";
-        cursorStart = start + 3;
-        cursorEnd = cursorStart;
-      } else if (selected) {
-        replacementString = `## ${selected}`;
-        cursorStart = start + 3;
-        cursorEnd = cursorStart + selected.length;
-      } else {
-        replacementString = `## ${translate("main.formatSample.headingText", { defaultValue: "标题" })}`;
-        cursorStart = start + 3;
-        cursorEnd = cursorStart + 2;
-      }
-      break;
-    }
-    case "hr": {
-      const newlineBefore = before.endsWith("\n") || before === "" ? "" : "\n";
-      const newlineAfter = after.startsWith("\n") || after === "" ? "" : "\n";
-      replacementString = `${newlineBefore}---${newlineAfter}`;
-      cursorStart = cursorEnd = before.length + newlineBefore.length + 3;
-      break;
-    }
-    case "ul": {
-      if (selected.includes("\n")) {
-        replacementString = selected
-          .split("\n")
-          .map((l) => `- ${l}`)
-          .join("\n");
-        cursorStart = start;
-        cursorEnd = start + replacementString.length;
-      } else {
-        const fallback = translate("main.formatSample.listItem", { defaultValue: "列表项" });
-        replacementString = `- ${selected || fallback}`;
-        cursorStart = start + 2;
-        cursorEnd = cursorStart + (selected || fallback).length;
-      }
-      break;
-    }
-    case "ol": {
-      if (selected.includes("\n")) {
-        replacementString = selected
-          .split("\n")
-          .map((l, i) => `${i + 1}. ${l}`)
-          .join("\n");
-        cursorStart = start;
-        cursorEnd = start + replacementString.length;
-      } else {
-        const fallback = translate("main.formatSample.listItem", { defaultValue: "列表项" });
-        replacementString = `1. ${selected || fallback}`;
-        cursorStart = start + 3;
-        cursorEnd = cursorStart + (selected || fallback).length;
-      }
-      break;
-    }
-    case "code": {
-      if (selected.includes("\n")) {
-        replacementString = "```\n" + selected + "\n```";
-        cursorStart = start + 4;
-        cursorEnd = cursorStart + selected.length;
-      } else {
-        const fallback = translate("main.formatSample.codeText", { defaultValue: "代码" });
-        replacementString = `\`${selected || fallback}\``;
-        cursorStart = start + 1;
-        cursorEnd = cursorStart + (selected || fallback).length;
-      }
-      break;
-    }
-    case "quote": {
-      if (selected.includes("\n")) {
-        replacementString = selected
-          .split("\n")
-          .map((l) => `> ${l}`)
-          .join("\n");
-        cursorStart = start;
-        cursorEnd = start + replacementString.length;
-      } else {
-        const fallback = translate("main.formatSample.quoteText", { defaultValue: "引用文本" });
-        replacementString = `> ${selected || fallback}`;
-        cursorStart = start + 2;
-        cursorEnd = cursorStart + (selected || fallback).length;
-      }
-      break;
-    }
-  }
-
-  const result = value.slice(0, replacementStart) + replacementString + value.slice(replacementEnd);
-  const scrollTop = textarea.scrollTop;
-
-  textarea.focus();
-  textarea.setSelectionRange(replacementStart, replacementEnd);
-  document.execCommand("insertText", false, replacementString);
-  updateEditorContent(result);
-  markDirty();
-  requestAnimationFrame(() => {
-    textarea.scrollTop = scrollTop;
-    textarea.setSelectionRange(cursorStart, cursorEnd);
-  });
-}
-
-function runEditorCommand(textarea: HTMLTextAreaElement | null, command: "undo" | "redo"): boolean {
-  if (!textarea || textarea.disabled) return false;
-  textarea.focus();
-  return document.execCommand(command);
-}
-
-function getCursorPosition(value: string, offset: number): { line: number; column: number } {
-  const safeOffset = Math.max(0, Math.min(offset, value.length));
-  const beforeCursor = value.slice(0, safeOffset);
-  const lastLineBreak = beforeCursor.lastIndexOf("\n");
-  return {
-    line: beforeCursor.split("\n").length,
-    column: safeOffset - lastLineBreak,
-  };
-}
-
-function detectNewline(value: string): "LF" | "CRLF" | "Mixed" {
-  const hasCrlf = /\r\n/.test(value);
-  const hasBareLf = /(^|[^\r])\n/.test(value);
-  if (hasCrlf && hasBareLf) return "Mixed";
-  if (hasCrlf) return "CRLF";
-  return "LF";
-}
-
 function getDocumentFormat(filePath: string | null): string {
   if (!filePath) return "Markdown";
   const extension = filePath.split(".").pop()?.toLowerCase();
@@ -341,38 +167,19 @@ export function MainWindow({
     normalizeViewMode(initialConfig?.defaultViewMode ?? "split"),
   );
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const contentRef = useRef<HTMLTextAreaElement>(null);
-  const [contentSnapshot, setContentSnapshot] = useState("");
+  const mainEditorRef = useRef<MainEditorRef>(null);
   const contentStateRef = useRef("");
-  const contentUpdateTimer = useRef<number>(0);
 
-  const updateEditorContent = useCallback((newContent: string) => {
-    if (contentRef.current && contentRef.current.value !== newContent) {
-      contentRef.current.value = newContent;
+  const handleContentChange = useCallback((newContent: string) => {
+    contentStateRef.current = newContent;
+    if (saveStateRef.current !== "saving") {
+      setSaveState("dirty");
     }
-    contentStateRef.current = newContent;
-    setContentSnapshot(newContent);
-  }, []);
-
-  const syncContentState = useCallback((newContent: string) => {
-    contentStateRef.current = newContent;
-    if (contentUpdateTimer.current) window.clearTimeout(contentUpdateTimer.current);
-    contentUpdateTimer.current = window.setTimeout(() => {
-      setContentSnapshot(newContent);
-    }, 150);
   }, []);
 
   const [title, setTitle] = useState("");
   const [saveState, setSaveState] = useState<SaveState>("idle");
-  const [cursorPosition, setCursorPosition] = useState({ line: 1, column: 1 });
-  const cursorUpdateTimer = useRef<number>(0);
 
-  const syncCursorPositionDebounced = useCallback((pos: { line: number; column: number }) => {
-    if (cursorUpdateTimer.current) window.clearTimeout(cursorUpdateTimer.current);
-    cursorUpdateTimer.current = window.setTimeout(() => {
-      setCursorPosition(pos);
-    }, 100);
-  }, []);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(initialErrorMessage);
@@ -508,26 +315,12 @@ export function MainWindow({
     [filteredNotes, categories],
   );
 
-  const lineCount = useMemo(() => contentSnapshot.split("\n").length, [contentSnapshot]);
-  const newlineFormat = useMemo(() => detectNewline(contentSnapshot), [contentSnapshot]);
   const documentFormat = useMemo(() => getDocumentFormat(selectedSourcePath), [selectedSourcePath]);
-  const byteSize = useMemo(
-    () => (new TextEncoder().encode(contentSnapshot).length / 1024).toFixed(1),
-    [contentSnapshot],
-  );
-  const charCount = useMemo(() => countNoteChars(contentSnapshot), [contentSnapshot]);
-
-  const syncCursorPosition = useCallback(() => {
-    const textarea = contentRef.current;
-    if (!textarea) return;
-    setCursorPosition(getCursorPosition(textarea.value, textarea.selectionStart));
-  }, []);
 
   const applyNote = useCallback((note: Note) => {
     setSelectedId(note.id);
     setTitle(note.title);
-    updateEditorContent(note.content);
-    setCursorPosition({ line: 1, column: 1 });
+    contentStateRef.current = note.content;
     setSaveState("saved");
     setErrorMessage(null);
     setNoteTransitionKey((k) => k + 1);
@@ -566,8 +359,7 @@ export function MainWindow({
   const clearCurrentNote = useCallback(() => {
     setSelectedId(null);
     setTitle("");
-    updateEditorContent("");
-    setCursorPosition({ line: 1, column: 1 });
+    contentStateRef.current = "";
     setSaveState("idle");
   }, []);
 
@@ -780,7 +572,7 @@ export function MainWindow({
               .then((note) => {
                 if (selectedIdRef.current !== currentId) return;
                 setTitle(note.title);
-                updateEditorContent(note.content);
+                contentStateRef.current = note.content;
                 setSaveState("saved");
               })
               .catch(() => undefined);
@@ -1602,21 +1394,6 @@ export function MainWindow({
     }
   }, [selectedId, title, activeCategory, replaceNoteMetadata, applyNote]);
 
-  const {
-    handlePaste: imagePasteHandler,
-    handleDrop: imageDropHandler,
-    handleDragOver: imageDragOverHandler,
-  } = useImagePaste({
-    noteId: selectedId,
-    textareaRef: contentRef,
-    setContent: updateEditorContent,
-    markDirty,
-    onEnsureNoteSaved: ensureNoteSaved,
-    disabled: false,
-    onError: setErrorMessage,
-    t,
-  });
-
   const handleCleanUnusedImages = async () => {
     if (!selectedId) return;
     try {
@@ -1639,20 +1416,12 @@ export function MainWindow({
 
   const handleUndo = () => {
     if (!selectedId) return;
-    const textarea = contentRef.current;
-    if (runEditorCommand(textarea, "undo")) {
-      updateEditorContent(textarea?.value ?? contentStateRef.current);
-      markDirty();
-    }
+    mainEditorRef.current?.undo();
   };
 
   const handleRedo = () => {
     if (!selectedId) return;
-    const textarea = contentRef.current;
-    if (runEditorCommand(textarea, "redo")) {
-      updateEditorContent(textarea?.value ?? contentStateRef.current);
-      markDirty();
-    }
+    mainEditorRef.current?.redo();
   };
 
   const handleOpenNotepad = async () => {
@@ -2730,7 +2499,7 @@ export function MainWindow({
                 onKeyDown={(event) => {
                   if (event.key === "Enter") {
                     event.preventDefault();
-                    contentRef.current?.focus();
+                    mainEditorRef.current?.focus();
                   }
                 }}
                 placeholder={t("common.untitledNote", { defaultValue: "无标题笔记" })}
@@ -2750,7 +2519,10 @@ export function MainWindow({
                 </span>
                 <span className="text-[10px] text-ink-ghost/40">·</span>
                 <span className="text-[10px] text-ink-ghost font-mono tabular-nums">
-                  {t("common.wordCount", { count: charCount, defaultValue: "{{count}} 字" })}
+                  {t("common.wordCount", {
+                    count: countNoteChars(contentStateRef.current),
+                    defaultValue: "{{count}} 字",
+                  })}
                 </span>
                 <span className="text-[10px] text-ink-ghost/40">·</span>
                 <span
@@ -2778,160 +2550,24 @@ export function MainWindow({
                   {t("main.editor.emptyHint", { defaultValue: "选择或新建一篇笔记" })}
                 </div>
               ) : (
-                <>
-                  {(viewMode === "edit" || viewMode === "split") && (
-                    <div
-                      className="flex flex-col min-h-0 shrink-0"
-                      style={{ width: viewMode === "split" ? `${splitRatio * 100}%` : "100%" }}
-                    >
-                      <EditorToolbar
-                        onApplyFormat={(action) => {
-                          if (contentRef.current) {
-                            applyFormat(
-                              contentRef.current,
-                              action,
-                              t,
-                              updateEditorContent,
-                              markDirty,
-                            );
-                          }
-                        }}
-                      />
-
-                      <div className="flex-1 overflow-hidden px-5 pb-4">
-                        <textarea
-                          ref={contentRef}
-                          data-tab-indent="true"
-                          defaultValue={contentSnapshot}
-                          onChange={(event) => {
-                            syncContentState(event.target.value);
-                            markDirty();
-                            syncCursorPositionDebounced(
-                              getCursorPosition(event.target.value, event.target.selectionStart),
-                            );
-                          }}
-                          onClick={syncCursorPosition}
-                          onKeyUp={syncCursorPosition}
-                          onSelect={syncCursorPosition}
-                          onPaste={imagePasteHandler}
-                          onDrop={imageDropHandler}
-                          onDragOver={imageDragOverHandler}
-                          className="w-full h-full text-ink-soft font-body placeholder:text-ink-ghost/40"
-                          style={{
-                            fontSize: `${settingsConfig?.fontSize ?? 14}px`,
-                            lineHeight: "normal",
-                            tabSize: `var(--tab-indent-size, 2)`,
-                          }}
-                          placeholder={t("main.editor.contentPlaceholder", {
-                            defaultValue: "开始写作……",
-                          })}
-                          spellCheck={false}
-                          disabled={!selectedId}
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  {viewMode === "split" && (
-                    <div
-                      className={`w-1.5 shrink-0 cursor-col-resize group relative flex items-center justify-center ${isResizingSplit ? "bg-bamboo/30" : "hover:bg-bamboo/20"} transition-colors`}
-                      onMouseDown={(e) => {
-                        e.preventDefault();
-                        setIsResizingSplit(true);
-                      }}
-                    >
-                      <div
-                        className={`absolute inset-y-0 -left-1.5 -right-1.5 ${isResizingSplit ? "" : "group-hover:bg-bamboo/5"}`}
-                      />
-                      {/* 拖拽手柄指示器 */}
-                      <div className="relative z-10 flex flex-col gap-[3px] opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div className="w-[3px] h-[3px] rounded-full bg-ink-ghost/60" />
-                        <div className="w-[3px] h-[3px] rounded-full bg-ink-ghost/60" />
-                        <div className="w-[3px] h-[3px] rounded-full bg-ink-ghost/60" />
-                      </div>
-                    </div>
-                  )}
-
-                  {(viewMode === "preview" || viewMode === "split") && (
-                    <div className="flex flex-col min-h-0 min-w-0 flex-1">
-                      {viewMode === "split" && (
-                        <div className="px-4 pt-2.5 pb-1 shrink-0">
-                          <span className="text-[10px] text-ink-ghost/60 font-mono tracking-widest uppercase">
-                            {t("main.editor.previewLabel", { defaultValue: "Preview" })}
-                          </span>
-                        </div>
-                      )}
-                      <div
-                        className={`flex-1 overflow-y-auto px-6 pb-6 ${
-                          viewMode === "preview" ? "pt-3" : "pt-1"
-                        }`}
-                      >
-                        <LazyMarkdownPreview
-                          content={contentSnapshot}
-                          fontSize={settingsConfig?.fontSize ?? 14}
-                          renderHtml={settingsConfig?.renderHtmlMarkdown ?? false}
-                          imageBaseDir={imageBaseDir ?? undefined}
-                        />
-                      </div>
-                    </div>
-                  )}
-                </>
+                <MainEditor
+                  key={noteTransitionKey}
+                  ref={mainEditorRef}
+                  initialContent={contentStateRef.current}
+                  selectedId={selectedId}
+                  viewMode={viewMode}
+                  splitRatio={splitRatio}
+                  isResizingSplit={isResizingSplit}
+                  setIsResizingSplit={setIsResizingSplit}
+                  settingsConfig={settingsConfig}
+                  imageBaseDir={imageBaseDir ?? null}
+                  documentFormat={documentFormat}
+                  onChange={handleContentChange}
+                  onEnsureNoteSaved={ensureNoteSaved}
+                  onCleanUnusedImages={() => void handleCleanUnusedImages()}
+                  t={t}
+                />
               )}
-            </div>
-
-            <div className="flex items-center justify-between px-4 h-7 border-t border-paper-deep/20 bg-paper/30 shrink-0">
-              <div className="flex items-center gap-3 min-w-0">
-                <span className="text-[10px] text-ink-ghost font-mono tabular-nums">
-                  {t("main.statusBar.lineNumber", {
-                    count: cursorPosition.line,
-                    defaultValue: "Ln {{count}}",
-                  })}
-                </span>
-                <span className="text-[10px] text-ink-ghost font-mono tabular-nums">
-                  {t("main.statusBar.columnNumber", {
-                    count: cursorPosition.column,
-                    defaultValue: "Col {{count}}",
-                  })}
-                </span>
-                <span className="text-[10px] text-ink-ghost/40">|</span>
-                <span className="text-[10px] text-ink-ghost font-mono tabular-nums">
-                  {t("main.statusBar.totalLines", {
-                    count: lineCount,
-                    defaultValue: "{{count}} lines",
-                  })}
-                </span>
-                <span className="text-[10px] text-ink-ghost/40">|</span>
-                <span className="text-[10px] text-ink-ghost font-mono tabular-nums">
-                  {t("common.wordCount", { count: charCount, defaultValue: "{{count}} 字" })}
-                </span>
-              </div>
-              <div className="flex items-center gap-3 min-w-0">
-                {selectedId && contentSnapshot.includes("images/") && (
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => void handleCleanUnusedImages()}
-                      className="text-[10px] text-ink-ghost hover:text-bamboo font-mono cursor-pointer transition-colors"
-                    >
-                      {t("main.images.cleanUnused", { defaultValue: "清理未使用图片" })}
-                    </button>
-                    <span className="text-[10px] text-ink-ghost/40">|</span>
-                  </>
-                )}
-                <span className="text-[10px] text-ink-ghost font-mono whitespace-nowrap">
-                  {documentFormat || t("main.statusBar.format", { defaultValue: "Markdown" })}
-                </span>
-                <span className="text-[10px] text-ink-ghost/40">|</span>
-                <span className="text-[10px] text-ink-ghost font-mono">{newlineFormat}</span>
-                <span className="text-[10px] text-ink-ghost/40">|</span>
-                <span className="text-[10px] text-ink-ghost font-mono">
-                  {t("main.statusBar.encoding", { defaultValue: "UTF-8" })}
-                </span>
-                <span className="text-[10px] text-ink-ghost/40">|</span>
-                <span className="text-[10px] text-ink-ghost font-mono tabular-nums">
-                  {t("main.statusBar.byteSize", { size: byteSize, defaultValue: "{{size}} KB" })}
-                </span>
-              </div>
             </div>
           </div>
           {settingsConfig && settingsOpen && settingsOverlay && (
